@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="John Doe" />
+
+
+
+<meta name="description" content="题目KaggleHouse Prices - Advanced Regression Techniques 代码123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767">
+<meta property="og:type" content="article">
+<meta property="og:title" content="房价预测">
+<meta property="og:url" content="http://example.com/2025/03/23/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="题目KaggleHouse Prices - Advanced Regression Techniques 代码123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-03-23T14:27:58.000Z">
+<meta property="article:modified_time" content="2025-03-23T14:42:17.572Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="线性回归">
+<meta property="article:tag" content="code">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>房价预测 | Hexo</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                            <li><a href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a></li>
+                        
+                            <li><a href="/categories/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/">优化技术</a></li>
+                        
+                            <li><a href="/categories/project/">小试牛刀</a></li>
+                        
+                            <li><a href="/archives/">归档</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACGAN/" rel="tag">ACGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BERT/" rel="tag">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CycleGAN/" rel="tag">CycleGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DCGAN/" rel="tag">DCGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B/" rel="tag">模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a></li>
+                
+                    <li><a href="/categories/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/">优化技术</a></li>
+                
+                    <li><a href="/categories/project/">小试牛刀</a></li>
+                
+                    <li><a href="/archives/">归档</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-房价预测" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/03/23/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/" class="article-date">
+      <time datetime="2025-03-23T14:27:58.000Z" itemprop="datePublished">2025-03-23</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      房价预测
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/project/">project</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>Kaggle<a target="_blank" rel="noopener" href="https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques">House Prices - Advanced Regression Techniques</a></p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split, RandomizedSearchCV</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"><span class="keyword">import</span> xgboost <span class="keyword">as</span> xgb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取数据</span></span><br><span class="line">train_data = pd.read_csv(<span class="string">&#x27;train.csv&#x27;</span>)</span><br><span class="line">test_data = pd.read_csv(<span class="string">&#x27;test.csv&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 备份 test_data 的 ID 列</span></span><br><span class="line">test_ids = test_data[<span class="string">&#x27;Id&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理缺失值</span></span><br><span class="line">numeric_features = train_data.select_dtypes(include=[np.number]).columns.drop(<span class="string">&#x27;SalePrice&#x27;</span>, errors=<span class="string">&#x27;ignore&#x27;</span>)</span><br><span class="line">non_numeric_features = train_data.select_dtypes(exclude=[np.number]).columns</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数值型特征填充</span></span><br><span class="line">train_data[numeric_features] = train_data[numeric_features].fillna(train_data[numeric_features].mean())</span><br><span class="line">test_data[numeric_features] = test_data[numeric_features].fillna(test_data[numeric_features].mean())</span><br><span class="line"></span><br><span class="line"><span class="comment"># 类别型特征填充</span></span><br><span class="line"><span class="keyword">for</span> feature <span class="keyword">in</span> non_numeric_features:</span><br><span class="line">    train_data.loc[:, feature] = train_data[feature].fillna(<span class="string">&#x27;Missing&#x27;</span>)</span><br><span class="line">    test_data.loc[:, feature] = test_data[feature].fillna(<span class="string">&#x27;Missing&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 独热编码</span></span><br><span class="line">train_data = pd.get_dummies(train_data)</span><br><span class="line">test_data = pd.get_dummies(test_data)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 确保特征对齐</span></span><br><span class="line">train_data, test_data = train_data.align(test_data, join=<span class="string">&#x27;left&#x27;</span>, axis=<span class="number">1</span>, fill_value=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 提取 X, y</span></span><br><span class="line">X = train_data.drop(<span class="string">&#x27;SalePrice&#x27;</span>, axis=<span class="number">1</span>)</span><br><span class="line">y = train_data[<span class="string">&#x27;SalePrice&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 划分训练集和验证集</span></span><br><span class="line">X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 标准化</span></span><br><span class="line">scaler = StandardScaler()</span><br><span class="line">X_train_scaled = scaler.fit_transform(X_train)</span><br><span class="line">X_valid_scaled = scaler.transform(X_valid)</span><br><span class="line">X_test_scaled = scaler.transform(test_data.drop(<span class="string">&#x27;SalePrice&#x27;</span>, axis=<span class="number">1</span>, errors=<span class="string">&#x27;ignore&#x27;</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># XGBoost 训练</span></span><br><span class="line">xgb_model = xgb.XGBRegressor(objective=<span class="string">&#x27;reg:squarederror&#x27;</span>, random_state=<span class="number">42</span>, missing=np.nan)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 超参数搜索</span></span><br><span class="line">param_grid = &#123;</span><br><span class="line">    <span class="string">&#x27;learning_rate&#x27;</span>: [<span class="number">0.01</span>, <span class="number">0.1</span>, <span class="number">0.2</span>],</span><br><span class="line">    <span class="string">&#x27;max_depth&#x27;</span>: [<span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>],</span><br><span class="line">    <span class="string">&#x27;n_estimators&#x27;</span>: [<span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>]</span><br><span class="line">&#125;</span><br><span class="line">grid_search = RandomizedSearchCV(xgb_model, param_distributions=param_grid, n_iter=<span class="number">10</span>, cv=<span class="number">3</span>, scoring=<span class="string">&#x27;neg_mean_squared_error&#x27;</span>, random_state=<span class="number">42</span>)</span><br><span class="line">grid_search.fit(X_train_scaled, y_train)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 最优模型</span></span><br><span class="line">best_model = grid_search.best_estimator_</span><br><span class="line"></span><br><span class="line"><span class="comment"># 预测</span></span><br><span class="line">y_pred = best_model.predict(X_valid_scaled)</span><br><span class="line">rmse = np.sqrt(mean_squared_error(y_valid, y_pred))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Validation RMSE: <span class="subst">&#123;rmse:<span class="number">.2</span>f&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试集预测</span></span><br><span class="line">test_predictions = best_model.predict(X_test_scaled)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成提交文件</span></span><br><span class="line">submission = pd.DataFrame(&#123;<span class="string">&#x27;Id&#x27;</span>: test_ids, <span class="string">&#x27;SalePrice&#x27;</span>: test_predictions&#125;)</span><br><span class="line">submission.to_csv(<span class="string">&#x27;submission.csv&#x27;</span>, index=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">mean_price = y_valid.mean()</span><br><span class="line">relative_rmse = rmse / mean_price</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Relative RMSE: <span class="subst">&#123;relative_rmse:<span class="number">.2</span>%&#125;</span>&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2025/03/23/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">房价预测</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
+        <p><span>Created:</span>2025-03-23, 22:27:58</p>
+        <p><span>Updated:</span>2025-03-23, 22:42:17</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2025/03/23/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/" title="房价预测">http://example.com/2025/03/23/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/03/23/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/03/23/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">
+                    ACGAN 实现手写数字生成
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">代码</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"房价预测　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="Back to Homepage"><i class="fa fa-home"></i></a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/03/23/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/" title="Next: ACGAN 实现手写数字生成">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">房价预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">ACGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">GAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">DCGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/CycleGAN-%E5%AE%9E%E7%8E%B0%E8%8E%AB%E5%A5%88%E9%A3%8E%E6%A0%BC%E7%94%BB%E4%BD%9C%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%9C%9F%E5%AE%9E%E7%85%A7%E7%89%87/">CycleGAN 实现莫奈风格画作转化为真实照片</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">WGAN/WGAN-GP 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/BERT-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">BERT 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">Transformer 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/">预测系外行星轨道周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%85%B3%E4%BA%8E-%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 线性回归 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2025 John Doe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

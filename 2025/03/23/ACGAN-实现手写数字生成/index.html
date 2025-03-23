@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="John Doe" />
+
+
+
+<meta name="description" content="题目 本次挑战使用的MNIST手写数字数据集，包含60,000张28x28的灰度图像，分为10个类别（数字0-9）。此数据集将用于训练你的生成对抗网络。 你的任务是使用DCGAN模型，对该数据集进行图像生成。具体要求如下： 数据集下载：请下载MNIST数据集，并确保数据集中包含训练集和测试集。 数据预处理：将图像数据进行必要的预处理，使其适合于DCGAN模型的训练。 模型训练：搭建DCGAN模型，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ACGAN 实现手写数字生成">
+<meta property="og:url" content="http://example.com/2025/03/23/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="题目 本次挑战使用的MNIST手写数字数据集，包含60,000张28x28的灰度图像，分为10个类别（数字0-9）。此数据集将用于训练你的生成对抗网络。 你的任务是使用DCGAN模型，对该数据集进行图像生成。具体要求如下： 数据集下载：请下载MNIST数据集，并确保数据集中包含训练集和测试集。 数据预处理：将图像数据进行必要的预处理，使其适合于DCGAN模型的训练。 模型训练：搭建DCGAN模型，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/acgan_mnist.png">
+<meta property="article:published_time" content="2025-03-23T14:26:19.000Z">
+<meta property="article:modified_time" content="2025-03-23T15:04:29.278Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="GAN">
+<meta property="article:tag" content="code">
+<meta property="article:tag" content="ACGAN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/acgan_mnist.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>ACGAN 实现手写数字生成 | Hexo</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                            <li><a href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a></li>
+                        
+                            <li><a href="/categories/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/">优化技术</a></li>
+                        
+                            <li><a href="/categories/project/">小试牛刀</a></li>
+                        
+                            <li><a href="/archives/">归档</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACGAN/" rel="tag">ACGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BERT/" rel="tag">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CycleGAN/" rel="tag">CycleGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DCGAN/" rel="tag">DCGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B/" rel="tag">模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a></li>
+                
+                    <li><a href="/categories/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/">优化技术</a></li>
+                
+                    <li><a href="/categories/project/">小试牛刀</a></li>
+                
+                    <li><a href="/archives/">归档</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-ACGAN-实现手写数字生成" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/03/23/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/" class="article-date">
+      <time datetime="2025-03-23T14:26:19.000Z" itemprop="datePublished">2025-03-23</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ACGAN 实现手写数字生成
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/project/">project</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ACGAN/" rel="tag">ACGAN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/code/" rel="tag">code</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><ol>
+<li>本次挑战使用的MNIST手写数字数据集，包含60,000张28x28的灰度图像，分为10个类别（数字0-9）。此数据集将用于训练你的生成对抗网络。</li>
+<li>你的任务是使用DCGAN模型，对该数据集进行图像生成。具体要求如下：<ol>
+<li>数据集下载：请下载MNIST数据集，并确保数据集中包含训练集和测试集。</li>
+<li>数据预处理：将图像数据进行必要的预处理，使其适合于DCGAN模型的训练。</li>
+<li>模型训练：搭建DCGAN模型，并利用训练数据集进行训练，调整模型参数，尝试生成高质量的数字图像。</li>
+<li>模型评估：在训练过程中，监控生成图像的质量，并可视化不同训练阶段生成的图像。</li>
+</ol>
+</li>
+</ol>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> datasets, transforms</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader</span><br><span class="line"><span class="keyword">import</span> torchvision.utils <span class="keyword">as</span> vutils</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">batch_size = <span class="number">128</span></span><br><span class="line">lr = <span class="number">0.0002</span></span><br><span class="line">noise_dim = <span class="number">100</span></span><br><span class="line">epochs = <span class="number">20</span></span><br><span class="line">channel_size = <span class="number">1</span></span><br><span class="line">num_classes = <span class="number">10</span>  <span class="comment"># 数据集类别数</span></span><br><span class="line"></span><br><span class="line">device = torch.device(<span class="string">&quot;cuda&quot;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span>)</span><br><span class="line">os.makedirs(<span class="string">&quot;output_acgan&quot;</span>, exist_ok=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据预处理和加载</span></span><br><span class="line">transform = transforms.Compose([</span><br><span class="line">    transforms.Grayscale(num_output_channels=<span class="number">1</span>),</span><br><span class="line">    transforms.ToTensor(),</span><br><span class="line">    transforms.Normalize((<span class="number">0.5</span>,), (<span class="number">0.5</span>,))</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line">dataset = datasets.ImageFolder(root=<span class="string">&#x27;data/mnist_jpg&#x27;</span>, transform=transform)</span><br><span class="line">dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Generator</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, noise_dim, num_classes, channel_size</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        基于卷积层的生成器</span></span><br><span class="line"><span class="string">        卷积层的部分和DCGAN完全相同，只是增加了类别嵌入，以学习到类别信息</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 将离散类别标签映射到连续向量空间</span></span><br><span class="line">        <span class="variable language_">self</span>.label_emb = nn.Embedding(num_classes, noise_dim)</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.main = nn.Sequential(</span><br><span class="line">            nn.ConvTranspose2d(noise_dim * <span class="number">2</span>, <span class="number">128</span>, kernel_size=<span class="number">7</span>, stride=<span class="number">1</span>, padding=<span class="number">0</span>),</span><br><span class="line">            nn.BatchNorm2d(<span class="number">128</span>),</span><br><span class="line">            nn.ReLU(<span class="literal">True</span>),</span><br><span class="line"></span><br><span class="line">            nn.ConvTranspose2d(<span class="number">128</span>, <span class="number">64</span>, kernel_size=<span class="number">4</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>),</span><br><span class="line">            nn.BatchNorm2d(<span class="number">64</span>),</span><br><span class="line">            nn.ReLU(<span class="literal">True</span>),</span><br><span class="line"></span><br><span class="line">            nn.ConvTranspose2d(<span class="number">64</span>, channel_size, kernel_size=<span class="number">4</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>),</span><br><span class="line">            nn.Tanh()</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, noise, labels</span>):</span><br><span class="line">        <span class="comment"># 将类别嵌入</span></span><br><span class="line">        label_embedding = <span class="variable language_">self</span>.label_emb(labels).unsqueeze(<span class="number">2</span>).unsqueeze(<span class="number">3</span>) <span class="comment"># 变形以匹配噪声维度</span></span><br><span class="line">        <span class="built_in">input</span> = torch.cat([noise, label_embedding], dim=<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.main(<span class="built_in">input</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Discriminator</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, channel_size, num_classes</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        基于卷积层的判别器</span></span><br><span class="line"><span class="string">        卷积层的部分和DCGAN完全相同</span></span><br><span class="line"><span class="string">        新增加类别分类头</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.main = nn.Sequential(</span><br><span class="line">            nn.Conv2d(channel_size, <span class="number">64</span>, kernel_size=<span class="number">4</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>),</span><br><span class="line">            nn.LeakyReLU(<span class="number">0.2</span>, inplace=<span class="literal">True</span>),</span><br><span class="line"></span><br><span class="line">            nn.Conv2d(<span class="number">64</span>, <span class="number">128</span>, kernel_size=<span class="number">4</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>),</span><br><span class="line">            nn.BatchNorm2d(<span class="number">128</span>),</span><br><span class="line">            nn.LeakyReLU(<span class="number">0.2</span>, inplace=<span class="literal">True</span>),</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.flatten = nn.Flatten()</span><br><span class="line">        <span class="variable language_">self</span>.fc_real_fake = nn.Linear(<span class="number">128</span> * <span class="number">7</span> * <span class="number">7</span>, <span class="number">1</span>)  <span class="comment"># 真假分类</span></span><br><span class="line">        <span class="variable language_">self</span>.fc_class = nn.Linear(<span class="number">128</span> * <span class="number">7</span> * <span class="number">7</span>, num_classes)  <span class="comment"># 分类</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, <span class="built_in">input</span></span>):</span><br><span class="line">        x = <span class="variable language_">self</span>.main(<span class="built_in">input</span>)</span><br><span class="line">        x = <span class="variable language_">self</span>.flatten(x)</span><br><span class="line"></span><br><span class="line">        real_fake = torch.sigmoid(<span class="variable language_">self</span>.fc_real_fake(x)) <span class="comment"># 需要添加 softmax，因为 BCELoss 需要输入概率值</span></span><br><span class="line">        class_output = <span class="variable language_">self</span>.fc_class(x)  <span class="comment"># 分类输出（不加 softmax，交叉熵损失自带sigmoid）</span></span><br><span class="line">        <span class="keyword">return</span> real_fake, class_output</span><br><span class="line"></span><br><span class="line"><span class="comment"># 模型,优化器,损失函数</span></span><br><span class="line">netG = Generator(noise_dim, num_classes, channel_size).to(device)</span><br><span class="line">netD = Discriminator(channel_size, num_classes).to(device)</span><br><span class="line"></span><br><span class="line">criterion_gan = nn.BCELoss()</span><br><span class="line">criterion_class = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line">optimizerD = optim.Adam(netD.parameters(), lr=lr, betas=(<span class="number">0.5</span>, <span class="number">0.999</span>))</span><br><span class="line">optimizerG = optim.Adam(netG.parameters(), lr=lr, betas=(<span class="number">0.5</span>, <span class="number">0.999</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练过程</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(epochs):</span><br><span class="line">    <span class="keyword">for</span> i, (data, labels) <span class="keyword">in</span> <span class="built_in">enumerate</span>(dataloader):</span><br><span class="line">        batch_size = data.size(<span class="number">0</span>)</span><br><span class="line">        real_imgs, labels = data.to(device), labels.to(device)</span><br><span class="line"></span><br><span class="line">        real_labels = torch.ones(batch_size, <span class="number">1</span>, device=device)</span><br><span class="line">        fake_labels = torch.zeros(batch_size, <span class="number">1</span>, device=device)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 训练判别器</span></span><br><span class="line">        netD.zero_grad()</span><br><span class="line">            <span class="comment"># 真实数据损失</span></span><br><span class="line">        real_out, real_class = netD(real_imgs)</span><br><span class="line">        lossD_real = criterion_gan(real_out, real_labels)</span><br><span class="line">        lossD_real_class = criterion_class(real_class, labels)</span><br><span class="line">            <span class="comment"># 计算虚假数据损失</span></span><br><span class="line">                <span class="comment"># 生成假样本</span></span><br><span class="line">        noise = torch.randn(batch_size, noise_dim, <span class="number">1</span>, <span class="number">1</span>, device=device)</span><br><span class="line">        fake_labels_input = torch.randint(<span class="number">0</span>, num_classes, (batch_size,), device=device)</span><br><span class="line">        fake_imgs = netG(noise, fake_labels_input)</span><br><span class="line">                <span class="comment"># 假样本损失</span></span><br><span class="line">        fake_out, fake_class = netD(fake_imgs.detach())</span><br><span class="line">        lossD_fake = criterion_gan(fake_out, fake_labels)</span><br><span class="line">        lossD_fake_class = criterion_class(fake_class, fake_labels_input)</span><br><span class="line">            <span class="comment"># 总判别器损失</span></span><br><span class="line">        lossD = lossD_real + lossD_fake + lossD_real_class + lossD_fake_class</span><br><span class="line">        lossD.backward()</span><br><span class="line">        optimizerD.step()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 训练生成器</span></span><br><span class="line">        netG.zero_grad()</span><br><span class="line">        fake_out, fake_class = netD(fake_imgs)</span><br><span class="line">            <span class="comment"># 生成器希望判别器把假样本判为真实</span></span><br><span class="line">        lossG_fake = criterion_gan(fake_out, real_labels)</span><br><span class="line">        lossG_classification = criterion_class(fake_class, fake_labels_input)</span><br><span class="line">            <span class="comment"># 总生成器损失</span></span><br><span class="line">        lossG = lossG_fake + lossG_classification</span><br><span class="line">        lossG.backward()</span><br><span class="line">        optimizerG.step()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> i % <span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Epoch [<span class="subst">&#123;epoch + <span class="number">1</span>&#125;</span>/<span class="subst">&#123;epochs&#125;</span>] Batch <span class="subst">&#123;i&#125;</span>/<span class="subst">&#123;<span class="built_in">len</span>(dataloader)&#125;</span> &quot;</span></span><br><span class="line">                  <span class="string">f&quot;Loss_D: <span class="subst">&#123;lossD.item():<span class="number">.4</span>f&#125;</span> Loss_G: <span class="subst">&#123;lossG.item():<span class="number">.4</span>f&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 保存生成结果</span></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        fixed_noise = torch.randn(<span class="number">16</span>, noise_dim, <span class="number">1</span>, <span class="number">1</span>, device=device)</span><br><span class="line">        fixed_labels = torch.randint(<span class="number">0</span>, num_classes, (<span class="number">16</span>,), device=device)</span><br><span class="line">        fake = netG(fixed_noise, fixed_labels)</span><br><span class="line">    vutils.save_image(fake, <span class="string">f&quot;output_acgan/fake_samples_epoch_<span class="subst">&#123;epoch + <span class="number">1</span>&#125;</span>.png&quot;</span>, normalize=<span class="literal">True</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>7 epoches:<br><img src="/img/acgan_mnist.png" alt="alt text"></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2025/03/23/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">ACGAN 实现手写数字生成</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
+        <p><span>Created:</span>2025-03-23, 22:26:19</p>
+        <p><span>Updated:</span>2025-03-23, 23:04:29</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2025/03/23/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/" title="ACGAN 实现手写数字生成">http://example.com/2025/03/23/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/03/23/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/03/23/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">
+                    房价预测
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/03/23/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">
+                    GAN 实现手写数字生成
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-number">3.</span> <span class="toc-text">结果</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"ACGAN 实现手写数字生成　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/03/23/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/" title="Pre: 房价预测">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/03/23/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/" title="Next: GAN 实现手写数字生成">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">房价预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">ACGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">GAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">DCGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/CycleGAN-%E5%AE%9E%E7%8E%B0%E8%8E%AB%E5%A5%88%E9%A3%8E%E6%A0%BC%E7%94%BB%E4%BD%9C%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%9C%9F%E5%AE%9E%E7%85%A7%E7%89%87/">CycleGAN 实现莫奈风格画作转化为真实照片</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">WGAN/WGAN-GP 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/BERT-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">BERT 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">Transformer 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/">预测系外行星轨道周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%85%B3%E4%BA%8E-%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 线性回归 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2025 John Doe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

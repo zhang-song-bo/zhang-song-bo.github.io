@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="John Doe" />
+
+
+
+<meta name="description" content="任务 使用 NASA系外行星数据库 中的数据 选取轨道半长轴（pl_orbsmax）和母恒星质量（st_mass）作为输入特征 目标变量为轨道周期（pl_orbper）  思路导入必要的库 123456import numpy as npimport pandas as pdimport matplotlib.pyplot as pltfrom sklearn.model_selection im">
+<meta property="og:type" content="article">
+<meta property="og:title" content="预测系外行星轨道周期">
+<meta property="og:url" content="http://example.com/2025/03/23/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="任务 使用 NASA系外行星数据库 中的数据 选取轨道半长轴（pl_orbsmax）和母恒星质量（st_mass）作为输入特征 目标变量为轨道周期（pl_orbper）  思路导入必要的库 123456import numpy as npimport pandas as pdimport matplotlib.pyplot as pltfrom sklearn.model_selection im">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/star_1.png">
+<meta property="og:image" content="http://example.com/img/star_2.png">
+<meta property="article:published_time" content="2025-03-23T14:25:05.000Z">
+<meta property="article:modified_time" content="2025-03-23T14:40:12.153Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="线性回归">
+<meta property="article:tag" content="code">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/star_1.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>预测系外行星轨道周期 | Hexo</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                            <li><a href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a></li>
+                        
+                            <li><a href="/categories/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/">优化技术</a></li>
+                        
+                            <li><a href="/categories/project/">小试牛刀</a></li>
+                        
+                            <li><a href="/archives/">归档</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACGAN/" rel="tag">ACGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BERT/" rel="tag">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CycleGAN/" rel="tag">CycleGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DCGAN/" rel="tag">DCGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B/" rel="tag">模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a></li>
+                
+                    <li><a href="/categories/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/">优化技术</a></li>
+                
+                    <li><a href="/categories/project/">小试牛刀</a></li>
+                
+                    <li><a href="/archives/">归档</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-预测系外行星轨道周期" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/03/23/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/" class="article-date">
+      <time datetime="2025-03-23T14:25:05.000Z" itemprop="datePublished">2025-03-23</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      预测系外行星轨道周期
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/project/">project</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><ul>
+<li>使用 <a target="_blank" rel="noopener" href="https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&config=PSCompPars">NASA系外行星数据库</a> 中的数据</li>
+<li>选取轨道半长轴（pl_orbsmax）和母恒星质量（st_mass）作为输入特征</li>
+<li>目标变量为轨道周期（pl_orbper）</li>
+</ul>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p><strong>导入必要的库</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error, r2_score</span><br></pre></td></tr></table></figure>
+
+<p><strong>第一步：</strong> 访问 NASA 系外行星数据库，获取行星数据保存在 csv 文件中<br><strong>第二步：</strong> 提取 csv 文件中所需要的数据，保留’pl_orbsmax’, ‘st_mass’和’pl_orbper’数据，与此同时注意到某些数据是缺失的，故而使用 <code>df.dropna(subset=[&#39;pl_orbsmax&#39;, &#39;st_mass&#39;, &#39;pl_orbper&#39;])</code> 用来删除含有缺失值的数据组，保证后续计算正确</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加载数据</span></span><br><span class="line">df = pd.read_csv(<span class="string">&quot;D:/lianshidaiRecurit/03/PSCompPars_2025.02.09_07.27.02.csv&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 处理缺失值</span></span><br><span class="line">df = df.dropna(subset=[<span class="string">&#x27;pl_orbsmax&#x27;</span>, <span class="string">&#x27;st_mass&#x27;</span>, <span class="string">&#x27;pl_orbper&#x27;</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 选择相关特征和目标变量</span></span><br><span class="line">X = df[[<span class="string">&#x27;pl_orbsmax&#x27;</span>, <span class="string">&#x27;st_mass&#x27;</span>]]</span><br><span class="line">y = df[<span class="string">&#x27;pl_orbper&#x27;</span>]</span><br></pre></td></tr></table></figure>
+
+<p><strong>第三步：</strong> 使用提取到的数据来训练模型</p>
+<p>首先需要将数据使用 <code>train_test_split</code> 来拆分成 8：2 的训练集和测试集，使用训练集来进行线性回归拟合</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 拆分训练集和测试集</span></span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 sklearn 进行线性回归</span></span><br><span class="line">model = LinearRegression()</span><br><span class="line">model.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 预测</span></span><br><span class="line">y_pred = model.predict(X_test)</span><br></pre></td></tr></table></figure>
+
+<p><strong>第四步：</strong> 使用 <strong>MSE、R检测法</strong> 来评估模型的预测性能</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 预测</span></span><br><span class="line">y_pred = model.predict(X_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算 sklearn 线性回归的 R^2 和 MSE</span></span><br><span class="line">r2_sklearn = r2_score(y_test, y_pred)</span><br><span class="line">mse_sklearn = mean_squared_error(y_test, y_pred)</span><br></pre></td></tr></table></figure>
+
+<p><strong>第五步：</strong> 手动使用最小二乘法来完成线性回归的任务，这里具体的计算方法使用了 <strong>伪逆矩阵</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">manual</span>(<span class="params">X_train, X_test, y_train, y_test</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;手动实现最小二乘法计算参数&quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 偏置项</span></span><br><span class="line">    X_b = np.c_[np.ones((<span class="built_in">len</span>(X_train), <span class="number">1</span>)), X_train.values]</span><br><span class="line">    <span class="comment"># 伪逆法求解 theta_best</span></span><br><span class="line">    theta_best = np.linalg.pinv(X_b.T @ X_b) @ X_b.T @ y_train</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 手动预测函数</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">predict_manual</span>(<span class="params">X</span>):</span><br><span class="line">        X = X.values  <span class="comment"># 转换为 NumPy 数组</span></span><br><span class="line">        X_b_test = np.c_[np.ones((X.shape[<span class="number">0</span>], <span class="number">1</span>)), X]</span><br><span class="line">        <span class="keyword">return</span> X_b_test @ theta_best</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算手动最小二乘法的预测值</span></span><br><span class="line">    y_manual_pred = predict_manual(X_test)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算手动实现的 R^2 和 MSE</span></span><br><span class="line">    r2_manual = r2_score(y_test, y_manual_pred)</span><br><span class="line">    mse_manual = mean_squared_error(y_test, y_manual_pred)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> r2_manual, mse_manual, theta_best, y_manual_pred</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>第六步：</strong> 将预测值的真实值的关系使用 <code>matplotlib</code> 绘制散点图进行 <strong>可视化</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">draw_plot_map</span>():</span><br><span class="line">    <span class="comment"># 可视化预测结果</span></span><br><span class="line">    plt.scatter(y_test, y_pred, label=<span class="string">&quot;Sklearn Predict&quot;</span>, alpha=<span class="number">0.5</span>)</span><br><span class="line">    plt.scatter(y_test, y_manual_pred, label=<span class="string">&quot;Manual Least Squares Predict&quot;</span>, alpha=<span class="number">0.5</span>, marker=<span class="string">&quot;x&quot;</span>)</span><br><span class="line">    plt.plot([y_test.<span class="built_in">min</span>(), y_test.<span class="built_in">max</span>()], [y_test.<span class="built_in">min</span>(), y_test.<span class="built_in">max</span>()], <span class="string">&#x27;r--&#x27;</span>)</span><br><span class="line">    plt.xlabel(<span class="string">&quot;True orbital period&quot;</span>)</span><br><span class="line">    plt.ylabel(<span class="string">&quot;Predicted orbital period&quot;</span>)</span><br><span class="line">    plt.title(<span class="string">&quot;Prediction vs True value (Log Transformed)&quot;</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line">    plt.show()</span><br></pre></td></tr></table></figure>
+
+<p><strong>第七步：</strong> 输出最终的线性方程参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">output</span>():</span><br><span class="line">    <span class="comment"># 输出结果</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Sklearn 线性回归模型：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;权重: <span class="subst">&#123;intercept_sklearn&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;偏置: <span class="subst">&#123;coef_sklearn&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;R²: <span class="subst">&#123;r2_sklearn&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;log10(MSE):&quot;</span>, log_mse_sklearn)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Sklearn: y = <span class="subst">&#123;model.intercept_:<span class="number">.4</span>f&#125;</span> + <span class="subst">&#123;model.coef_[<span class="number">0</span>]:<span class="number">.4</span>f&#125;</span> * pl_orbsmax + <span class="subst">&#123;model.coef_[<span class="number">1</span>]:<span class="number">.4</span>f&#125;</span> * st_mass&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;------------------------------------------------------&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;手动最小二乘法模型：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;计算出的 theta_best: <span class="subst">&#123;theta_best.flatten()&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;R²: <span class="subst">&#123;r2_manual&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;log10(MSE):&quot;</span>, log_mse_manual)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Manual: y = <span class="subst">&#123;theta_best[<span class="number">0</span>]:<span class="number">.4</span>f&#125;</span> + <span class="subst">&#123;theta_best[<span class="number">1</span>]:<span class="number">.4</span>f&#125;</span> * pl_orbsmax + <span class="subst">&#123;theta_best[<span class="number">2</span>]:<span class="number">.4</span>f&#125;</span> * st_mass&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>第八步：</strong> 对数据进行对数变换，<strong>然后重复第二到七步</strong>，获得模型效果，进行对比</p>
+<p>在 <strong>天体问题</strong> 中，习惯的对数变换是以 <strong>10为底数</strong> 的变换，更符合天文物理学的习惯。与此同时，取对数可以更直观地对应开普勒定律。<br>这里需要时刻注意何时使用 <strong>对数后的数据</strong> 何时使用 <strong>原数据</strong></p>
+<p>具体使用代码来实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">pre</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;训练前的数据处理&quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">#其余部分不变，略去</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 进行 log10 对数变换</span></span><br><span class="line">    X_log10 = np.log10(X)</span><br><span class="line">    y_log10 = np.log10(y)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 拆分训练集和测试集</span></span><br><span class="line">    X_train, X_test, y_train, y_test = train_test_split(X_log10, y_log10, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> X_train, X_test, y_train, y_test</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sklearn</span>(<span class="params">X_train, X_test, y_train, y_test</span>):</span><br><span class="line">    <span class="comment"># 使用 sklearn 进行线性回归</span></span><br><span class="line">    model = LinearRegression()</span><br><span class="line">    model.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 预测</span></span><br><span class="line">    y_pred_log = model.predict(X_test)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 反变换回原始尺度</span></span><br><span class="line">    y_pred = <span class="number">10</span> ** y_pred_log</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算 sklearn 线性回归的 R^2 和 MSE,注意在 log10 尺度计算 R^2 ，MSE 需要在原尺度计算</span></span><br><span class="line">    r2_sklearn = r2_score(y_test, y_pred_log)</span><br><span class="line">    mse_sklearn = mean_squared_error(<span class="number">10</span> ** y_test, y_pred)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> r2_sklearn, mse_sklearn, model, y_pred</span><br></pre></td></tr></table></figure>
+
+<p><strong>第九步：</strong> 解释模型的误差</p>
+<p><strong>各个系数的物理含义：</strong><br>回归方程：<br>[<br>\log_{10} pl_orbper &#x3D; 2.5611 + 1.4962 \log_{10} pl_orbsmax - 0.4700 \log_{10} st_mass<br>]<br>对比理论的开普勒第三定律：<br>[<br>pl_orbper &#x3D; C \cdot pl_orbsmax^{3&#x2F;2} \cdot st_mass^{-1&#x2F;2}<br>]<br>取对数：<br>[<br>\log_{10} pl_orbper &#x3D; \log_{10} C + 1.5 \log_{10} pl_orbsmax - 0.5 \log_{10} st_mass<br>]<br>其中，<strong>偏置项</strong> 代表：<br>[<br>\log_{10} C<br>]<br>所以，我们可以反推：<br>[<br>C &#x3D; 10^{2.5611} \approx 363<br>]</p>
+<p>开普勒定律的系数 <code>C</code> 取决于单位, 在以 <strong>AU、天和太阳质量</strong> 为单位的时候， 理论值为365.25<br>而由公式可得，另两个参数的理论值应该分别为 <strong>1.5</strong> 和 <strong>-0.5</strong></p>
+<p>最终的参数 <strong>实际值</strong> 和 <strong>理论值</strong> 对比:<br><strong>$363 \approx 365.25 $</strong><br><strong>$1.4962 \approx 1.5$</strong><br><strong>$-0.4700 \approx -0.5$</strong></p>
+<hr>
+<p>尽管各个系数非常接近 <strong>理论值</strong>，但不完全一致，可能有几个原因：</p>
+<ol>
+<li><strong>数据误差</strong><ul>
+<li>测量数据可能有误差，导致拟合出的参数略有偏差</li>
+</ul>
+</li>
+<li><strong>情况复杂</strong><ul>
+<li>理论上行星轨道只受到半径和质量的影响，但是在现实情况下，会受到其他天体（附近的行星）的引力扰动，这使得产生了噪声</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p>如果希望修复这问题，我有以下两个思路：</p>
+<ol>
+<li><strong>增大数据量</strong><ul>
+<li>通过增大训练的数据量，可以一定程度上减少测量带来的误差影响</li>
+</ul>
+</li>
+<li><strong>删除噪声过大的数据</strong><ul>
+<li>对于某些行星而言，其运动周期受到其他天体影响过于巨大，对于这样的天体再纳入训练只会起到反面作用。</li>
+<li>可以通过计算数据的 <strong>残差</strong> ，然后删除掉残差超过设定的 <strong>阈值</strong> 的数据，即噪声过大的数据来实现更精准的模型</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><h5 id="不经过对数处理"><a href="#不经过对数处理" class="headerlink" title="不经过对数处理"></a>不经过对数处理</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error, r2_score</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pre</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;训练前的数据处理&quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 加载数据</span></span><br><span class="line">    df = pd.read_csv(<span class="string">&quot;D:/lianshidaiRecurit/03/PSCompPars.csv&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 处理缺失值</span></span><br><span class="line">    df = df.dropna(subset=[<span class="string">&#x27;pl_orbsmax&#x27;</span>, <span class="string">&#x27;st_mass&#x27;</span>, <span class="string">&#x27;pl_orbper&#x27;</span>])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 提取相关特征和目标变量</span></span><br><span class="line">    X = df[[<span class="string">&#x27;pl_orbsmax&#x27;</span>, <span class="string">&#x27;st_mass&#x27;</span>]]</span><br><span class="line">    y = df[<span class="string">&#x27;pl_orbper&#x27;</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 拆分训练集和测试集</span></span><br><span class="line">    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> X_train, X_test, y_train, y_test</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sklearn</span>(<span class="params">X_train, X_test, y_train, y_test</span>):</span><br><span class="line">    <span class="comment"># 使用 sklearn 进行线性回归</span></span><br><span class="line">    model = LinearRegression()</span><br><span class="line">    model.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 预测</span></span><br><span class="line">    y_pred = model.predict(X_test)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算 sklearn 线性回归的 R^2 和 MSE</span></span><br><span class="line">    r2_sklearn = r2_score(y_test, y_pred)</span><br><span class="line">    mse_sklearn = mean_squared_error(y_test, y_pred)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> r2_sklearn, mse_sklearn, model, y_pred</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">manual</span>(<span class="params">X_train, X_test, y_train, y_test</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;手动实现最小二乘法计算参数&quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 偏置项</span></span><br><span class="line">    X_b = np.c_[np.ones((<span class="built_in">len</span>(X_train), <span class="number">1</span>)), X_train.values]</span><br><span class="line">    <span class="comment"># 伪逆法求解 theta_best</span></span><br><span class="line">    theta_best = np.linalg.pinv(X_b.T @ X_b) @ X_b.T @ y_train</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 手动预测函数</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">predict_manual</span>(<span class="params">X</span>):</span><br><span class="line">        X = X.values  <span class="comment"># 转换为 NumPy 数组</span></span><br><span class="line">        X_b_test = np.c_[np.ones((X.shape[<span class="number">0</span>], <span class="number">1</span>)), X]</span><br><span class="line">        <span class="keyword">return</span> X_b_test @ theta_best</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算手动最小二乘法的预测值</span></span><br><span class="line">    y_manual_pred = predict_manual(X_test)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算手动实现的 R^2 和 MSE</span></span><br><span class="line">    r2_manual = r2_score(y_test, y_manual_pred)</span><br><span class="line">    mse_manual = mean_squared_error(y_test, y_manual_pred)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> r2_manual, mse_manual, theta_best, y_manual_pred</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">output</span>():</span><br><span class="line">    <span class="comment"># 输出结果</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Sklearn 线性回归模型：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;权重: <span class="subst">&#123;intercept_sklearn&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;偏置: <span class="subst">&#123;coef_sklearn&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;R²: <span class="subst">&#123;r2_sklearn&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;log10(MSE):&quot;</span>, log_mse_sklearn)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Sklearn: y = <span class="subst">&#123;model.intercept_:<span class="number">.4</span>f&#125;</span> + <span class="subst">&#123;model.coef_[<span class="number">0</span>]:<span class="number">.4</span>f&#125;</span> * pl_orbsmax + <span class="subst">&#123;model.coef_[<span class="number">1</span>]:<span class="number">.4</span>f&#125;</span> * st_mass&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;------------------------------------------------------&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;手动最小二乘法模型：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;计算出的 theta_best: <span class="subst">&#123;theta_best.flatten()&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;R²: <span class="subst">&#123;r2_manual&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;log10(MSE):&quot;</span>, log_mse_manual)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Manual: y = <span class="subst">&#123;theta_best[<span class="number">0</span>]:<span class="number">.4</span>f&#125;</span> + <span class="subst">&#123;theta_best[<span class="number">1</span>]:<span class="number">.4</span>f&#125;</span> * pl_orbsmax + <span class="subst">&#123;theta_best[<span class="number">2</span>]:<span class="number">.4</span>f&#125;</span> * st_mass&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">draw_plot_map</span>():</span><br><span class="line">    <span class="comment"># 可视化预测结果</span></span><br><span class="line">    plt.scatter(y_test, y_pred, label=<span class="string">&quot;Sklearn Predict&quot;</span>, alpha=<span class="number">0.5</span>)</span><br><span class="line">    plt.scatter(y_test, y_manual_pred, label=<span class="string">&quot;Manual Least Squares Predict&quot;</span>, alpha=<span class="number">0.5</span>, marker=<span class="string">&quot;x&quot;</span>)</span><br><span class="line">    plt.plot([y_test.<span class="built_in">min</span>(), y_test.<span class="built_in">max</span>()], [y_test.<span class="built_in">min</span>(), y_test.<span class="built_in">max</span>()], <span class="string">&#x27;r--&#x27;</span>)</span><br><span class="line">    plt.xlabel(<span class="string">&quot;True orbital period&quot;</span>)</span><br><span class="line">    plt.ylabel(<span class="string">&quot;Predicted orbital period&quot;</span>)</span><br><span class="line">    plt.title(<span class="string">&quot;Prediction vs True value (Log Transformed)&quot;</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    X_train, X_test, y_train, y_test = pre()</span><br><span class="line">    r2_sklearn, mse_sklearn, model, y_pred = sklearn(X_train, X_test, y_train, y_test)</span><br><span class="line">    r2_manual, mse_manual, theta_best, y_manual_pred = manual(X_train, X_test, y_train, y_test)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算 MSE 时使用 log10 ，避免数值过大</span></span><br><span class="line">    log_mse_sklearn = np.log10(mse_sklearn)</span><br><span class="line">    log_mse_manual = np.log10(mse_manual)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 获取回归系数</span></span><br><span class="line">    intercept_sklearn = model.intercept_</span><br><span class="line">    coef_sklearn = model.coef_</span><br><span class="line">    intercept_manual = theta_best[<span class="number">0</span>]</span><br><span class="line">    coef_manual = theta_best[<span class="number">1</span>:]</span><br><span class="line"></span><br><span class="line">    output()</span><br><span class="line">    draw_plot_map()</span><br></pre></td></tr></table></figure>
+
+<h5 id="经过对数处理"><a href="#经过对数处理" class="headerlink" title="经过对数处理"></a>经过对数处理</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> mean_squared_error, r2_score</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pre</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;训练前的数据处理&quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 加载数据</span></span><br><span class="line">    df = pd.read_csv(<span class="string">&quot;D:/lianshidaiRecurit/03/PSCompPars.csv&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 处理缺失值</span></span><br><span class="line">    df = df.dropna(subset=[<span class="string">&#x27;pl_orbsmax&#x27;</span>, <span class="string">&#x27;st_mass&#x27;</span>, <span class="string">&#x27;pl_orbper&#x27;</span>])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 提取相关特征和目标变量</span></span><br><span class="line">    X = df[[<span class="string">&#x27;pl_orbsmax&#x27;</span>, <span class="string">&#x27;st_mass&#x27;</span>]]</span><br><span class="line">    y = df[<span class="string">&#x27;pl_orbper&#x27;</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 进行 log10 对数变换</span></span><br><span class="line">    X_log10 = np.log10(X)</span><br><span class="line">    y_log10 = np.log10(y)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 拆分训练集和测试集</span></span><br><span class="line">    X_train, X_test, y_train, y_test = train_test_split(X_log10, y_log10, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> X_train, X_test, y_train, y_test</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sklearn</span>(<span class="params">X_train, X_test, y_train, y_test</span>):</span><br><span class="line">    <span class="comment"># 使用 sklearn 进行线性回归</span></span><br><span class="line">    model = LinearRegression()</span><br><span class="line">    model.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 预测</span></span><br><span class="line">    y_pred_log = model.predict(X_test)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 反变换回原始尺度</span></span><br><span class="line">    y_pred = <span class="number">10</span> ** y_pred_log</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算 sklearn 线性回归的 R^2 和 MSE,注意在 log10 尺度计算 R^2 ，MSE 需要在原尺度计算</span></span><br><span class="line">    r2_sklearn = r2_score(y_test, y_pred_log)</span><br><span class="line">    mse_sklearn = mean_squared_error(<span class="number">10</span> ** y_test, y_pred)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> r2_sklearn, mse_sklearn, model, y_pred</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">output</span>():</span><br><span class="line">    <span class="comment"># 输出结果</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Sklearn 线性回归模型：&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;权重: <span class="subst">&#123;intercept_sklearn&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;偏置: <span class="subst">&#123;coef_sklearn&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;R²: <span class="subst">&#123;r2_sklearn&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;log10(MSE):&quot;</span>, log_mse_sklearn)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Sklearn: log10(y) = <span class="subst">&#123;model.intercept_:<span class="number">.4</span>f&#125;</span> + <span class="subst">&#123;model.coef_[<span class="number">0</span>]:<span class="number">.4</span>f&#125;</span> * log10(pl_orbsmax) + <span class="subst">&#123;model.coef_[<span class="number">1</span>]:<span class="number">.4</span>f&#125;</span> * log10(st_mass)&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">draw_plot_map</span>():</span><br><span class="line">    <span class="comment"># 可视化预测结果</span></span><br><span class="line">    plt.scatter(<span class="number">10</span> ** y_test, y_pred, label=<span class="string">&quot;Sklearn Predict&quot;</span>, alpha=<span class="number">0.5</span>)</span><br><span class="line">    plt.plot([(<span class="number">10</span> ** y_test).<span class="built_in">min</span>(), (<span class="number">10</span> ** y_test).<span class="built_in">max</span>()], [(<span class="number">10</span> ** y_test).<span class="built_in">min</span>(), (<span class="number">10</span> ** y_test).<span class="built_in">max</span>()], <span class="string">&#x27;r--&#x27;</span>)</span><br><span class="line">    plt.xlabel(<span class="string">&quot;True orbital period&quot;</span>)</span><br><span class="line">    plt.ylabel(<span class="string">&quot;Predicted orbital period&quot;</span>)</span><br><span class="line">    plt.title(<span class="string">&quot;Prediction vs True value (Log Transformed)&quot;</span>)</span><br><span class="line">    plt.legend()</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span> :</span><br><span class="line">    X_train, X_test, y_train, y_test = pre()</span><br><span class="line">    r2_sklearn, mse_sklearn, model, y_pred = sklearn(X_train, X_test, y_train, y_test)</span><br><span class="line"></span><br><span class="line">    log_mse_sklearn = np.log10(mse_sklearn)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 获取回归系数</span></span><br><span class="line">    intercept_sklearn = model.intercept_</span><br><span class="line">    coef_sklearn = model.coef_</span><br><span class="line"></span><br><span class="line">    output()</span><br><span class="line">    draw_plot_map()</span><br></pre></td></tr></table></figure>
+
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>对数变化前：</p>
+<p><img src="/img/star_1.png" alt="alt text"></p>
+<p>对数变化后：</p>
+<p><img src="/img/star_2.png" alt="alt text"></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2025/03/23/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/">预测系外行星轨道周期</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
+        <p><span>Created:</span>2025-03-23, 22:25:05</p>
+        <p><span>Updated:</span>2025-03-23, 22:40:12</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2025/03/23/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/" title="预测系外行星轨道周期">http://example.com/2025/03/23/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/03/23/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/03/23/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">
+                    Transformer 实现 IMDb 情感分类
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">
+                    多生成器架构
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.</span> <span class="toc-text">任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF"><span class="toc-number">2.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">3.</span> <span class="toc-text">代码</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%8D%E7%BB%8F%E8%BF%87%E5%AF%B9%E6%95%B0%E5%A4%84%E7%90%86"><span class="toc-number">3.0.0.1.</span> <span class="toc-text">不经过对数处理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BB%8F%E8%BF%87%E5%AF%B9%E6%95%B0%E5%A4%84%E7%90%86"><span class="toc-number">3.0.0.2.</span> <span class="toc-text">经过对数处理</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">结果</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"预测系外行星轨道周期　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/03/23/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/" title="Pre: Transformer 实现 IMDb 情感分类">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/" title="Next: 多生成器架构">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">房价预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">ACGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">GAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">DCGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/CycleGAN-%E5%AE%9E%E7%8E%B0%E8%8E%AB%E5%A5%88%E9%A3%8E%E6%A0%BC%E7%94%BB%E4%BD%9C%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%9C%9F%E5%AE%9E%E7%85%A7%E7%89%87/">CycleGAN 实现莫奈风格画作转化为真实照片</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">WGAN/WGAN-GP 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/BERT-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">BERT 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">Transformer 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/">预测系外行星轨道周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%85%B3%E4%BA%8E-%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 线性回归 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2025 John Doe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
