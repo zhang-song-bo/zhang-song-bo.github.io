@@ -15,15 +15,15 @@
 
 
 
-<meta name="description" content="你好，我是张淞博你好！我是张淞博，一名来自电子科技大学的软件工程专业的本科生。感谢你来到我的个人博客！在这里，我将与你分享我在学习编程、机器学习、软件工程以及个人成长过程中的心得和思考。 📝 基本信息 姓名：张淞博 学校：电子科技大学 专业：软件工程 年级：大一 兴趣爱好： 编程与技术探索 阅读与思考    💻 我的技能 编程语言：Python, C, C++ 技术领域： 机器学习 算法">
-<meta property="og:type" content="website">
-<meta property="og:title" content="欢迎来到张淞博的个人博客">
-<meta property="og:url" content="http://example.com/main/index.html">
+<meta name="description" content="KL散度（Kullback-Leibler Divergence）KL散度，又叫Kullback-Leibler信息量散度，是一种衡量两个概率分布之间差异的度量。它定义了从分布 (Q) 到分布 (P) 的信息损失，或者说，如果我们用分布 (Q) 来近似真实分布 (P)，则产生的误差。 直观解释：KL散度衡量的是使用概率分布 (Q) 来代替概率分布 (P) 时，所丧失的信息量。它并不是对称的，即 (">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KL散度">
+<meta property="og:url" content="http://example.com/2025/03/23/KL%E6%95%A3%E5%BA%A6/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="你好，我是张淞博你好！我是张淞博，一名来自电子科技大学的软件工程专业的本科生。感谢你来到我的个人博客！在这里，我将与你分享我在学习编程、机器学习、软件工程以及个人成长过程中的心得和思考。 📝 基本信息 姓名：张淞博 学校：电子科技大学 专业：软件工程 年级：大一 兴趣爱好： 编程与技术探索 阅读与思考    💻 我的技能 编程语言：Python, C, C++ 技术领域： 机器学习 算法">
+<meta property="og:description" content="KL散度（Kullback-Leibler Divergence）KL散度，又叫Kullback-Leibler信息量散度，是一种衡量两个概率分布之间差异的度量。它定义了从分布 (Q) 到分布 (P) 的信息损失，或者说，如果我们用分布 (Q) 来近似真实分布 (P)，则产生的误差。 直观解释：KL散度衡量的是使用概率分布 (Q) 来代替概率分布 (P) 时，所丧失的信息量。它并不是对称的，即 (">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-03-23T08:06:53.000Z">
-<meta property="article:modified_time" content="2025-03-23T09:12:28.115Z">
+<meta property="article:published_time" content="2025-03-23T10:31:11.000Z">
+<meta property="article:modified_time" content="2025-03-23T10:31:53.934Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 
@@ -59,7 +59,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>欢迎来到张淞博的个人博客 | Hexo</title>
+<title>KL散度 | Hexo</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -69,7 +69,7 @@
         fancybox: true,
         animate: true,
         isHome: false,
-        isPost: false,
+        isPost: true,
         isArchive: false,
         isTag: false,
         isCategory: false,
@@ -158,11 +158,11 @@
                     <nav class="header-menu">
                         <ul>
                         
-                            <li><a href="/main/">主页</a></li>
+                            <li><a href="/about/">关于我</a></li>
                         
-                            <li><a href="/archives/">所有文章</a></li>
+                            <li><a href="/notes/">学习笔记</a></li>
                         
-                            <li><a href="/tags/">随笔</a></li>
+                            <li><a href="/archives/">归档</a></li>
                         
                         </ul>
                     </nav>
@@ -225,11 +225,11 @@
             <nav class="header-menu">
                 <ul>
                 
-                    <li><a href="/main/">主页</a></li>
+                    <li><a href="/about/">关于我</a></li>
                 
-                    <li><a href="/archives/">所有文章</a></li>
+                    <li><a href="/notes/">学习笔记</a></li>
                 
-                    <li><a href="/tags/">随笔</a></li>
+                    <li><a href="/archives/">归档</a></li>
                 
                 <div class="clearfix"></div>
                 </ul>
@@ -243,11 +243,11 @@
     </div>
     <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
 </nav>
-      <div class="body-wrap"><article id="page-" class="article article-type-page" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-KL散度" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/main/index.html" class="article-date">
-      <time datetime="2025-03-23T08:06:53.000Z" itemprop="datePublished">2025-03-23</time>
+      <a href="/2025/03/23/KL%E6%95%A3%E5%BA%A6/" class="article-date">
+      <time datetime="2025-03-23T10:31:11.000Z" itemprop="datePublished">2025-03-23</time>
 </a>
 
 
@@ -262,7 +262,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      欢迎来到张淞博的个人博客
+      KL散度
     </h1>
   
 
@@ -279,55 +279,26 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              <style>
-    .article-meta { display: none; }
-    #container .article .article-title { padding-right: 0; }
-    .article-header {
-        padding: 0;
-        padding-top: 26px;
-        border-left: none;
-        text-align: center;
-    }
-    .article-header:hover { border-left: none; }
-    .article-title { font-size: 1.6em }
-    .article-entry hr { margin: 0;}
-    .article-meta,
-    #container .article-info-post.article-info { display: none;}
-    #container .article .article-title { padding: 0; }
-</style>
-
-
-          
-        <h1 id="你好，我是张淞博"><a href="#你好，我是张淞博" class="headerlink" title="你好，我是张淞博"></a>你好，我是张淞博</h1><p>你好！我是张淞博，一名来自电子科技大学的软件工程专业的本科生。感谢你来到我的个人博客！在这里，我将与你分享我在学习编程、机器学习、软件工程以及个人成长过程中的心得和思考。</p>
-<h2 id="📝-基本信息"><a href="#📝-基本信息" class="headerlink" title="📝 基本信息"></a>📝 基本信息</h2><ul>
-<li><strong>姓名</strong>：张淞博</li>
-<li><strong>学校</strong>：电子科技大学</li>
-<li><strong>专业</strong>：软件工程</li>
-<li><strong>年级</strong>：大一</li>
-<li><strong>兴趣爱好</strong>：<ul>
-<li>编程与技术探索</li>
-<li>阅读与思考</li>
-</ul>
-</li>
-</ul>
-<h2 id="💻-我的技能"><a href="#💻-我的技能" class="headerlink" title="💻 我的技能"></a>💻 我的技能</h2><ul>
-<li><strong>编程语言</strong>：Python, C, C++</li>
-<li><strong>技术领域</strong>：<ul>
-<li>机器学习</li>
-<li>算法</li>
-</ul>
-</li>
-<li><strong>工具与平台</strong>：Git, PyCharm, Visual Studio Code</li>
-</ul>
-<h2 id="🌱-未来展望"><a href="#🌱-未来展望" class="headerlink" title="🌱 未来展望"></a>🌱 未来展望</h2><p>在接下来的大学生涯中，我希望通过参与学术研究、技术竞赛和项目开发，进一步提高自己的技术能力和实践经验。未来，我期待能够投身于机器学习或人工智能的相关领域，为技术的进步贡献自己的力量。</p>
-<h2 id="📬-联系方式"><a href="#📬-联系方式" class="headerlink" title="📬 联系方式"></a>📬 联系方式</h2><p>如果你对我感兴趣，欢迎通过以下方式与我联系：</p>
+        <h3 id="KL散度（Kullback-Leibler-Divergence）"><a href="#KL散度（Kullback-Leibler-Divergence）" class="headerlink" title="KL散度（Kullback-Leibler Divergence）"></a><strong>KL散度（Kullback-Leibler Divergence）</strong></h3><p><strong>KL散度</strong>，又叫<strong>Kullback-Leibler信息量散度</strong>，是一种衡量两个概率分布之间差异的度量。它定义了从分布 (Q) 到分布 (P) 的信息损失，或者说，如果我们用分布 (Q) 来近似真实分布 (P)，则产生的误差。</p>
+<h4 id="直观解释："><a href="#直观解释：" class="headerlink" title="直观解释："></a><strong>直观解释</strong>：</h4><p>KL散度衡量的是使用概率分布 (Q) 来代替概率分布 (P) 时，所丧失的信息量。它并不是对称的，即 (D_{KL}(P \parallel Q)) 不等于 (D_{KL}(Q \parallel P))。可以把KL散度理解为，给定一个真实的分布 (P)，如果我们用分布 (Q) 来近似它，那么KL散度就是衡量这种近似误差的大小。</p>
+<h4 id="公式："><a href="#公式：" class="headerlink" title="公式："></a><strong>公式</strong>：</h4><p>对于离散的概率分布 (P) 和 (Q)，KL散度的公式为：</p>
+<p>[<br>D_{KL}(P \parallel Q) &#x3D; \sum_{i} P(i) \log \frac{P(i)}{Q(i)}<br>]</p>
+<p>对于连续的概率分布 (P) 和 (Q)，KL散度的公式为：</p>
+<p>[<br>D_{KL}(P \parallel Q) &#x3D; \int p(x) \log \frac{p(x)}{q(x)} , dx<br>]</p>
+<p>其中：</p>
 <ul>
-<li><strong>邮箱</strong>：<a href="zhangsongbo.1@gmail.com">zhangsongbo.1@gmail.com</a> <a href="1317154897@qq.com">1317154897@qq.com</a></li>
-<li><strong>GitHub</strong>：<a target="_blank" rel="noopener" href="https://github.com/zhang-song-bo">张淞博的GitHub</a></li>
-<li><strong>QQ</strong>：1317154897</li>
+<li>(P(i)) 和 (Q(i)) 分别是离散分布 (P) 和 (Q) 在样本点 (i) 上的概率。</li>
+<li>(p(x)) 和 (q(x)) 是连续分布 (P) 和 (Q) 在样本点 (x) 上的概率密度。</li>
 </ul>
-<hr>
-<p>感谢你花时间阅读我的自我介绍，愿我们的未来能够有更多的交流。</p>
+<h4 id="优势："><a href="#优势：" class="headerlink" title="优势："></a><strong>优势</strong>：</h4><ul>
+<li><strong>易于理解和计算</strong>：KL散度的计算相对简单，并且能够直接衡量分布之间的信息丧失。</li>
+<li><strong>适用于实际应用</strong>：在许多实际机器学习任务中（例如变分推理和自编码器），KL散度经常作为目标函数来进行优化。</li>
+</ul>
+<h4 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a><strong>缺点</strong>：</h4><ul>
+<li><strong>不对称</strong>：KL散度不对称，即 (D_{KL}(P \parallel Q) \neq D_{KL}(Q \parallel P))，这可能会导致某些情况下的评估偏差。</li>
+<li><strong>无法处理零概率问题</strong>：如果分布 (Q) 中某些事件的概率为零，而分布 (P) 中该事件的概率不为零，KL散度会出现无穷大，这在某些情况下会带来计算上的困难。</li>
+</ul>
+<h4 id="在GAN中的应用："><a href="#在GAN中的应用：" class="headerlink" title="在GAN中的应用："></a><strong>在GAN中的应用</strong>：</h4><p>KL散度在原始GAN的训练过程中并没有直接作为损失函数，但它与生成模型中的**变分自编码器（VAE）**相关。VAE在训练时使用KL散度来衡量潜在变量的分布与标准正态分布之间的差异，因此KL散度在生成模型中经常被用来优化潜在空间的结构。</p>
 
       
     </div>
@@ -335,10 +306,65 @@
   </div>
   
     
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2025/03/23/KL%E6%95%A3%E5%BA%A6/">KL散度</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
+        <p><span>Created:</span>2025-03-23, 18:31:11</p>
+        <p><span>Updated:</span>2025-03-23, 18:31:53</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2025/03/23/KL%E6%95%A3%E5%BA%A6/" title="KL散度">http://example.com/2025/03/23/KL%E6%95%A3%E5%BA%A6/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/03/23/KL%E6%95%A3%E5%BA%A6/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
 
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/03/23/Wasserstein%E8%B7%9D%E7%A6%BB/">
+                    Wasserstein距离
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/03/23/Inception-Score/">
+                    Inception Score
+                </a>
+            </div>
+        
+    </nav>
 
   
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#KL%E6%95%A3%E5%BA%A6%EF%BC%88Kullback-Leibler-Divergence%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">KL散度（Kullback-Leibler Divergence）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E8%A7%82%E8%A7%A3%E9%87%8A%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">直观解释：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%AC%E5%BC%8F%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">公式：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF%EF%BC%9A"><span class="toc-number">1.3.</span> <span class="toc-text">优势：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9%EF%BC%9A"><span class="toc-number">1.4.</span> <span class="toc-text">缺点：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%A8GAN%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8%EF%BC%9A"><span class="toc-number">1.5.</span> <span class="toc-text">在GAN中的应用：</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
 
 
 
@@ -356,7 +382,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"欢迎来到张淞博的个人博客　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"KL散度　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -371,6 +397,26 @@
 
     
 
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/03/23/Wasserstein%E8%B7%9D%E7%A6%BB/" title="Pre: Wasserstein距离">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/03/23/Inception-Score/" title="Next: Inception Score">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%85%B3%E4%BA%8E-%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 线性回归 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li></ul>
 
 
 

@@ -15,13 +15,15 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Project">
-<meta property="og:url" content="http://example.com/project/index.html">
+<meta name="description" content="Inception Score (IS)Inception Score（简称IS）是衡量生成模型（例如GAN）生成图像质量的一个重要指标。其核心思想是衡量生成图像的“清晰度”和“多样性”。 计算方式： 清晰度：生成的图像是否能被分类网络（通常是Inception网络）准确地分类。如果生成的图像属于某个类别并且网络能够自信地给出一个高概率，那么说明图像的内容清晰，容易被识别。 多样性：如果生成的图像">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Inception Score">
+<meta property="og:url" content="http://example.com/2025/03/23/Inception-Score/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Inception Score (IS)Inception Score（简称IS）是衡量生成模型（例如GAN）生成图像质量的一个重要指标。其核心思想是衡量生成图像的“清晰度”和“多样性”。 计算方式： 清晰度：生成的图像是否能被分类网络（通常是Inception网络）准确地分类。如果生成的图像属于某个类别并且网络能够自信地给出一个高概率，那么说明图像的内容清晰，容易被识别。 多样性：如果生成的图像">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-03-23T08:52:38.599Z">
-<meta property="article:modified_time" content="2025-03-23T08:52:38.599Z">
+<meta property="article:published_time" content="2025-03-23T10:28:51.000Z">
+<meta property="article:modified_time" content="2025-03-23T10:29:46.832Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 
@@ -57,7 +59,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Project | Hexo</title>
+<title>Inception Score | Hexo</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -67,7 +69,7 @@
         fancybox: true,
         animate: true,
         isHome: false,
-        isPost: false,
+        isPost: true,
         isArchive: false,
         isTag: false,
         isCategory: false,
@@ -156,11 +158,11 @@
                     <nav class="header-menu">
                         <ul>
                         
-                            <li><a href="/main/">主页</a></li>
+                            <li><a href="/about/">关于我</a></li>
                         
-                            <li><a href="/archives/">所有文章</a></li>
+                            <li><a href="/notes/">学习笔记</a></li>
                         
-                            <li><a href="/tags/">随笔</a></li>
+                            <li><a href="/archives/">归档</a></li>
                         
                         </ul>
                     </nav>
@@ -223,11 +225,11 @@
             <nav class="header-menu">
                 <ul>
                 
-                    <li><a href="/main/">主页</a></li>
+                    <li><a href="/about/">关于我</a></li>
                 
-                    <li><a href="/archives/">所有文章</a></li>
+                    <li><a href="/notes/">学习笔记</a></li>
                 
-                    <li><a href="/tags/">随笔</a></li>
+                    <li><a href="/archives/">归档</a></li>
                 
                 <div class="clearfix"></div>
                 </ul>
@@ -241,11 +243,11 @@
     </div>
     <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
 </nav>
-      <div class="body-wrap"><article id="project-" class="article article-type-project" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Inception-Score" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/project/index.html" class="article-date">
-      <time datetime="2025-03-23T08:52:38.599Z" itemprop="datePublished">2025-03-23</time>
+      <a href="/2025/03/23/Inception-Score/" class="article-date">
+      <time datetime="2025-03-23T10:28:51.000Z" itemprop="datePublished">2025-03-23</time>
 </a>
 
 
@@ -260,7 +262,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Project
+      Inception Score
     </h1>
   
 
@@ -277,36 +279,94 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              <style>
-    .article-meta { display: none; }
-    #container .article .article-title { padding-right: 0; }
-    .article-header {
-        padding: 0;
-        padding-top: 26px;
-        border-left: none;
-        text-align: center;
-    }
-    .article-header:hover { border-left: none; }
-    .article-title { font-size: 1.6em }
-    .article-entry hr { margin: 0;}
-    .article-meta,
-    #container .article-info-post.article-info { display: none;}
-    #container .article .article-title { padding: 0; }
-</style>
+        <h3 id="Inception-Score-IS"><a href="#Inception-Score-IS" class="headerlink" title="Inception Score (IS)"></a><strong>Inception Score (IS)</strong></h3><p><strong>Inception Score</strong>（简称IS）是衡量生成模型（例如GAN）生成图像质量的一个重要指标。其核心思想是衡量生成图像的“清晰度”和“多样性”。</p>
+<h4 id="计算方式："><a href="#计算方式：" class="headerlink" title="计算方式："></a><strong>计算方式</strong>：</h4><ul>
+<li><strong>清晰度</strong>：生成的图像是否能被分类网络（通常是Inception网络）准确地分类。如果生成的图像属于某个类别并且网络能够自信地给出一个高概率，那么说明图像的内容清晰，容易被识别。</li>
+<li><strong>多样性</strong>：如果生成的图像种类非常丰富，分类网络的输出应该会具有较大的分布差异。换句话说，生成图像的类别不应该过于集中在某一类。</li>
+</ul>
+<p>具体地，IS是通过以下步骤计算的：</p>
+<ol>
+<li>先通过Inception网络对生成的每一张图片进行分类，得到每张图片的预测概率分布。</li>
+<li>然后计算这些预测概率分布的<strong>KL散度</strong>（Kullback-Leibler divergence），也就是衡量不同生成图像之间的多样性。</li>
+<li>最后将这些多样性和图像的清晰度结合起来，得到最终的得分。</li>
+</ol>
+<h4 id="公式："><a href="#公式：" class="headerlink" title="公式："></a><strong>公式</strong>：</h4><p>Inception Score的计算公式为：</p>
+<p>[<br>IS &#x3D; \exp\left(\mathbb{E}<em>x[D</em>{KL}(p(y|x) || p(y))]\right)<br>]</p>
+<p>其中，(p(y|x)) 是给定生成图像 (x) 后的类别概率分布，(p(y)) 是所有生成图像类别的均匀分布。</p>
+<h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a><strong>优点</strong>：</h4><ul>
+<li>计算简单，直接利用了现有的预训练分类网络（如Inception v3）进行评估。</li>
+<li>对生成图像的清晰度和多样性都有一定的衡量。</li>
+</ul>
+<h4 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a><strong>缺点</strong>：</h4><ul>
+<li><strong>依赖Inception网络</strong>：Inception Score的好坏很大程度上取决于Inception网络的能力。网络的训练集、分类的能力和网络的泛化能力可能影响最终评估的准确性。</li>
+<li><strong>局限性</strong>：IS没有直接考虑生成样本与真实数据之间的分布差异，可能导致一些细微的生成质量问题无法被反映出来。</li>
+</ul>
 
-
-          
-        
       
     </div>
     
   </div>
   
     
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2025/03/23/Inception-Score/">Inception Score</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
+        <p><span>Created:</span>2025-03-23, 18:28:51</p>
+        <p><span>Updated:</span>2025-03-23, 18:29:46</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2025/03/23/Inception-Score/" title="Inception Score">http://example.com/2025/03/23/Inception-Score/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/03/23/Inception-Score/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
 
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/03/23/KL%E6%95%A3%E5%BA%A6/">
+                    KL散度
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/03/23/FID/">
+                    FID
+                </a>
+            </div>
+        
+    </nav>
 
   
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Inception-Score-IS"><span class="toc-number">1.</span> <span class="toc-text">Inception Score (IS)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%96%B9%E5%BC%8F%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">计算方式：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%AC%E5%BC%8F%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">公式：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E7%82%B9%EF%BC%9A"><span class="toc-number">1.3.</span> <span class="toc-text">优点：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9%EF%BC%9A"><span class="toc-number">1.4.</span> <span class="toc-text">缺点：</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
 
 
 
@@ -324,7 +384,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"Project　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"Inception Score　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -339,6 +399,26 @@
 
     
 
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/03/23/KL%E6%95%A3%E5%BA%A6/" title="Pre: KL散度">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/03/23/FID/" title="Next: FID">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%85%B3%E4%BA%8E-%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 线性回归 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li></ul>
 
 
 

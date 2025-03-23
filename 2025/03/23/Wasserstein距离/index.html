@@ -15,15 +15,15 @@
 
 
 
-<meta name="description" content="Profile这是我的 hexo 测试网页 Info Name: 张淞博 Age: 18">
+<meta name="description" content="Wasserstein距离（Wasserstein Distance）Wasserstein距离，又被称为地球移动者距离（Earth Mover’s Distance, EMD），是一种衡量两个概率分布之间“距离”的方法。直观来说，它可以看作是从一个分布到另一个分布移动“质量”的最小工作量。 直观解释：假设你有两个概率分布，分别表示两个不同的“山脊”（或者“堆积”）。Wasserstein距离试图">
 <meta property="og:type" content="article">
-<meta property="og:title" content="测试博客">
-<meta property="og:url" content="http://example.com/2025/03/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/index.html">
+<meta property="og:title" content="Wasserstein距离">
+<meta property="og:url" content="http://example.com/2025/03/23/Wasserstein%E8%B7%9D%E7%A6%BB/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Profile这是我的 hexo 测试网页 Info Name: 张淞博 Age: 18">
+<meta property="og:description" content="Wasserstein距离（Wasserstein Distance）Wasserstein距离，又被称为地球移动者距离（Earth Mover’s Distance, EMD），是一种衡量两个概率分布之间“距离”的方法。直观来说，它可以看作是从一个分布到另一个分布移动“质量”的最小工作量。 直观解释：假设你有两个概率分布，分别表示两个不同的“山脊”（或者“堆积”）。Wasserstein距离试图">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-03-23T07:52:13.000Z">
-<meta property="article:modified_time" content="2025-03-23T07:54:43.603Z">
+<meta property="article:published_time" content="2025-03-23T10:31:23.000Z">
+<meta property="article:modified_time" content="2025-03-23T10:32:07.130Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 
@@ -59,7 +59,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>测试博客 | Hexo</title>
+<title>Wasserstein距离 | Hexo</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -243,11 +243,11 @@
     </div>
     <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
 </nav>
-      <div class="body-wrap"><article id="post-测试博客" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Wasserstein距离" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2025/03/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/" class="article-date">
-      <time datetime="2025-03-23T07:52:13.000Z" itemprop="datePublished">2025-03-23</time>
+      <a href="/2025/03/23/Wasserstein%E8%B7%9D%E7%A6%BB/" class="article-date">
+      <time datetime="2025-03-23T10:31:23.000Z" itemprop="datePublished">2025-03-23</time>
 </a>
 
 
@@ -262,7 +262,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      测试博客
+      Wasserstein距离
     </h1>
   
 
@@ -279,11 +279,22 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h1 id="Profile"><a href="#Profile" class="headerlink" title="Profile"></a>Profile</h1><p>这是我的 <code>hexo</code> 测试网页</p>
-<h1 id="Info"><a href="#Info" class="headerlink" title="Info"></a>Info</h1><ul>
-<li>Name: 张淞博</li>
-<li>Age: 18</li>
+        <h3 id="Wasserstein距离（Wasserstein-Distance）"><a href="#Wasserstein距离（Wasserstein-Distance）" class="headerlink" title="Wasserstein距离（Wasserstein Distance）"></a><strong>Wasserstein距离（Wasserstein Distance）</strong></h3><p><strong>Wasserstein距离</strong>，又被称为<strong>地球移动者距离（Earth Mover’s Distance, EMD）</strong>，是一种衡量两个概率分布之间“距离”的方法。直观来说，它可以看作是从一个分布到另一个分布移动“质量”的最小工作量。</p>
+<h4 id="直观解释："><a href="#直观解释：" class="headerlink" title="直观解释："></a><strong>直观解释</strong>：</h4><p>假设你有两个概率分布，分别表示两个不同的“山脊”（或者“堆积”）。Wasserstein距离试图计算，把一堆质量从一个山脊移动到另一个山脊所需要的最小“成本”。其中，每个“成本”都是根据移动质量的距离来计算的。可以把它看作是把一堆土从一个地方搬到另一个地方所需要的最少工作量。</p>
+<h4 id="公式："><a href="#公式：" class="headerlink" title="公式："></a><strong>公式</strong>：</h4><p>Wasserstein距离通常定义为<strong>最小传输成本</strong>。对于两个分布 (P) 和 (Q)，它的计算可以用下面的公式表示：</p>
+<p>[<br>W(P, Q) &#x3D; \inf_{\gamma \in \Gamma(P, Q)} \mathbb{E}_{(x,y) \sim \gamma} [| x - y |]<br>]</p>
+<p>其中：</p>
+<ul>
+<li>( \Gamma(P, Q) ) 是所有满足边际条件 (P) 和 (Q) 的联合分布（即对每个 (x) 和 (y) 在分布 (P) 和 (Q) 下的配对情况）。</li>
+<li>( | x - y | ) 是计算在空间中从 (x) 到 (y) 的距离。</li>
 </ul>
+<p><strong>Wasserstein距离</strong>实际上衡量的是从一个分布到另一个分布的最小“成本”或“运输工作量”。</p>
+<h4 id="优势："><a href="#优势：" class="headerlink" title="优势："></a><strong>优势</strong>：</h4><ul>
+<li><strong>良好的梯度性质</strong>：与Kullback-Leibler散度等传统方法不同，Wasserstein距离在分布之间有更平滑的过渡。它不容易出现梯度消失问题，因此它在训练过程中更加稳定。</li>
+<li><strong>可用性</strong>：Wasserstein距离不仅适用于连续分布，还可以适用于离散分布，这使得它在处理一些复杂的数据分布时特别有用。</li>
+</ul>
+<h4 id="在GAN中的应用："><a href="#在GAN中的应用：" class="headerlink" title="在GAN中的应用："></a><strong>在GAN中的应用</strong>：</h4><p>在生成对抗网络中，**Wasserstein GAN（WGAN）**引入了Wasserstein距离作为优化目标，解决了传统GAN中的训练不稳定问题。传统GAN在训练时存在判别器输出饱和和梯度消失的问题，而WGAN通过Wasserstein距离的引入，使得生成器和判别器的学习更加稳定，并且生成效果更好。</p>
+<hr>
 
       
     </div>
@@ -292,13 +303,13 @@
   
     
     <div class="copyright">
-        <p><span>Title:</span><a href="/2025/03/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></p>
+        <p><span>Title:</span><a href="/2025/03/23/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></p>
         <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
-        <p><span>Created:</span>2025-03-23, 15:52:13</p>
-        <p><span>Updated:</span>2025-03-23, 15:54:43</p>
+        <p><span>Created:</span>2025-03-23, 18:31:23</p>
+        <p><span>Updated:</span>2025-03-23, 18:32:07</p>
         <p>
-            <span>Full URL:</span><a class="post-url" href="/2025/03/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/" title="测试博客">http://example.com/2025/03/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/</a>
-            <span class="copy-path" data-clipboard-text="From http://example.com/2025/03/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <span>Full URL:</span><a class="post-url" href="/2025/03/23/Wasserstein%E8%B7%9D%E7%A6%BB/" title="Wasserstein距离">http://example.com/2025/03/23/Wasserstein%E8%B7%9D%E7%A6%BB/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/03/23/Wasserstein%E8%B7%9D%E7%A6%BB/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -311,15 +322,15 @@
     <nav id="article-nav">
         
             <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2025/03/23/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">
-                    关于 Transformer 的笔记与思考
+                <a href="/2025/03/23/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">
+                    批归一化
                 </a>
             </div>
         
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2025/03/23/hello-world/">
-                    Hello World
+                <a href="/2025/03/23/KL%E6%95%A3%E5%BA%A6/">
+                    KL散度
                 </a>
             </div>
         
@@ -331,7 +342,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Profile"><span class="toc-number">1.</span> <span class="toc-text">Profile</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Info"><span class="toc-number">2.</span> <span class="toc-text">Info</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Wasserstein%E8%B7%9D%E7%A6%BB%EF%BC%88Wasserstein-Distance%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">Wasserstein距离（Wasserstein Distance）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%B4%E8%A7%82%E8%A7%A3%E9%87%8A%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">直观解释：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%AC%E5%BC%8F%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">公式：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF%EF%BC%9A"><span class="toc-number">1.3.</span> <span class="toc-text">优势：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%A8GAN%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8%EF%BC%9A"><span class="toc-number">1.4.</span> <span class="toc-text">在GAN中的应用：</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -367,7 +378,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"测试博客　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"Wasserstein距离　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -387,7 +398,7 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2025/03/23/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/" title="Pre: 关于 Transformer 的笔记与思考">
+            <a href="/2025/03/23/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/" title="Pre: 批归一化">
                 <i class="fa fa-angle-left"></i>
             </a>
         
@@ -395,7 +406,7 @@
         <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2025/03/23/hello-world/" title="Next: Hello World">
+            <a href="/2025/03/23/KL%E6%95%A3%E5%BA%A6/" title="Next: KL散度">
                 <i class="fa fa-angle-right"></i>
             </a>
         
