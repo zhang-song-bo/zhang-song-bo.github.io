@@ -901,6 +901,76 @@
 <li><p><strong>残差连接和层归一化（Residual Connection &amp; Layer Normalization）</strong><br>为了防止深层网络中的梯度消失或爆炸问题，Transformer 在每一层都采用了 <strong>残差连接</strong> 和 <strong>层归一化</strong>。残差连接确保信息在网络中的有效传递，而层归一化帮助模型的训练更稳定、收敛更快。</p>
 </li>
 </ol>
+<h6 id="对于翻译任务"><a href="#对于翻译任务" class="headerlink" title="对于翻译任务"></a>对于翻译任务</h6><p>对于学习的数据，应该是一一配对的句子对(两种不同的语言)<br>对于模型而言，需要分别将句子对的两个视作 <strong>源语言</strong> 和 <strong>目标语言</strong></p>
+<p>因为模型无法学习非数值的数据，所以需要对于文本数据进行词嵌入处理，把句子变成tokens，再把tokens变成可学习的向量(维度为embed_dim)。</p>
+<ul>
+<li><p>对于编码器</p>
+<ol>
+<li>分词处理：<br> 首先，使用分词技术将输入句子拆分为若干个token（分割策略有讲究，可以是基于词的划分，也可以是基于子词或字符的划分等）。分词后的结果是一个形状为 (batch_size, seq_len) 的张量，其中每个token都被映射为其对应的ID。</li>
+<li>词嵌入和位置编码：<br> 接下来，通过词嵌入（Input Embedding）将token ID映射为对应的高维稠密向量，得到形状为 (batch_size, seq_len, embed_dim) 的数据。这些嵌入向量是通过查找表学习得到的。<br> 然后，使用位置编码（Positional Encoding）对输入嵌入进行增强。位置编码通过正余弦函数生成，形状为 (batch_size, seq_len, embed_dim)，用于注入序列中每个token的位置信息。位置编码会加到输入嵌入中，从而让模型能够感知每个token在序列中的相对位置。</li>
+<li>数据转置：<br> 为了与Transformer中的矩阵运算兼容，输入数据会被转置成 (seq_len, batch_size, embed_dim) 的形状。这样做有助于提高计算效率，并使得后续的矩阵运算能够并行执行。</li>
+<li>进入自注意力（Self-Attention）层：<br> 数据进入自注意力层后，首先通过三个全连接层分别计算得到查询（Q）、键（K）、值（V）矩阵。这些矩阵的参数会通过后续的梯度下降优化学习得到。<br> 对每个token的查询向量Q与其他token的键向量K进行点积计算，得到注意力得分。通过缩放因子（根号下 d_model）对得分进行缩放，再通过softmax操作将得分转换为概率分布。<br> 接着，使用该概率分布对值向量V进行加权求和，得到一个融合了上下文信息的新的表示。</li>
+<li>残差连接与层归一化：<br> 将注意力层的输出与输入数据进行残差连接，然后进行层归一化（Layer Normalization）。残差连接有助于缓解深层网络中的梯度消失问题，而层归一化则有助于提升训练的稳定性。</li>
+<li>前馈神经网络（MLP）：<br> 接着，经过一个前馈神经网络（MLP）。这个网络通常由两层全连接层组成，其中中间层的大小通常是输入的4倍。前馈神经网络的作用是进一步非线性转换每个token的表示。</li>
+<li>再次残差连接与层归一化：<br> 前馈神经网络的输出会再次与输入数据进行残差连接，并进行层归一化处理，确保模型在深层网络中保持有效的信息流动和稳定的训练过程。</li>
+<li>完成一次Encoder处理：<br> 这样，我们就完成了一个Transformer编码器层的处理。</li>
+<li>重复堆叠多个编码器层：<br> 上述的编码器层结构会堆叠若干次，每一层都包括自注意力、前馈神经网络和层归一化等组件。通过多层堆叠，模型能够逐步捕捉更复杂的特征和语义信息。</li>
+</ol>
+</li>
+<li><p>对于解码器</p>
+<ol>
+<li>输入处理<br>在解码器中，首先输入的是目标序列（通常是已经翻译过的部分，或者在训练时是实际的目标序列）。目标序列通过<strong>分词处理</strong>（tokenization）分割成若干个token，得到形状为 (batch_size, target_seq_len) 的数据，其中每个token被映射为对应的ID。</li>
+<li>词嵌入和位置编码<br>和编码器类似，解码器的目标序列经过<strong>词嵌入</strong>（Input Embedding），将token ID映射为高维稠密向量，得到形状为 (batch_size, target_seq_len, embed_dim) 的数据。<br>之后，解码器会对目标序列应用<strong>位置编码</strong>（Positional Encoding）。位置编码采用正余弦函数生成，并加到输入的词嵌入中，使得每个token的表示不仅包含词汇信息，还包含位置信息，形状为 (batch_size, target_seq_len, embed_dim)</li>
+<li>数据转置<br>为了和后续矩阵运算兼容，解码器输入数据会被转置成 (target_seq_len, batch_size, embed_dim) 的形状。这样处理是为了使得计算过程能够高效并行。</li>
+<li>进入解码器的自注意力层（Masked Self-Attention）：<br>在解码器的自注意力层中，首先通过全连接层计算得到 查询（Q）、键（K）、值（V）矩阵。这些矩阵的参数通过训练进行优化。<br>在解码器中，<strong>自注意力</strong>机制是<strong>掩蔽的</strong>（masked），即当前token只能看到之前生成的token，无法看到后续的token。这种掩蔽机制确保了解码过程的自回归性质，使得每个token只能依赖于先前生成的部分。</li>
+<li>计算注意力得分<br>类似于编码器，解码器中的每个token对应的查询向量Q与所有其他token的键向量K进行点积计算。得分会经过缩放（根号下 d_model）后，通过<strong>softmax</strong>得到注意力权重，最后使用这些权重对值向量V进行加权求和，从而得到每个token的上下文表示。</li>
+<li>残差连接与层归一化<br>解码器中的自注意力输出会与输入进行<strong>残差连接</strong>，然后通过<strong>层归一化</strong>（Layer Normalization）。这帮助模型在深度网络中保持稳定的训练过程。</li>
+<li><strong>交叉注意力层（Cross-Attention）</strong></li>
+</ol>
+<ul>
+<li>解码器的一个关键组件是<strong>交叉注意力层</strong>，它的作用是将解码器的输入（通过自注意力计算的表示）与编码器的输出进行交互。这个层通过查询（Q）来自解码器，键（K）和值（V）来自编码器的输出。</li>
+<li>交叉注意力层通过计算解码器的查询和编码器的键的点积，得到解码器与编码器之间的依赖关系。然后，利用softmax计算权重，并根据这些权重对编码器的值向量进行加权求和，从而得到融合了编码器上下文信息的输出。</li>
+</ul>
+<ol start="8">
+<li><strong>残差连接与层归一化（交叉注意力部分）</strong>：</li>
+</ol>
+<ul>
+<li>类似于自注意力层，交叉注意力层的输出会与输入数据进行<strong>残差连接</strong>，然后进行<strong>层归一化</strong>处理。</li>
+</ul>
+<ol start="9">
+<li><strong>前馈神经网络（MLP）</strong>：</li>
+</ol>
+<ul>
+<li>通过一个<strong>前馈神经网络</strong>（MLP），通常包含两层全连接层，其中中间层的大小通常是输入的四倍。前馈网络的作用是进一步对每个token的表示进行非线性变换。</li>
+</ul>
+<ol start="10">
+<li><strong>残差连接与层归一化（MLP部分）</strong>：</li>
+</ol>
+<ul>
+<li>前馈神经网络的输出会再次与输入进行<strong>残差连接</strong>，并进行<strong>层归一化</strong>处理。这样可以有效地缓解梯度消失问题，并确保训练过程中信息的流动。</li>
+</ul>
+<ol start="11">
+<li><strong>完成一个解码器处理</strong>：</li>
+</ol>
+<ul>
+<li>这样，一次解码器层的处理就完成了。通过多个堆叠的解码器层，模型能够逐层深入地理解目标序列的上下文信息，并生成目标序列的预测。</li>
+</ul>
+<ol start="12">
+<li><strong>堆叠多个解码器层</strong>：</li>
+</ol>
+<ul>
+<li>Transformer解码器通常由多个相同的层堆叠组成。每一层都包括自注意力、交叉注意力、前馈神经网络和层归一化等组件。通过堆叠多个解码器层，模型可以捕捉到更加复杂和丰富的特征，从而生成更精确的预测。</li>
+</ul>
+<ol start="13">
+<li><strong>生成最终输出</strong>：</li>
+</ol>
+<ul>
+<li>在解码器的最后一层，经过所有处理后的表示会通过一个线性层和Softmax层，生成对目标词汇表中每个token的预测概率分布。最终的输出是一个形状为 <code>(batch_size, target_seq_len, vocab_size)</code> 的张量，其中 <code>vocab_size</code> 是词汇表的大小。</li>
+</ul>
+</li>
+</ul>
+<h6 id="对于文本情感分类任务"><a href="#对于文本情感分类任务" class="headerlink" title="对于文本情感分类任务"></a>对于文本情感分类任务</h6><p>事实上这个任务完全不需要解码器的存在，因为是分类任务而不是生成任务</p>
+<p>所以只需要编码器的堆叠，最终通过全连接层进行二分类即可</p>
 <h4 id="Transformer的优势"><a href="#Transformer的优势" class="headerlink" title="Transformer的优势"></a>Transformer的优势</h4><ol>
 <li><strong>并行计算</strong>：与传统的 RNN 和 CNN 不同，Transformer 可以一次性处理整个序列，大大提高了计算效率。</li>
 <li><strong>长距离依赖建模</strong>：通过自注意力机制，Transformer 能够捕捉到序列中任意两位置之间的依赖关系，从而解决了 RNN 无法有效建模长距离依赖的问题。</li>
