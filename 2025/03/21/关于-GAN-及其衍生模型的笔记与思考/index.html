@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="John Doe" />
+
+
+
+<meta name="description" content="关于 GAN从单模型到 “左右互搏术” 的对抗式模型，GAN 的对抗式的思路注定了它的革命性意义 GAN之前的思路在 GAN 的横空出世之前，生成模型的研究主要依赖于传统的概率图模型和最大似然估计等方法。生成模型的基本目标是通过学习训练数据的分布，来生成类似于训练数据的新样本。 但在当时，主流的生成模型往往依赖于一种显式建模的方式，通常使用自回归模型（如HMM、VAE等），通过明确的概率分布和参数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于 GAN 及其衍生模型的笔记与思考">
+<meta property="og:url" content="http://example.com/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="关于 GAN从单模型到 “左右互搏术” 的对抗式模型，GAN 的对抗式的思路注定了它的革命性意义 GAN之前的思路在 GAN 的横空出世之前，生成模型的研究主要依赖于传统的概率图模型和最大似然估计等方法。生成模型的基本目标是通过学习训练数据的分布，来生成类似于训练数据的新样本。 但在当时，主流的生成模型往往依赖于一种显式建模的方式，通常使用自回归模型（如HMM、VAE等），通过明确的概率分布和参数">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-03-21T10:01:06.000Z">
+<meta property="article:modified_time" content="2025-03-24T07:38:13.721Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="GAN">
+<meta property="article:tag" content="模型">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>关于 GAN 及其衍生模型的笔记与思考 | Hexo</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                            <li><a href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a></li>
+                        
+                            <li><a href="/categories/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/">优化技术</a></li>
+                        
+                            <li><a href="/categories/project/">小试牛刀</a></li>
+                        
+                            <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                        
+                            <li><a href="/archives/">归档</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACGAN/" rel="tag">ACGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BERT/" rel="tag">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CycleGAN/" rel="tag">CycleGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DCGAN/" rel="tag">DCGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B/" rel="tag">模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E8%AE%B0/" rel="tag">随记</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a></li>
+                
+                    <li><a href="/categories/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/">优化技术</a></li>
+                
+                    <li><a href="/categories/project/">小试牛刀</a></li>
+                
+                    <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                
+                    <li><a href="/archives/">归档</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-关于-GAN-及其衍生模型的笔记与思考" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/" class="article-date">
+      <time datetime="2025-03-21T10:01:06.000Z" itemprop="datePublished">2025-03-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      关于 GAN 及其衍生模型的笔记与思考
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B/" rel="tag">模型</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="关于-GAN"><a href="#关于-GAN" class="headerlink" title="关于 GAN"></a>关于 GAN</h1><p><em>从单模型到 <strong>“左右互搏术”</strong> 的对抗式模型，<strong>GAN</strong> 的对抗式的思路注定了它的革命性意义</em></p>
+<h3 id="GAN之前的思路"><a href="#GAN之前的思路" class="headerlink" title="GAN之前的思路"></a>GAN之前的思路</h3><p>在 <strong>GAN</strong> 的横空出世之前，生成模型的研究主要依赖于传统的概率图模型和最大似然估计等方法。生成模型的基本目标是通过学习训练数据的分布，来生成类似于训练数据的新样本。</p>
+<p>但在当时，主流的生成模型往往依赖于一种显式建模的方式，通常使用自回归模型（如HMM、VAE等），通过明确的概率分布和参数估计进行训练。虽然这些方法可以实现某些生成任务，但始终存在一些局限性：</p>
+<ol>
+<li>生成样本的质量不高：自回归模型常常生成模糊、不清晰的样本。</li>
+<li>难以捕捉数据的复杂性：例如，图像生成任务中，数据的高维度特性使得这些方法很难有效捕捉到所有复杂的细节。</li>
+</ol>
+<p>在这些挑战面前，生成模型的研究面临瓶颈，直到GAN的问世，一场生成模型的革命才悄然拉开帷幕。</p>
+<h3 id="GAN的思路"><a href="#GAN的思路" class="headerlink" title="GAN的思路"></a>GAN的思路</h3><p><em>深谙“左右互搏术”，G_model 与 D_model 既是对手，亦是良友</em></p>
+<p><strong>GAN</strong> 的核心思想是 <strong>“对抗”</strong>，生成器和判别器在对抗式的博弈中 <strong>相互优化</strong>。</p>
+<p>生成器的目标是产生尽可能逼真的假样本，尽量“骗过”判别器；而判别器的目标是区分生成样本和真实样本。两者通过不断“斗智斗勇”的过程，最终达到一种平衡：生成器能够生成与真实样本几乎无差别的图像，而判别器无法轻易分辨。</p>
+<p>这一创新的思路彻底改变了生成模型的训练方式，从参数化的显式建模转向了隐式的对抗博弈。这种“左右互搏”的博弈式优化，不仅在图像生成、视频生成等领域取得了突破性进展，也为其他机器学习任务提供了新的启示。</p>
+<p>GAN的优点：</p>
+<ol>
+<li>生成能力强大：与传统生成模型相比，GAN能够生成更加逼真和复杂的数据。</li>
+<li>无需明确建模分布：生成器通过与判别器的对抗训练，不需要事先假设数据分布，因此可以更灵活地适应复杂的数据集。</li>
+<li>适应性广泛：无论是图像、音频还是文本，GAN都可以被应用到各类生成任务中，展现出了超强的泛化能力。</li>
+</ol>
+<p>但尽管GAN如此强大，其训练过程中却充满了挑战，这也为后续的研究带来了许多值得思考的问题。</p>
+<h3 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h3><p>尽管GAN具有强大的生成能力，但其训练和调优相对复杂，存在以下挑战：​</p>
+<ol>
+<li><p><strong>模式崩溃（Mode Collapse）</strong><br><em>为了成功逃避判别器的严厉审查，生成器将为了成功而成功</em><br><em>趋利避害，本能也</em></p>
+<ul>
+<li>如果有一天，不需要学习很多知识，扩展自己的能力，只需要每天做着简单，轻松，重复的劳动，就可以获得名誉和金钱，万人瞩目，那么绝大多数人将趋之若鹜，无人扩展自己的能力。</li>
+<li>如果生成器只需要成功的模拟出一种图像的逼真生成，骗过判别器，那么生成器也会“懒得”去学习其他种类图像的生成逻辑，只会生成这一种来糊弄判别器。</li>
+</ul>
+<p>这就是 <strong>模式崩溃</strong></p>
+<blockquote>
+<p>模型崩溃是指机器学习模型由于在另一个模型（包括其自身的先前版本）的输出上进行未经整理的训练而产生错误，从而逐渐退化的一种现象。<br> Shumailov 等人 创造了这个术语，并描述了退化的两个具体阶段：早期模型崩溃和晚期模型崩溃。在早期模型崩溃阶段，模型开始丢失分布尾部的信息–主要影响少数数据。后来的研究强调，早期模型崩溃很难察觉，因为整体性能可能看起来有所改善，而模型在少数数据上的性能却有所下降。<br>         ——来自维基百科</p>
+</blockquote>
+<p> 也就是说，​生成器可能只能生成有限种类的数据，而忽略了数据集中的其他多样性。</p>
+<p> 为了解决这一问题，后续研究者提出了许多改进方法，如使用批量正则化或采用多生成器架构。​</p>
+</li>
+<li><p><strong>训练不稳定：</strong></p>
+<p> <em>为了与判别器斗智斗勇，生成器不得不全力以赴，但判别器的挑剔和苛刻，使得整个训练过程充满了矛盾与张力。</em></p>
+<ul>
+<li>假设你每天都要与一位非常严格的评审竞争，如何让他相信你的作品既完美又无可挑剔？但问题是，评审的标准变幻莫测，且总是在不断提高。你试图改进，但他总是能找出新的瑕疵，甚至有时会让你陷入困境，难以找到一个合适的平衡点。最终，你可能陷入一场无休止的噩梦中，无法突破。</li>
+</ul>
+<p> 这正是生成器和判别器之间的关系。生成器希望产生尽可能接近真实数据的假样本，而判别器则不断提高自己的标准，试图识别这些假样本。两者的竞争如果没有良好的平衡，可能会导致训练过程的不稳定。训练可能会早期收敛，但结果却远非理想，生成器并没有学到足够的生成策略，或者根本没有学到如何应对判别器的挑战。</p>
+<p> 训练不稳定是GAN训练中的一个普遍问题。为了避免生成器和判别器之间的学习速率失衡，研究者提出了WGAN（Wasserstein GAN），它通过引入 <strong>“Wasserstein距离”</strong> 来缓解这种不稳定性，使得优化过程更加平滑且容易收敛。此外，合理的超参数调整，尤其是学习率和优化器选择，也能在一定程度上改善这一问题，但是这往往是漫长的尝试。</p>
+</li>
+<li><p><strong>难以评估：</strong><br> <em>生成器的目标是创造看似真实的样本，而判别器的职责是让生成的样本无法再隐藏在真实数据的“伪装”下。但这场较量最终的标准究竟是什么？</em></p>
+<ul>
+<li>假设你是一个画家，创作了一幅作品，你的作品看起来栩栩如生。现在，评审团的任务是评判你作品的艺术价值。问题是，他们无法简单通过传统的评分标准来评价你的作品，因为艺术的美学标准常常难以量化。是否只通过他们的主观评价，还是找到一种能量化的工具来衡量作品的质量呢？</li>
+</ul>
+<p>在GAN中，评估生成模型的质量也是一个复杂的问题。生成器的目标是生成看起来非常真实的数据，而判别器则试图分辨出这些“假冒伪劣”的样本。因此，传统的损失函数难以准确地评估生成器的表现，因为损失函数可能无法捕捉到生成数据与真实数据之间微妙的差别。想象你在画布上做出的每一笔都应该尽可能与真实世界的数据匹配，如何保证每一笔都完美无瑕？</p>
+<p>为了解决这个问题，研究者们提出了一些新的评估方法，如 <strong>Fréchet Inception Distance（FID）</strong>，它通过比较生成样本和真实样本在 Inception 模型特征空间中的分布差异来量化生成数据的质量。这种方法能够 <strong>更加客观</strong> 地衡量生成样本与真实数据之间的距离，避免仅依赖人工评估的主观性。<br>除此之外，还有诸如 <strong>Inception Score</strong> 等评估方法，试图用更精细的方式来捕捉生成样本的质量。</p>
+</li>
+</ol>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>GAN 通过引入生成器与判别器的 <strong>对抗式博弈</strong>，极大推动了生成模型的进步，使得机器能够生成几乎与真实数据无异的样本。然而，这种创新的思路也带来了新的挑战：模式崩溃、训练不稳定、评估困难等问题，成为GAN进一步发展的瓶颈。</p>
+<p>但正是这些挑战推动了GAN及其变种模型（如WGAN、WGAN-GP等）的不断演进，解决方案也在逐步落地。<br>从 <strong>Wasserstein距离</strong> 到 <strong>Fréchet Inception Distance</strong>，从 <strong>批量正则化</strong> 到 <strong>多生成器架构</strong>，我们已经看到研究者们为克服这些问题所做出的巨大努力。</p>
+<p>随着这些挑战的逐步解决，GAN无疑将在未来的机器学习领域中继续发挥其巨大的潜力。</p>
+<hr>
+<h1 id="关于-GAN-的衍生模型"><a href="#关于-GAN-的衍生模型" class="headerlink" title="关于 GAN 的衍生模型"></a>关于 GAN 的衍生模型</h1><h3 id="DCGAN"><a href="#DCGAN" class="headerlink" title="DCGAN"></a>DCGAN</h3><p><em>创新的 <strong>GAN</strong> + 卓越的 <strong>CNN</strong> &#x3D; 创新卓越的<strong>DCGAN</strong></em></p>
+<p>从简单的全连接神经网络架构走向了更复杂的深度卷积网络架构</p>
+<p>DCGAN通过深度卷积网络增强了生成器与判别器的能力，尤其是生成器的表现得到了极大改进。相比于传统GAN，DCGAN用卷积层替代了全连接层，这一改动使得生成器能够有效捕捉到图像的空间结构和细节特征。<br>DCGAN的一个关键创新就是使用 <strong>去卷积（Deconvolution）操作</strong>，让生成器能够从潜在空间映射到高维数据空间。</p>
+<p>效果：</p>
+<ol>
+<li><strong>图像生成质量提高：</strong> 通过卷积结构的引入，DCGAN能够生成更加清晰、自然的图像，尤其在面部图像生成和自然场景图像生成方面取得了突破。</li>
+<li><strong>训练更为稳定：</strong> DCGAN相比传统GAN，训练过程中的稳定性得到了大幅提升，减少了许多困扰传统GAN的梯度消失问题。</li>
+</ol>
+<h3 id="ACGAN"><a href="#ACGAN" class="headerlink" title="ACGAN"></a>ACGAN</h3><p><em>我不仅让你生成，我还得让你知道你生成的是什么</em></p>
+<p>ACGAN的提出，是为了让生成器的输出不再局限于仅生成真实感的图像，而是能够在生成图像的同时，控制图像的类别或标签。这一创新解决了传统GAN在生成任务中 <strong>缺乏可控性的问题</strong>。</p>
+<p><strong>ACGAN</strong> 在原始 <strong>GAN</strong> 的基础上，引入了一个 <strong>辅助分类器</strong>，生成器不仅根据随机噪声生成图像，同时也根据附加的类别标签生成特定类型的图像。<br>判别器则变得更加复杂，它不仅需要判断样本的真实性，还需要预测样本的类别。这种设计使得 <strong>ACGAN</strong> 能够在生成的过程中引入条件信息，从而控制生成图像的标签。</p>
+<p>效果：</p>
+<ol>
+<li><strong>多样性控制：</strong> ACGAN使得生成器能够根据输入的类别标签生成对应的图像，广泛应用于有标签数据的生成任务，例如生成特定类别的动物、植物图像等。</li>
+<li><strong>提升了生成样本的可控性：</strong> 生成器不仅追求图像的真实性，也能够有效地根据需求生成多种不同类型的样本。</li>
+</ol>
+<h3 id="WGAN"><a href="#WGAN" class="headerlink" title="WGAN"></a>WGAN</h3><p><em>你这数学原理有bug ！</em></p>
+<p><strong>WGAN</strong> 的提出，打破了传统GAN在训练过程中经常出现的 <strong>梯度消失与训练不稳定问题</strong>。</p>
+<p>WGAN的核心创新在于引入了 <strong>Wasserstein距离</strong>，代替了传统GAN中使用的 <strong>JS散度</strong>。Wasserstein距离具有更好的数学性质，能够提供更稳定的训练信号，特别是在生成分布与真实分布差异较大时，它能够避免出现梯度消失的情况。同时，WGAN的判别器不再是二分类器，而是一个判别评分器，用于衡量样本的真实性。</p>
+<p>为了优化训练过程，WGAN采用了 <strong>权重剪切技术</strong>，将判别器的权重限制在一定范围内，避免了权重过大导致的训练不稳定。</p>
+<p>效果：</p>
+<ol>
+<li><strong>训练过程更平稳：</strong> 引入Wasserstein距离的WGAN，不仅训练过程更加稳定，而且能够应对更复杂的生成任务，特别是在生成高质量图像时表现优异。</li>
+<li><strong>解决了梯度消失问题：</strong> WGAN通过Wasserstein距离有效缓解了GAN中常见的梯度消失问题，使得生成器和判别器的优化过程更加顺畅。</li>
+</ol>
+<h3 id="WGAN-GP"><a href="#WGAN-GP" class="headerlink" title="WGAN-GP"></a>WGAN-GP</h3><p><em>粗暴的裁剪是比不上优雅的梯度惩罚的</em></p>
+<p><strong>WGAN-GP</strong> 是对WGAN的一种优化，它引入了<strong>梯度惩罚</strong>（Gradient Penalty）机制，取代了WGAN中的权重剪切。梯度惩罚的加入进一步提升了模型的稳定性，并解决了WGAN中权重剪切可能带来的副作用。</p>
+<p>WGAN-GP通过对判别器的梯度进行惩罚，确保其梯度的平滑性。与WGAN中的权重剪切不同，梯度惩罚使得优化过程更加细致，能够避免生成器和判别器之间的不平衡。其损失函数中加入了梯度惩罚项：<br>[<br>L &#x3D; D(x) - D(G(z)) + \lambda \cdot \mathbb{E}[\left( |\nabla_{\hat{x}} D(\hat{x})|_2 - 1 \right)^2]<br>]</p>
+<p>其中，(\hat{x}) 是生成器输出的线性插值样本，(\lambda) 为梯度惩罚的权重。</p>
+<p>效果：</p>
+<ol>
+<li><strong>进一步提升训练稳定性</strong>：通过梯度惩罚，WGAN-GP避免了权重剪切可能带来的负面影响，进一步提升了训练过程的稳定性。</li>
+<li><strong>高质量生成</strong>：WGAN-GP生成的样本质量更高，尤其在图像生成领域表现出色，能够生成细节更加丰富、逼真度更高的图像。</li>
+</ol>
+<h3 id="CycleGAN"><a href="#CycleGAN" class="headerlink" title="CycleGAN"></a>CycleGAN</h3><p><em>循环交叉，交叉循环</em></p>
+<p>CycleGAN 作为一种无监督学习的生成对抗网络，特别适用于图像到图像的转换任务，而无需成对的数据。CycleGAN通过引入循环一致性损失，使得模型能够在没有标签数据的情况下，实现不同领域之间的图像转换。</p>
+<p>CycleGAN使用两个生成器和两个判别器。生成器一负责将源域图像转换为目标域图像，另一个生成器则将目标域图像转换回源域图像。关键在于循环一致性损失，通过确保转换回来的图像能够尽可能还原原图，保证生成图像的质量和一致性。</p>
+<p>其目标是：</p>
+<ol>
+<li>生成器G将源域图像转换为目标域图像。</li>
+<li>生成器F将目标域图像转换为源域图像。</li>
+<li>循环一致性损失,保证 $𝐺(𝐹(𝑥))≈𝑥$ 和 $𝐹(𝐺(𝑦))≈𝑦$</li>
+</ol>
+<p>效果：</p>
+<ol>
+<li><strong>无监督图像转换：</strong> CycleGAN可以在没有成对数据的情况下，进行风格迁移、图像合成等任务，应用广泛。</li>
+<li><strong>图像合成和风格迁移：</strong> 无论是将夏季图像转换为冬季图像，还是将一张照片转换为油画风格，CycleGAN都能表现出色。</li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
+        <p><span>Created:</span>2025-03-21, 18:01:06</p>
+        <p><span>Updated:</span>2025-03-24, 15:38:13</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/" title="关于 GAN 及其衍生模型的笔记与思考">http://example.com/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/03/23/hello-world/">
+                    Hello World
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/03/20/FID/">
+                    FID
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E-GAN"><span class="toc-number">1.</span> <span class="toc-text">关于 GAN</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#GAN%E4%B9%8B%E5%89%8D%E7%9A%84%E6%80%9D%E8%B7%AF"><span class="toc-number">1.0.1.</span> <span class="toc-text">GAN之前的思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GAN%E7%9A%84%E6%80%9D%E8%B7%AF"><span class="toc-number">1.0.2.</span> <span class="toc-text">GAN的思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.0.3.</span> <span class="toc-text">存在的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.0.4.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E-GAN-%E7%9A%84%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">关于 GAN 的衍生模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DCGAN"><span class="toc-number">2.0.1.</span> <span class="toc-text">DCGAN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ACGAN"><span class="toc-number">2.0.2.</span> <span class="toc-text">ACGAN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WGAN"><span class="toc-number">2.0.3.</span> <span class="toc-text">WGAN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WGAN-GP"><span class="toc-number">2.0.4.</span> <span class="toc-text">WGAN-GP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CycleGAN"><span class="toc-number">2.0.5.</span> <span class="toc-text">CycleGAN</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"关于 GAN 及其衍生模型的笔记与思考　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/03/23/hello-world/" title="Pre: Hello World">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/03/20/FID/" title="Next: FID">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/03/24/%E9%93%BE%E6%97%B6%E4%BB%A3/">链时代招新</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN-%E5%AE%9E%E7%8E%B0%E8%8E%AB%E5%A5%88%E9%A3%8E%E6%A0%BC%E7%94%BB%E4%BD%9C%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%9C%9F%E5%AE%9E%E7%85%A7%E7%89%87/">CycleGAN 实现莫奈风格画作转化为真实照片</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/%E5%85%B3%E4%BA%8E-%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 线性回归 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">WGAN/WGAN-GP 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/12/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">ACGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">GAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">DCGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/06/BERT-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">BERT 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/02/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">房价预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/01/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">Transformer 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/27/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/">预测系外行星轨道周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2025 John Doe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
