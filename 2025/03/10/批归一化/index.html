@@ -15,16 +15,17 @@
 
 
 
-<meta name="description" content="批量正则化（Batch Normalization）批量正则化（Batch Normalization，简称BN） 是一种对神经网络的输入数据进行规范化处理的方法，旨在加速网络训练、提高稳定性，并减少模型对初始化的依赖。在GAN中，批量正则化主要应用于生成器和判别器的训练过程中，以提高其收敛速度和训练的稳定性。 原理：在深度神经网络的训练中，随着层数的增加，网络的输入可能会经历很多次的线性变换和非">
+<meta name="description" content="省流批归一化就是对于一批数据中所有数据的同一特征维度进行归一化。 归一化的效果不用多说，对于模型训练的稳定性相当重要 比如一批数据中有6个同学，每个同学有身高，体重，微积分成绩，线性代数成绩四个特征    A B C D E F    180 169 183 175 168 177   70 75 72 68 68 71   87 86 91 69 75 79   61 69 94 82 76 8">
 <meta property="og:type" content="article">
 <meta property="og:title" content="批归一化">
 <meta property="og:url" content="http://example.com/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="批量正则化（Batch Normalization）批量正则化（Batch Normalization，简称BN） 是一种对神经网络的输入数据进行规范化处理的方法，旨在加速网络训练、提高稳定性，并减少模型对初始化的依赖。在GAN中，批量正则化主要应用于生成器和判别器的训练过程中，以提高其收敛速度和训练的稳定性。 原理：在深度神经网络的训练中，随着层数的增加，网络的输入可能会经历很多次的线性变换和非">
+<meta property="og:description" content="省流批归一化就是对于一批数据中所有数据的同一特征维度进行归一化。 归一化的效果不用多说，对于模型训练的稳定性相当重要 比如一批数据中有6个同学，每个同学有身高，体重，微积分成绩，线性代数成绩四个特征    A B C D E F    180 169 183 175 168 177   70 75 72 68 68 71   87 86 91 69 75 79   61 69 94 82 76 8">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-03-10T10:37:14.000Z">
-<meta property="article:modified_time" content="2025-03-24T07:38:02.552Z">
+<meta property="article:modified_time" content="2025-03-26T12:47:09.750Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="优化技术">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -182,7 +183,7 @@
                 
                 <section class="switch-part switch-part2">
                     <div class="widget tagcloud" id="js-tagcloud">
-                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACGAN/" rel="tag">ACGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ANN/" rel="tag">ANN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BERT/" rel="tag">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CycleGAN/" rel="tag">CycleGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DCGAN/" rel="tag">DCGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVM/" rel="tag">SVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TF-IDF/" rel="tag">TF-IDF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pix2pix/" rel="tag">pix2pix</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%BA%E5%B7%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">人工神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8F%90%E5%8F%96/" rel="tag">关键词提取</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B/" rel="tag">分类模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/" rel="tag">分类算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91/" rel="tag">图像翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%83%8F%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/" rel="tag">图像风格迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/" rel="tag">支持向量机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/" rel="tag">文本分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B/" rel="tag">模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" rel="tag">逻辑回归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E8%AE%B0/" rel="tag">随记</a></li></ul>
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACGAN/" rel="tag">ACGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ANN/" rel="tag">ANN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BERT/" rel="tag">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CycleGAN/" rel="tag">CycleGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DCGAN/" rel="tag">DCGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVM/" rel="tag">SVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TF-IDF/" rel="tag">TF-IDF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pix2pix/" rel="tag">pix2pix</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%BA%E5%B7%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">人工神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" rel="tag">优化技术</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8F%90%E5%8F%96/" rel="tag">关键词提取</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B/" rel="tag">分类模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/" rel="tag">分类算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%83%8F%E7%BF%BB%E8%AF%91/" rel="tag">图像翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%83%8F%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/" rel="tag">图像风格迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/" rel="tag">支持向量机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/" rel="tag">文本分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B/" rel="tag">模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" rel="tag">逻辑回归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E8%AE%B0/" rel="tag">随记</a></li></ul>
                     </div>
                 </section>
                 
@@ -288,6 +289,10 @@
 
 
         
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" rel="tag">优化技术</a></li></ul>
+    </div>
+
         <div class="clearfix"></div>
       </div>
       
@@ -295,8 +300,57 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h3 id="批量正则化（Batch-Normalization）"><a href="#批量正则化（Batch-Normalization）" class="headerlink" title="批量正则化（Batch Normalization）"></a><strong>批量正则化（Batch Normalization）</strong></h3><p><strong>批量正则化（Batch Normalization，简称BN）</strong> 是一种对神经网络的输入数据进行规范化处理的方法，旨在加速网络训练、提高稳定性，并减少模型对初始化的依赖。在GAN中，批量正则化主要应用于生成器和判别器的训练过程中，以提高其收敛速度和训练的稳定性。</p>
-<h4 id="原理："><a href="#原理：" class="headerlink" title="原理："></a><strong>原理</strong>：</h4><p>在深度神经网络的训练中，随着层数的增加，网络的输入可能会经历很多次的线性变换和非线性激活。这样会导致每一层的输入分布发生变化，这个现象叫做<strong>内部协变量偏移（Internal Covariate Shift）</strong>。为了避免这种偏移，<strong>批量正则化</strong>通过对每一层的输入进行标准化，使其均值为0，方差为1，从而加速训练并减少训练的不稳定性。</p>
+        <h1 id="省流"><a href="#省流" class="headerlink" title="省流"></a>省流</h1><p>批归一化就是对于一批数据中所有数据的同一特征维度进行归一化。</p>
+<p>归一化的效果不用多说，对于模型训练的稳定性相当重要</p>
+<p>比如<br>一批数据中有6个同学，每个同学有身高，体重，微积分成绩，线性代数成绩四个特征</p>
+<table>
+<thead>
+<tr>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+<th>D</th>
+<th>E</th>
+<th>F</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>180</td>
+<td>169</td>
+<td>183</td>
+<td>175</td>
+<td>168</td>
+<td>177</td>
+</tr>
+<tr>
+<td>70</td>
+<td>75</td>
+<td>72</td>
+<td>68</td>
+<td>68</td>
+<td>71</td>
+</tr>
+<tr>
+<td>87</td>
+<td>86</td>
+<td>91</td>
+<td>69</td>
+<td>75</td>
+<td>79</td>
+</tr>
+<tr>
+<td>61</td>
+<td>69</td>
+<td>94</td>
+<td>82</td>
+<td>76</td>
+<td>85</td>
+</tr>
+</tbody></table>
+<p>那么批归一化会对同一个特征维度进行归一化，比如对于身高|180|169|183|175|168|177|进行归一化</p>
+<p>所以它在 CNN 等网络结构中表现良好，但是在特殊的任务（NLP）任务表现不佳，具体原因请见层归一化文章</p>
+<h1 id="批量正则化（Batch-Normalization）"><a href="#批量正则化（Batch-Normalization）" class="headerlink" title="批量正则化（Batch Normalization）"></a><strong>批量正则化（Batch Normalization）</strong></h1><p><strong>批量正则化（Batch Normalization，简称BN）</strong> 是一种对神经网络的输入数据进行规范化处理的方法，旨在加速网络训练、提高稳定性，并减少模型对初始化的依赖。在GAN中，批量正则化主要应用于生成器和判别器的训练过程中，以提高其收敛速度和训练的稳定性。</p>
+<h2 id="原理："><a href="#原理：" class="headerlink" title="原理："></a><strong>原理</strong>：</h2><p>在深度神经网络的训练中，随着层数的增加，网络的输入可能会经历很多次的线性变换和非线性激活。这样会导致每一层的输入分布发生变化，这个现象叫做<strong>内部协变量偏移（Internal Covariate Shift）</strong>。为了避免这种偏移，<strong>批量正则化</strong>通过对每一层的输入进行标准化，使其均值为0，方差为1，从而加速训练并减少训练的不稳定性。</p>
 <p>批量正则化的主要步骤是：</p>
 <ol>
 <li><strong>计算当前批次数据的均值和方差</strong>。</li>
@@ -311,7 +365,7 @@
 <li>( \epsilon ) 是一个很小的常数，用于避免除以零的情况。</li>
 </ul>
 <p>然后，标准化后的数据会经过两个可学习的参数：<strong>缩放因子</strong>（( \gamma )）和<strong>偏移量</strong>（( \beta )），以便网络能够根据需要恢复原来的数据分布。</p>
-<h4 id="在GAN中的作用："><a href="#在GAN中的作用：" class="headerlink" title="在GAN中的作用："></a><strong>在GAN中的作用</strong>：</h4><ul>
+<h2 id="在GAN中的作用："><a href="#在GAN中的作用：" class="headerlink" title="在GAN中的作用："></a><strong>在GAN中的作用</strong>：</h2><ul>
 <li><strong>提高训练稳定性</strong>：由于批量正则化对输入数据进行了标准化，网络训练过程中的梯度更新更加稳定，避免了梯度消失或爆炸的问题。</li>
 <li><strong>加速收敛</strong>：通过标准化输入数据，使得训练过程更快速地收敛，减少了学习率调节的难度。</li>
 <li><strong>缓解模式崩溃</strong>：批量正则化有助于防止生成器只生成某一类样本的模式崩溃问题，因为它提供了更为平滑的训练过程，有助于生成器学习更多样的样本。</li>
@@ -328,7 +382,7 @@
         <p><span>Title:</span><a href="/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></p>
         <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
         <p><span>Created:</span>2025-03-10, 18:37:14</p>
-        <p><span>Updated:</span>2025-03-24, 15:38:02</p>
+        <p><span>Updated:</span>2025-03-26, 20:47:09</p>
         <p>
             <span>Full URL:</span><a class="post-url" href="/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/" title="批归一化">http://example.com/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/</a>
             <span class="copy-path" data-clipboard-text="From http://example.com/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
@@ -364,7 +418,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%B9%E9%87%8F%E6%AD%A3%E5%88%99%E5%8C%96%EF%BC%88Batch-Normalization%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">批量正则化（Batch Normalization）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E7%90%86%EF%BC%9A"><span class="toc-number">1.1.</span> <span class="toc-text">原理：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%A8GAN%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9A"><span class="toc-number">1.2.</span> <span class="toc-text">在GAN中的作用：</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9C%81%E6%B5%81"><span class="toc-number">1.</span> <span class="toc-text">省流</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%89%B9%E9%87%8F%E6%AD%A3%E5%88%99%E5%8C%96%EF%BC%88Batch-Normalization%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">批量正则化（Batch Normalization）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86%EF%BC%9A"><span class="toc-number">2.1.</span> <span class="toc-text">原理：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8GAN%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9A"><span class="toc-number">2.2.</span> <span class="toc-text">在GAN中的作用：</span></a></li></ol></li></ol>
         
     </div>
     <style>
@@ -434,7 +488,7 @@
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/pix2pix/">pix2pix 模型详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/">逻辑回归（Logistic Regression）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/ANN/">人工神经网络（ANN）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/SVM/">支持向量机（SVM）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/CycleGAN/">CycleGAN 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/TF-IDF/">TF-IDF 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/%E8%B4%9D%E5%8F%B6%E6%96%AF/">贝叶斯</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/24/%E9%93%BE%E6%97%B6%E4%BB%A3/">链时代招新</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN-%E5%AE%9E%E7%8E%B0%E8%8E%AB%E5%A5%88%E9%A3%8E%E6%A0%BC%E7%94%BB%E4%BD%9C%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%9C%9F%E5%AE%9E%E7%85%A7%E7%89%87/">CycleGAN 实现莫奈风格画作转化为真实照片</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/%E5%85%B3%E4%BA%8E-%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 线性回归 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/WGAN-WGAN-GP/">WGAN与WGAN-GP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/DCGAN/">DCGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/ACGAN/">ACGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">WGAN/WGAN-GP 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/12/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">ACGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">DCGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">GAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/06/%E9%A2%87%E6%9C%89%E6%84%9F%E8%A7%A6%E7%9A%84%E5%BC%95%E8%A8%80/">颇有感触的引言/台词</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/06/BERT-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">BERT 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/02/%E6%83%B3%E7%9C%8B%E7%9A%84%E7%94%B5%E5%BD%B1/">想看的电影</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/02/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">房价预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/01/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">Transformer 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/27/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/">预测系外行星轨道周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/pix2pix/">pix2pix 模型详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/TF-IDF/">TF-IDF 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/%E8%B4%9D%E5%8F%B6%E6%96%AF/">贝叶斯</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/24/%E9%93%BE%E6%97%B6%E4%BB%A3/">链时代招新</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/22/ANN/">人工神经网络（ANN）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN-%E5%AE%9E%E7%8E%B0%E8%8E%AB%E5%A5%88%E9%A3%8E%E6%A0%BC%E7%94%BB%E4%BD%9C%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%9C%9F%E5%AE%9E%E7%85%A7%E7%89%87/">CycleGAN 实现莫奈风格画作转化为真实照片</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN/">CycleGAN 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/%E5%85%B3%E4%BA%8E-%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 线性回归 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/WGAN-WGAN-GP/">WGAN与WGAN-GP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/DCGAN/">DCGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/ACGAN/">ACGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/15/SVM/">支持向量机（SVM）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/14/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/">逻辑回归（Logistic Regression）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">WGAN/WGAN-GP 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/12/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">ACGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">DCGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">GAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/06/%E9%A2%87%E6%9C%89%E6%84%9F%E8%A7%A6%E7%9A%84%E5%BC%95%E8%A8%80/">颇有感触的引言/台词</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/06/BERT-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">BERT 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/02/%E6%83%B3%E7%9C%8B%E7%9A%84%E7%94%B5%E5%BD%B1/">想看的电影</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/02/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">房价预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/01/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">Transformer 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/27/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/">预测系外行星轨道周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li></ul>
 
 
 
