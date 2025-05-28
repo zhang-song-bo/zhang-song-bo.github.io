@@ -15,19 +15,19 @@
 
 
 
-<meta name="description" content="逻辑回归（Logistic Regression）是一种常见的分类算法，尽管名字中带有“回归”，但它主要用于二分类问题，也可以扩展到多分类任务。 1. 逻辑回归的基本原理逻辑回归的核心思想是使用**逻辑函数（Sigmoid）**将线性回归的输出转换为概率值： [\sigma(z) &#x3D; \frac{1}{1 + e^{-z}}] 其中，( z ) 是线性回归的结果： [z &#x3D; w">
+<meta name="description" content="LoRA: Low-Rank Adaptation of Large Language Models原论文链接：arXiv:2106.09685 项目主页：GitHub - microsoft&#x2F;LoRA 研究背景随着大型语言模型（LLMs）如 GPT-3 的广泛应用，如何高效地将其适配到特定任务成为了一个关键问题。传统的微调方法需要更新模型中所有的参数，这在计算资源和存储方面都带来了巨">
 <meta property="og:type" content="article">
-<meta property="og:title" content="逻辑回归（Logistic Regression）详解">
-<meta property="og:url" content="http://example.com/2025/03/14/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/index.html">
+<meta property="og:title" content="LoRA">
+<meta property="og:url" content="http://example.com/2025/05/28/LoRA/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="逻辑回归（Logistic Regression）是一种常见的分类算法，尽管名字中带有“回归”，但它主要用于二分类问题，也可以扩展到多分类任务。 1. 逻辑回归的基本原理逻辑回归的核心思想是使用**逻辑函数（Sigmoid）**将线性回归的输出转换为概率值： [\sigma(z) &#x3D; \frac{1}{1 + e^{-z}}] 其中，( z ) 是线性回归的结果： [z &#x3D; w">
+<meta property="og:description" content="LoRA: Low-Rank Adaptation of Large Language Models原论文链接：arXiv:2106.09685 项目主页：GitHub - microsoft&#x2F;LoRA 研究背景随着大型语言模型（LLMs）如 GPT-3 的广泛应用，如何高效地将其适配到特定任务成为了一个关键问题。传统的微调方法需要更新模型中所有的参数，这在计算资源和存储方面都带来了巨">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-03-14T14:15:00.000Z">
-<meta property="article:modified_time" content="2025-03-27T12:48:45.978Z">
+<meta property="article:published_time" content="2025-05-28T13:44:04.000Z">
+<meta property="article:modified_time" content="2025-05-28T13:48:22.533Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="机器学习">
-<meta property="article:tag" content="逻辑回归">
-<meta property="article:tag" content="分类模型">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="LoRA">
+<meta property="article:tag" content="微调">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -62,7 +62,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>逻辑回归（Logistic Regression）详解 | Hexo</title>
+<title>LoRA | Hexo</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -258,11 +258,11 @@
     </div>
     <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
 </nav>
-      <div class="body-wrap"><article id="post-逻辑回归" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-LoRA" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2025/03/14/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" class="article-date">
-      <time datetime="2025-03-14T14:15:00.000Z" itemprop="datePublished">2025-03-14</time>
+      <a href="/2025/05/28/LoRA/" class="article-date">
+      <time datetime="2025-05-28T13:44:04.000Z" itemprop="datePublished">2025-05-28</time>
 </a>
 
 
@@ -277,7 +277,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      逻辑回归（Logistic Regression）详解
+      LoRA
     </h1>
   
 
@@ -286,13 +286,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a>
+    <a class="article-category-link" href="/categories/%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0/">论文学习</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B/" rel="tag">分类模型</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" rel="tag">逻辑回归</a></li></ul>
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LLM/" rel="tag">LLM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LoRA/" rel="tag">LoRA</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%AE%E8%B0%83/" rel="tag">微调</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -302,55 +302,67 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>逻辑回归（Logistic Regression）是一种常见的分类算法，尽管名字中带有“回归”，但它主要用于<strong>二分类问题</strong>，也可以扩展到多分类任务。</p>
-<h1 id="1-逻辑回归的基本原理"><a href="#1-逻辑回归的基本原理" class="headerlink" title="1. 逻辑回归的基本原理"></a>1. 逻辑回归的基本原理</h1><p>逻辑回归的核心思想是使用**逻辑函数（Sigmoid）**将线性回归的输出转换为概率值：</p>
-<p>[<br>\sigma(z) &#x3D; \frac{1}{1 + e^{-z}}<br>]</p>
-<p>其中，( z ) 是线性回归的结果：</p>
-<p>[<br>z &#x3D; w_1x_1 + w_2x_2 + … + w_nx_n + b<br>]</p>
-<p>通过 Sigmoid 函数，逻辑回归可以输出一个介于 0 和 1 之间的概率值，并根据设定的阈值（通常为 0.5）将样本分类为 0 或 1。</p>
-<h1 id="2-逻辑回归的决策边界"><a href="#2-逻辑回归的决策边界" class="headerlink" title="2. 逻辑回归的决策边界"></a>2. 逻辑回归的决策边界</h1><p>逻辑回归的决策边界是由权重和偏置确定的超平面。例如：</p>
+        <hr>
+<h1 id="LoRA-Low-Rank-Adaptation-of-Large-Language-Models"><a href="#LoRA-Low-Rank-Adaptation-of-Large-Language-Models" class="headerlink" title="LoRA: Low-Rank Adaptation of Large Language Models"></a>LoRA: Low-Rank Adaptation of Large Language Models</h1><p>原论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2106.09685">arXiv:2106.09685</a><br> 项目主页：<a target="_blank" rel="noopener" href="https://github.com/microsoft/LoRA">GitHub - microsoft&#x2F;LoRA</a></p>
+<h2 id="研究背景"><a href="#研究背景" class="headerlink" title="研究背景"></a>研究背景</h2><p>随着大型语言模型（LLMs）如 GPT-3 的广泛应用，如何高效地将其适配到特定任务成为了一个关键问题。传统的微调方法需要更新模型中<strong>所有的参数</strong>，这在计算资源和存储方面都带来了巨大的挑战。为了解决这一问题，微软研究院提出了 LoRA（Low-Rank Adaptation）方法，旨在以更低的计算成本实现对大型模型的高效微调。</p>
+<h2 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h2><p>LoRA 的核心理念是：<strong>在微调过程中，模型参数的更新可以被近似为一个低秩矩阵的形式</strong>。具体而言，LoRA 冻结预训练模型的原始权重，仅在每一层中引入可训练的低秩矩阵，从而大幅减少需要更新的参数数量。</p>
+<p>通过这种方式，LoRA 实现了以下目标：</p>
 <ul>
-<li>在<strong>二维</strong>数据中，决策边界是<strong>一条直线</strong>。</li>
-<li>在<strong>三维</strong>数据中，决策边界是<strong>一个平面</strong>。</li>
-<li>在更高维数据中，决策边界是<strong>一个超平面</strong>。</li>
+<li><strong>参数高效</strong>：相比全量微调，LoRA 将可训练参数数量减少了约 10,000 倍。</li>
+<li><strong>内存节省</strong>：GPU 内存需求降低了约 3 倍。</li>
+<li><strong>性能保持</strong>：在多个任务上，LoRA 的性能与全量微调相当，甚至更优。</li>
 </ul>
-<h1 id="3-逻辑回归的损失函数"><a href="#3-逻辑回归的损失函数" class="headerlink" title="3. 逻辑回归的损失函数"></a>3. 逻辑回归的损失函数</h1><p>为了优化逻辑回归模型，我们使用<strong>对数损失函数（Log Loss）</strong>，即<strong>交叉熵损失（Cross-Entropy Loss）</strong>：</p>
-<p>[<br>L &#x3D; - \frac{1}{m} \sum_{i&#x3D;1}^{m} [ y_i \log \hat{y}_i + (1 - y_i) \log (1 - \hat{y}_i) ]<br>]</p>
-<p>其中：</p>
+<h2 id="方法流程详解"><a href="#方法流程详解" class="headerlink" title="方法流程详解"></a>方法流程详解</h2><p>LoRA 的实现过程如下：</p>
+<ol>
+<li><strong>冻结原始权重</strong>：预训练模型的原始权重保持不变。</li>
+<li><strong>引入低秩矩阵</strong>：在每一层中，添加两个可训练的低秩矩阵 A 和 B，使得权重更新可以表示为 $\Delta W &#x3D; A \times B$，其中 A 的维度为 $d \times r$，B 的维度为 $r \times d$，r 是远小于 d 的秩。</li>
+<li><strong>训练低秩矩阵</strong>：仅训练 A 和 B 两个矩阵，其他参数保持不变。</li>
+<li><strong>推理阶段</strong>：在推理时，将 $\Delta W$ 加到原始权重上，得到更新后的权重。</li>
+</ol>
+<p>这种方法的优势在于，只需训练少量参数即可实现模型的适配，极大地降低了计算成本。</p>
+<h2 id="实验设置与结果"><a href="#实验设置与结果" class="headerlink" title="实验设置与结果"></a>实验设置与结果</h2><p>研究团队在多个模型和任务上对 LoRA 进行了评估，包括 RoBERTa、DeBERTa、GPT-2 和 GPT-3。实验结果表明，LoRA 在以下方面表现出色：</p>
 <ul>
-<li>( y_i ) 是真实标签（0 或 1）。</li>
-<li>( \hat{y}_i ) 是预测的概率值。</li>
-<li>( m ) 是样本总数。</li>
+<li><strong>参数效率</strong>：在 GPT-3 175B 上，LoRA 将可训练参数数量减少了约 10,000 倍。</li>
+<li><strong>内存使用</strong>：GPU 内存需求降低了约 3 倍。</li>
+<li><strong>性能表现</strong>：在多个任务上，LoRA 的性能与全量微调相当，甚至更优。</li>
 </ul>
-<h1 id="4-逻辑回归的优化方法"><a href="#4-逻辑回归的优化方法" class="headerlink" title="4. 逻辑回归的优化方法"></a>4. 逻辑回归的优化方法</h1><p>逻辑回归使用**梯度下降（Gradient Descent）**来最小化损失函数，更新权重 ( w ) 和偏置 ( b )：</p>
-<p>[<br>w &#x3D; w - \alpha \frac{\partial L}{\partial w}, \quad b &#x3D; b - \alpha \frac{\partial L}{\partial b}<br>]</p>
-<p>其中 ( \alpha ) 是学习率。</p>
-<p>常见优化方法：</p>
-<ul>
-<li><strong>批量梯度下降（BGD）</strong></li>
-<li><strong>随机梯度下降（SGD）</strong></li>
-<li><strong>小批量梯度下降（Mini-batch SGD）</strong></li>
-</ul>
-<h1 id="5-逻辑回归的-Python-实现"><a href="#5-逻辑回归的-Python-实现" class="headerlink" title="5. 逻辑回归的 Python 实现"></a>5. 逻辑回归的 Python 实现</h1><p>使用 <code>scikit-learn</code> 进行逻辑回归建模：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_classification</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成数据集</span></span><br><span class="line">X, y = make_classification(n_samples=<span class="number">1000</span>, n_features=<span class="number">2</span>, random_state=<span class="number">42</span>)</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.2</span>, random_state=<span class="number">42</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练逻辑回归模型</span></span><br><span class="line">model = LogisticRegression()</span><br><span class="line">model.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 预测</span></span><br><span class="line">y_pred = model.predict(X_test)</span><br><span class="line">accuracy = accuracy_score(y_test, y_pred)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;模型准确率: <span class="subst">&#123;accuracy:<span class="number">.2</span>f&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>此外，LoRA 的训练吞吐量更高，且在推理阶段不会引入额外的延迟。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>LoRA 提供了一种高效的微调大型语言模型的方法，显著降低了计算资源的需求，同时保持了模型的性能。其核心思想是利用低秩矩阵近似参数更新，从而实现参数高效的微调。</p>
+<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><p>在实践中，使用 LoRA（Low-Rank Adaptation）对大型语言模型进行高效微调，可以显著减少训练所需的参数和计算资源。以下是一个典型的 LoRA 微调流程，适用于如 LLaMA、GPT-2、BERT 等模型，结合了 Hugging Face Transformers 和 PEFT（Parameter-Efficient Fine-Tuning）库的使用。</p>
+<h3 id="1-安装必要的库"><a href="#1-安装必要的库" class="headerlink" title="1. 安装必要的库"></a>1. 安装必要的库</h3><p>确保安装了以下 Python 库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install torch transformers datasets peft</span><br></pre></td></tr></table></figure>
 
-<h1 id="6-逻辑回归的优缺点"><a href="#6-逻辑回归的优缺点" class="headerlink" title="6. 逻辑回归的优缺点"></a>6. 逻辑回归的优缺点</h1><p><strong>优点</strong>：</p>
+<h3 id="2-加载预训练模型和分词器"><a href="#2-加载预训练模型和分词器" class="headerlink" title="2. 加载预训练模型和分词器"></a>2. 加载预训练模型和分词器</h3><p>以 LLaMA 模型为例，加载预训练模型和对应的分词器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoTokenizer, AutoModelForCausalLM</span><br><span class="line"></span><br><span class="line">model_name = <span class="string">&quot;huggingface/llama-7b&quot;</span></span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(model_name)</span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(model_name)</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-应用-LoRA-配置"><a href="#3-应用-LoRA-配置" class="headerlink" title="3. 应用 LoRA 配置"></a>3. 应用 LoRA 配置</h3><p>使用 PEFT 库配置 LoRA 参数，并将其应用到模型中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> peft <span class="keyword">import</span> get_peft_model, LoraConfig, TaskType</span><br><span class="line"></span><br><span class="line">lora_config = LoraConfig(</span><br><span class="line">    r=<span class="number">8</span>,</span><br><span class="line">    lora_alpha=<span class="number">16</span>,</span><br><span class="line">    target_modules=[<span class="string">&quot;q_proj&quot;</span>, <span class="string">&quot;v_proj&quot;</span>],</span><br><span class="line">    lora_dropout=<span class="number">0.05</span>,</span><br><span class="line">    bias=<span class="string">&quot;none&quot;</span>,</span><br><span class="line">    task_type=TaskType.CAUSAL_LM</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">model = get_peft_model(model, lora_config)</span><br></pre></td></tr></table></figure>
+
+<p>在此配置中：</p>
 <ul>
-<li>计算简单，易于实现。</li>
-<li>训练速度快，适用于大规模数据。</li>
-<li>结果可解释性强，能提供特征权重。</li>
+<li><code>r</code>：低秩矩阵的秩，控制参数的压缩程度。</li>
+<li><code>lora_alpha</code>：缩放因子，影响学习速率。</li>
+<li><code>target_modules</code>：指定应用 LoRA 的模块，通常选择自注意力机制中的查询（q_proj）和键（v_proj）投影层。</li>
 </ul>
-<p><strong>缺点</strong>：</p>
-<ul>
-<li>只能处理<strong>线性可分</strong>问题，无法解决复杂非线性关系。</li>
-<li>对异常值较敏感。</li>
-<li>不能自动进行特征选择，可能需要手动筛选。</li>
-</ul>
-<h1 id="7-逻辑回归的扩展"><a href="#7-逻辑回归的扩展" class="headerlink" title="7. 逻辑回归的扩展"></a>7. 逻辑回归的扩展</h1><ul>
-<li><strong>多分类逻辑回归（Softmax 回归）</strong>：用于多类别分类任务。</li>
-<li><strong>正则化逻辑回归（L1&#x2F;L2 正则化）</strong>：防止过拟合。</li>
-<li><strong>带核的逻辑回归（Kernel Logistic Regression）</strong>：适用于非线性数据。</li>
-</ul>
+<h3 id="4-冻结原始模型参数"><a href="#4-冻结原始模型参数" class="headerlink" title="4. 冻结原始模型参数"></a>4. 冻结原始模型参数</h3><p>为了实现参数高效微调，冻结预训练模型的原始参数，仅训练 LoRA 模块的参数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> param <span class="keyword">in</span> model.base_model.parameters():</span><br><span class="line">    param.requires_grad = <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-准备训练数据"><a href="#5-准备训练数据" class="headerlink" title="5. 准备训练数据"></a>5. 准备训练数据</h3><p>使用 Hugging Face 的 <code>datasets</code> 库加载和预处理训练数据：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datasets <span class="keyword">import</span> load_dataset</span><br><span class="line"></span><br><span class="line">dataset = load_dataset(<span class="string">&quot;your_dataset_name&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>根据任务需求，进行必要的数据清洗和格式转换。</p>
+<h3 id="6-定义训练参数和训练器"><a href="#6-定义训练参数和训练器" class="headerlink" title="6. 定义训练参数和训练器"></a>6. 定义训练参数和训练器</h3><p>设置训练参数，并使用 <code>Trainer</code> 进行模型训练：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> Trainer, TrainingArguments</span><br><span class="line"></span><br><span class="line">training_args = TrainingArguments(</span><br><span class="line">    output_dir=<span class="string">&quot;./lora-llama&quot;</span>,</span><br><span class="line">    per_device_train_batch_size=<span class="number">4</span>,</span><br><span class="line">    num_train_epochs=<span class="number">3</span>,</span><br><span class="line">    learning_rate=<span class="number">1e-4</span>,</span><br><span class="line">    logging_dir=<span class="string">&quot;./logs&quot;</span>,</span><br><span class="line">    save_total_limit=<span class="number">2</span>,</span><br><span class="line">    save_steps=<span class="number">500</span>,</span><br><span class="line">    evaluation_strategy=<span class="string">&quot;steps&quot;</span>,</span><br><span class="line">    eval_steps=<span class="number">500</span>,</span><br><span class="line">    logging_steps=<span class="number">100</span>,</span><br><span class="line">    load_best_model_at_end=<span class="literal">True</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">trainer = Trainer(</span><br><span class="line">    model=model,</span><br><span class="line">    args=training_args,</span><br><span class="line">    train_dataset=dataset[<span class="string">&quot;train&quot;</span>],</span><br><span class="line">    eval_dataset=dataset[<span class="string">&quot;validation&quot;</span>],</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-开始训练"><a href="#7-开始训练" class="headerlink" title="7. 开始训练"></a>7. 开始训练</h3><p>启动训练过程：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trainer.train()</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-保存和加载-LoRA-模型"><a href="#8-保存和加载-LoRA-模型" class="headerlink" title="8. 保存和加载 LoRA 模型"></a>8. 保存和加载 LoRA 模型</h3><p>训练完成后，保存 LoRA 模型的权重：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model.save_pretrained(<span class="string">&quot;lora-llama&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>在需要时，加载保存的模型进行推理或进一步训练：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> peft <span class="keyword">import</span> PeftModel</span><br><span class="line"></span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(model_name)</span><br><span class="line">model = PeftModel.from_pretrained(model, <span class="string">&quot;lora-llama&quot;</span>)</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -359,13 +371,13 @@
   
     
     <div class="copyright">
-        <p><span>Title:</span><a href="/2025/03/14/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/">逻辑回归（Logistic Regression）详解</a></p>
+        <p><span>Title:</span><a href="/2025/05/28/LoRA/">LoRA</a></p>
         <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
-        <p><span>Created:</span>2025-03-14, 22:15:00</p>
-        <p><span>Updated:</span>2025-03-27, 20:48:45</p>
+        <p><span>Created:</span>2025-05-28, 21:44:04</p>
+        <p><span>Updated:</span>2025-05-28, 21:48:22</p>
         <p>
-            <span>Full URL:</span><a class="post-url" href="/2025/03/14/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" title="逻辑回归（Logistic Regression）详解">http://example.com/2025/03/14/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/</a>
-            <span class="copy-path" data-clipboard-text="From http://example.com/2025/03/14/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <span>Full URL:</span><a class="post-url" href="/2025/05/28/LoRA/" title="LoRA">http://example.com/2025/05/28/LoRA/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/05/28/LoRA/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -377,16 +389,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2025/03/15/SVM/">
-                    支持向量机（SVM）详解
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2025/03/13/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">
-                    WGAN/WGAN-GP 实现手写数字生成
+                <a href="/2025/05/28/%E5%A4%A7%E4%B8%80%E6%80%BB%E7%BB%93/">
+                    大一总结
                 </a>
             </div>
         
@@ -398,7 +404,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">1. 逻辑回归的基本原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E7%9A%84%E5%86%B3%E7%AD%96%E8%BE%B9%E7%95%8C"><span class="toc-number">2.</span> <span class="toc-text">2. 逻辑回归的决策边界</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E7%9A%84%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">3. 逻辑回归的损失函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E7%9A%84%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">4. 逻辑回归的优化方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E7%9A%84-Python-%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.</span> <span class="toc-text">5. 逻辑回归的 Python 实现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">6.</span> <span class="toc-text">6. 逻辑回归的优缺点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E7%9A%84%E6%89%A9%E5%B1%95"><span class="toc-number">7.</span> <span class="toc-text">7. 逻辑回归的扩展</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LoRA-Low-Rank-Adaptation-of-Large-Language-Models"><span class="toc-number">1.</span> <span class="toc-text">LoRA: Low-Rank Adaptation of Large Language Models</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF"><span class="toc-number">1.1.</span> <span class="toc-text">研究背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="toc-number">1.2.</span> <span class="toc-text">核心思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.3.</span> <span class="toc-text">方法流程详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE%E4%B8%8E%E7%BB%93%E6%9E%9C"><span class="toc-number">1.4.</span> <span class="toc-text">实验设置与结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8"><span class="toc-number">1.6.</span> <span class="toc-text">如何使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85%E5%BF%85%E8%A6%81%E7%9A%84%E5%BA%93"><span class="toc-number">1.6.1.</span> <span class="toc-text">1. 安装必要的库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%8A%A0%E8%BD%BD%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%88%86%E8%AF%8D%E5%99%A8"><span class="toc-number">1.6.2.</span> <span class="toc-text">2. 加载预训练模型和分词器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%BA%94%E7%94%A8-LoRA-%E9%85%8D%E7%BD%AE"><span class="toc-number">1.6.3.</span> <span class="toc-text">3. 应用 LoRA 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%86%BB%E7%BB%93%E5%8E%9F%E5%A7%8B%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0"><span class="toc-number">1.6.4.</span> <span class="toc-text">4. 冻结原始模型参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%87%86%E5%A4%87%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE"><span class="toc-number">1.6.5.</span> <span class="toc-text">5. 准备训练数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E5%AE%9A%E4%B9%89%E8%AE%AD%E7%BB%83%E5%8F%82%E6%95%B0%E5%92%8C%E8%AE%AD%E7%BB%83%E5%99%A8"><span class="toc-number">1.6.6.</span> <span class="toc-text">6. 定义训练参数和训练器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%BC%80%E5%A7%8B%E8%AE%AD%E7%BB%83"><span class="toc-number">1.6.7.</span> <span class="toc-text">7. 开始训练</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E4%BF%9D%E5%AD%98%E5%92%8C%E5%8A%A0%E8%BD%BD-LoRA-%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.6.8.</span> <span class="toc-text">8. 保存和加载 LoRA 模型</span></a></li></ol></li></ol></li></ol>
         
     </div>
     <style>
@@ -434,7 +440,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"逻辑回归（Logistic Regression）详解　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"LoRA　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -454,15 +460,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2025/03/15/SVM/" title="Pre: 支持向量机（SVM）详解">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="Back to Homepage"><i class="fa fa-home"></i></a>
         
 
         <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2025/03/13/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/" title="Next: WGAN/WGAN-GP 实现手写数字生成">
+            <a href="/2025/05/28/%E5%A4%A7%E4%B8%80%E6%80%BB%E7%BB%93/" title="Next: 大一总结">
                 <i class="fa fa-angle-right"></i>
             </a>
         
