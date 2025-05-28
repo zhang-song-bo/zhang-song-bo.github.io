@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="John Doe" />
+
+
+
+<meta name="description" content="本地部署大模型以及微调手册——by ChatGPT 概述本手册旨在指导读者在本地（如个人电脑、工作站或私有服务器）环境下部署与微调（Fine-tune）大型语言模型（LLM）。内容涵盖硬件与软件环境准备、模型获取与加载、推理优化、微调方法（包括 LoRA、P-tuning、全参微调等）、训练流程示例、常见问题及最佳实践等。以下内容基于 Hugging Face Transformers、PyTor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="本地部署大模型以及微调手册">
+<meta property="og:url" content="http://example.com/2025/04/12/LLM/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="本地部署大模型以及微调手册——by ChatGPT 概述本手册旨在指导读者在本地（如个人电脑、工作站或私有服务器）环境下部署与微调（Fine-tune）大型语言模型（LLM）。内容涵盖硬件与软件环境准备、模型获取与加载、推理优化、微调方法（包括 LoRA、P-tuning、全参微调等）、训练流程示例、常见问题及最佳实践等。以下内容基于 Hugging Face Transformers、PyTor">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-04-12T15:11:28.000Z">
+<meta property="article:modified_time" content="2025-05-28T12:15:06.341Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>本地部署大模型以及微调手册 | Hexo</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                            <li><a href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a></li>
+                        
+                            <li><a href="/categories/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/">优化技术</a></li>
+                        
+                            <li><a href="/categories/project/">动手实践</a></li>
+                        
+                            <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                        
+                            <li><a href="/categories/%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0/">论文学习</a></li>
+                        
+                            <li><a href="/archives/">归档</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACGAN/" rel="tag">ACGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BERT/" rel="tag">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CycleGAN/" rel="tag">CycleGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DCGAN/" rel="tag">DCGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM/" rel="tag">LLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM-Evaluation/" rel="tag">LLM Evaluation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Multi-Agent/" rel="tag">Multi-Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVM/" rel="tag">SVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TF-IDF/" rel="tag">TF-IDF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent/" rel="tag">agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/multi-agent/" rel="tag">multi-agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" rel="tag">优化技术</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8F%90%E5%8F%96/" rel="tag">关键词提取</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD/" rel="tag">具身智能</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B/" rel="tag">分类模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/" rel="tag">分类算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%83%8F%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/" rel="tag">图像风格迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/" rel="tag">支持向量机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/" rel="tag">文本分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B/" rel="tag">模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E6%8B%9F%E4%BA%BA%E7%B1%BB%E8%A1%8C%E4%B8%BA/" rel="tag">模拟人类行为</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" rel="tag">逻辑回归</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a></li>
+                
+                    <li><a href="/categories/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/">优化技术</a></li>
+                
+                    <li><a href="/categories/project/">动手实践</a></li>
+                
+                    <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                
+                    <li><a href="/categories/%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0/">论文学习</a></li>
+                
+                    <li><a href="/archives/">归档</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-LLM" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/04/12/LLM/" class="article-date">
+      <time datetime="2025-04-12T15:11:28.000Z" itemprop="datePublished">2025-04-12</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      本地部署大模型以及微调手册
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/project/">project</a>
+    </div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="本地部署大模型以及微调手册"><a href="#本地部署大模型以及微调手册" class="headerlink" title="本地部署大模型以及微调手册"></a>本地部署大模型以及微调手册</h1><p>——by ChatGPT</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>本手册旨在指导读者在本地（如个人电脑、工作站或私有服务器）环境下部署与微调（Fine-tune）大型语言模型（LLM）。内容涵盖硬件与软件环境准备、模型获取与加载、推理优化、微调方法（包括 LoRA、P-tuning、全参微调等）、训练流程示例、常见问题及最佳实践等。以下内容基于 Hugging Face Transformers、PyTorch 生态，以及常见开源大模型（如 GPT-2、LLaMA、Mistral、Bloom 等）的公开或授权使用情况编写。适用读者应具备基本的 Linux&#x2F;Windows 命令行操作、Python 编程、深度学习基础知识。</p>
+<hr>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li>前置条件<br> 1.1 硬件要求<br> 1.2 软件与环境依赖<br> 1.3 概念术语说明</li>
+<li>环境准备<br> 2.1 操作系统与基础依赖安装<br> 2.2 Python 环境与包管理<br> 2.3 CUDA、cuDNN、NCCL 安装与验证<br> 2.4 Conda&#x2F;venv 虚拟环境配置示例</li>
+<li>模型获取与部署<br> 3.1 Hugging Face Transformers 概览<br> 3.2 下载与加载预训练模型<br> 3.3 模型量化（Quantization）与显存优化<br> 3.4 推理示例代码<br> 3.5 使用 DeepSpeed&#x2F;In-8bit 推理加速</li>
+<li>微调策略与实现<br> 4.1 微调方法概述<br> 4.2 全参数微调（Full Fine-tuning）<br> 4.3 LoRA（Low-Rank Adaptation）<br> 4.4 P-tuning &#x2F; Prompt Tuning<br> 4.5 PEFT（Parameter-Efficient Fine-Tuning）架构介绍<br> 4.6 数据集准备与预处理</li>
+<li>实战示例：使用 LoRA 微调 LLaMA-7B<br> 5.1 数据集选取与格式化<br> 5.2 PEFT + Transformers 脚本示例<br> 5.3 训练超参数与分布式训练配置<br> 5.4 检查点保存与模型导出<br> 5.5 微调后模型推理对比</li>
+<li>推理部署优化<br> 6.1 8-bit&#x2F;4-bit 量化推理<br> 6.2 ONNX 转换与加速<br> 6.3 TensorRT&#x2F;TVM 简述<br> 6.4 多 GPU &#x2F; 多机部署示例</li>
+<li>常见问题与调优建议<br> 7.1 显存不足解决思路<br> 7.2 学习率、Batch Size 调试<br> 7.3 收敛慢或过拟合应对<br> 7.4 推理速度瓶颈分析</li>
+<li>附录<br> 8.1 常用平台与工具链接<br> 8.2 参考文献与官方文档</li>
+</ol>
+<hr>
+<h2 id="1-前置条件"><a href="#1-前置条件" class="headerlink" title="1. 前置条件"></a>1. 前置条件</h2><h3 id="1-1-硬件要求"><a href="#1-1-硬件要求" class="headerlink" title="1.1 硬件要求"></a>1.1 硬件要求</h3><ul>
+<li><strong>GPU</strong><ul>
+<li>推荐：NVIDIA A100&#x2F;RTX 3090&#x2F;RTX 4090 等显存 ≥24GB 的显卡</li>
+<li>若显存不足，可使用 8-bit&#x2F;4-bit 量化、梯度累积等策略</li>
+</ul>
+</li>
+<li><strong>CPU</strong><ul>
+<li>至少 8 核（推荐 16 核以上）</li>
+<li>多线程 I&#x2F;O 时更高核数更有利</li>
+</ul>
+</li>
+<li><strong>内存（RAM）</strong><ul>
+<li>≥32GB，若要做大规模数据预处理或多卡训练，建议 ≥64GB</li>
+</ul>
+</li>
+<li><strong>存储</strong><ul>
+<li>≥500GB 可用空间</li>
+<li>SSD 优先，数据读取与模型权重加载更快</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-2-软件与环境依赖"><a href="#1-2-软件与环境依赖" class="headerlink" title="1.2 软件与环境依赖"></a>1.2 软件与环境依赖</h3><ul>
+<li>操作系统：Ubuntu 20.04 &#x2F; 22.04、Debian、CentOS 7&#x2F;8，或 Windows 10&#x2F;11（建议使用 WSL2 + Ubuntu）</li>
+<li>CUDA Toolkit：11.7 及以上（与 PyTorch 兼容，后续示例以 CUDA 11.7 为例）</li>
+<li>cuDNN：8.x，与对应 CUDA 版本匹配</li>
+<li>Python 版本：3.8 - 3.10（由于 Hugging Face Transformers 和相关库的兼容性）</li>
+<li>PyTorch：1.13 或更高</li>
+<li>Transformers：4.28 或更高</li>
+<li>Accelerate：0.18 或更高（用于多卡&#x2F;分布式训练）</li>
+<li>PEFT：0.3.0 或更高（用于 LoRA&#x2F;P-tuning）</li>
+<li>bitsandbytes：0.39.0 或更高（用于 8-bit&#x2F;4-bit 量化）</li>
+<li>datasets：2.x（用于数据集加载与预处理）</li>
+<li>tokenizers：0.13.0 或更高</li>
+<li>其他依赖：numpy、pandas、scikit-learn、tqdm 等</li>
+</ul>
+<h3 id="1-3-概念术语说明"><a href="#1-3-概念术语说明" class="headerlink" title="1.3 概念术语说明"></a>1.3 概念术语说明</h3><ul>
+<li><strong>Pre-trained Model（预训练模型）</strong>：在海量文本语料上训练得到的通用语言模型权重，可用于下游任务微调或推理。</li>
+<li><strong>Fine-tuning（微调）</strong>：在预训练基础上，针对特定任务或数据集，继续训练模型以获得更佳效果的过程。</li>
+<li><strong>LoRA（Low-Rank Adaptation）</strong>：一种只微调低秩矩阵（而非整个模型参数）的技术，大幅降低显存与训练成本。</li>
+<li><strong>P-tuning &#x2F; Prompt Tuning</strong>：通过学习可微调的“软提示”（soft prompt），仅修改输入而非模型权重，实现参数高效微调。</li>
+<li><strong>Quantization（量化）</strong>：将浮点数参数（如 FP32）转换为更低精度（如 INT8、INT4），在保证精度损失可控的前提下减少显存占用及加速推理。</li>
+<li><strong>Accelerate</strong>：Hugging Face 推出的分布式训练工具，简化多 GPU &#x2F; 多机环境下的模型训练与推理。</li>
+<li><strong>PEFT（Parameter-Efficient Fine-Tuning）</strong>：统一封装 LoRA、P-tuning 等轻量级微调方法的库，便于快速实验对比与部署。</li>
+</ul>
+<hr>
+<h2 id="2-环境准备"><a href="#2-环境准备" class="headerlink" title="2. 环境准备"></a>2. 环境准备</h2><h3 id="2-1-操作系统与基础依赖安装"><a href="#2-1-操作系统与基础依赖安装" class="headerlink" title="2.1 操作系统与基础依赖安装"></a>2.1 操作系统与基础依赖安装</h3><p>以下以 Ubuntu 22.04 为示例，其他发行版可根据包管理器适当调整。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 更新系统</span></span><br><span class="line"><span class="built_in">sudo</span> apt update &amp;&amp; <span class="built_in">sudo</span> apt upgrade -y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装常用工具</span></span><br><span class="line"><span class="built_in">sudo</span> apt install -y build-essential git wget curl unzip zip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 Python 依赖 (建议使用 apt 安装 Python3、pip3，并利用 venv/conda 管理环境)</span></span><br><span class="line"><span class="built_in">sudo</span> apt install -y python3 python3-pip python3-venv</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-Python-环境与包管理"><a href="#2-2-Python-环境与包管理" class="headerlink" title="2.2 Python 环境与包管理"></a>2.2 Python 环境与包管理</h3><p>推荐使用 Conda 或 <code>venv</code> 创建隔离环境。以下示例展示 Conda 用法，若使用 <code>venv</code>，对应将 <code>conda</code> 替换为 <code>python3 -m venv</code> 即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建并激活 conda 环境</span></span><br><span class="line">conda create -n llm_env python=3.9 -y</span><br><span class="line">conda activate llm_env</span><br><span class="line"></span><br><span class="line"><span class="comment"># 升级 pip</span></span><br><span class="line">pip install --upgrade pip</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-CUDA、cuDNN、NCCL-安装与验证"><a href="#2-3-CUDA、cuDNN、NCCL-安装与验证" class="headerlink" title="2.3 CUDA、cuDNN、NCCL 安装与验证"></a>2.3 CUDA、cuDNN、NCCL 安装与验证</h3><ol>
+<li><p><strong>安装 CUDA Toolkit 11.7</strong></p>
+<ul>
+<li><p>前往 NVIDIA 官方网站下载相应 <code>.run</code> 或通过包管理器安装。示例通过 apt：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加 NVIDIA 源</span></span><br><span class="line"><span class="built_in">sudo</span> apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/7fa2af80.pub</span><br><span class="line"><span class="built_in">sudo</span> sh -c <span class="string">&#x27;echo &quot;deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /&quot; &gt; /etc/apt/sources.list.d/cuda.list&#x27;</span></span><br><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 CUDA 11.7（建议根据官网最新包名调整）</span></span><br><span class="line"><span class="built_in">sudo</span> apt install -y cuda-11-7</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装完成后，将以下两行添加到 <code>~/.bashrc</code> 或 <code>~/.zshrc</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=/usr/local/cuda-11.7/bin:<span class="variable">$PATH</span></span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=/usr/local/cuda-11.7/lib64:<span class="variable">$LD_LIBRARY_PATH</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重新加载配置：<code>source ~/.bashrc</code></p>
+</li>
+</ul>
+</li>
+<li><p><strong>安装 cuDNN</strong></p>
+<ul>
+<li><p>前往 NVIDIA Developer 账号下载对应 CUDA 版本的 cuDNN 包（如 cuDNN 8.5 for CUDA 11.x）。</p>
+</li>
+<li><p>解压并复制库文件。例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf cudnn-linux-x86_64-*.tgz</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> cuda/include/cudnn*.h /usr/local/cuda/include</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> cuda/lib64/libcudnn* /usr/local/cuda/lib64</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chmod</span> a+r /usr/local/cuda/include/cudnn*.h /usr/local/cuda/lib64/libcudnn*</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>安装 NCCL（可选，多机&#x2F;多卡通信加速）</strong></p>
+<ul>
+<li><p>如果需要多卡或多机训练，建议安装 NCCL。可通过包管理器或从 GitHub Release 下载预编译包。</p>
+</li>
+<li><p>也可使用 Conda 安装 NCCL：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda install -c nvidia nccl -y</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>验证 GPU 环境</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查 NVIDIA 驱动</span></span><br><span class="line">nvidia-smi</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查 CUDA 版本</span></span><br><span class="line">nvcc -V</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在 Python 中验证 PyTorch 可用 GPU</span></span><br><span class="line">python - &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">import torch</span></span><br><span class="line"><span class="string">print(&quot;CUDA available:&quot;, torch.cuda.is_available())</span></span><br><span class="line"><span class="string">print(&quot;CUDA device count:&quot;, torch.cuda.device_count())</span></span><br><span class="line"><span class="string">print(&quot;CUDA device name:&quot;, torch.cuda.get_device_name(0))</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="2-4-Conda-venv-虚拟环境配置示例"><a href="#2-4-Conda-venv-虚拟环境配置示例" class="headerlink" title="2.4 Conda&#x2F;venv 虚拟环境配置示例"></a>2.4 Conda&#x2F;venv 虚拟环境配置示例</h3><p>以 Conda 为例安装主要 Python 包，确保与 GPU 兼容的 PyTorch 版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 PyTorch + CUDA 支持</span></span><br><span class="line"><span class="comment"># 参照 https://pytorch.org/get-started/locally/ 查询最新命令，例如：</span></span><br><span class="line">conda install pytorch torchvision torchaudio pytorch-cuda=11.7 -c pytorch -c nvidia -y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 Hugging Face Transformers、Accelerate、PEFT、datasets 等</span></span><br><span class="line">pip install transformers accelerate peft datasets tokenizers</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 bitsandbytes（支持 8-bit/4-bit 量化）</span></span><br><span class="line">pip install bitsandbytes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装其他常用库</span></span><br><span class="line">pip install numpy pandas scikit-learn tqdm</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-模型获取与部署"><a href="#3-模型获取与部署" class="headerlink" title="3. 模型获取与部署"></a>3. 模型获取与部署</h2><h3 id="3-1-Hugging-Face-Transformers-概览"><a href="#3-1-Hugging-Face-Transformers-概览" class="headerlink" title="3.1 Hugging Face Transformers 概览"></a>3.1 Hugging Face Transformers 概览</h3><p>Hugging Face Transformers 是当前社区最主流的预训练语言模型框架，支持大量开源模型（如 GPT、BERT、LLaMA、Bloom 等）。其核心设计可分为：</p>
+<ul>
+<li><strong>模型结构与权重</strong>（<code>transformers.AutoModelForCausalLM</code>、<code>AutoTokenizer</code>）</li>
+<li><strong>加速器与推理优化</strong>（<code>transformers.pipeline</code>、<code>bitsandbytes</code> 量化、<code>DeepSpeed</code>）</li>
+<li><strong>训练 &#x2F; 微调接口</strong>（<code>Trainer</code> API、<code>Accelerate</code> 分布式训练、PEFT 轻量化微调）</li>
+</ul>
+<p>在本地部署大模型时，常见做法为：</p>
+<ol>
+<li><strong>从 Hugging Face Hub 下载权重</strong>。若使用商业模型（如 LLaMA 7B），需自行申请许可并手动上传到本地或私有 Hugging Face Space。</li>
+<li><strong>选择合适的设备加载</strong>。单卡 GPU 可直接加载，若显存不足需结合 8-bit&#x2F;4-bit 量化或使用 CPU+GPU 混合。</li>
+<li><strong>编写推理脚本</strong>，使用 <code>model.generate</code> 生成文本。</li>
+</ol>
+<h3 id="3-2-下载与加载预训练模型"><a href="#3-2-下载与加载预训练模型" class="headerlink" title="3.2 下载与加载预训练模型"></a>3.2 下载与加载预训练模型</h3><p>以下示例以 LLaMA-7B（假设已获得授权并放置在本地目录 <code>./llama-7b/</code>）为例。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoTokenizer, AutoModelForCausalLM</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 若使用本地权重，指定本地路径</span></span><br><span class="line">model_name_or_path = <span class="string">&quot;./llama-7b/&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载分词器与模型</span></span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(model_name_or_path, use_fast=<span class="literal">False</span>)</span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(</span><br><span class="line">    model_name_or_path,</span><br><span class="line">    torch_dtype=torch.float16,  <span class="comment"># 若显存充足可使用半精度</span></span><br><span class="line">    low_cpu_mem_usage=<span class="literal">True</span>       <span class="comment"># 减少加载时 CPU 内存占用</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将模型移动到 GPU</span></span><br><span class="line">device = torch.device(<span class="string">&quot;cuda&quot;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span>)</span><br><span class="line">model.to(device)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 推理示例</span></span><br><span class="line">prompt = <span class="string">&quot;以下是一道数学题：\n请计算 345 × 678 等于多少？\n答案：&quot;</span></span><br><span class="line">inputs = tokenizer(prompt, return_tensors=<span class="string">&quot;pt&quot;</span>).to(device)</span><br><span class="line">outputs = model.generate(</span><br><span class="line">    **inputs,</span><br><span class="line">    max_new_tokens=<span class="number">50</span>,</span><br><span class="line">    temperature=<span class="number">0.7</span>,</span><br><span class="line">    top_p=<span class="number">0.9</span>,</span><br><span class="line">    do_sample=<span class="literal">True</span></span><br><span class="line">)</span><br><span class="line"><span class="built_in">print</span>(tokenizer.decode(outputs[<span class="number">0</span>], skip_special_tokens=<span class="literal">True</span>))</span><br></pre></td></tr></table></figure>
+
+<p>若直接从 Hugging Face Hub 下载通用模型（如 <code>gpt2-medium</code>、<code>EleutherAI/gpt-j-6B</code> 等）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载 gpt-j-6B</span></span><br><span class="line">git lfs install  <span class="comment"># 确保 git-lfs 已安装并配置</span></span><br><span class="line">git <span class="built_in">clone</span> https://huggingface.co/EleutherAI/gpt-j-6B ./gpt-j-6B</span><br></pre></td></tr></table></figure>
+
+<p>然后与上述代码相同，直接将 <code>model_name_or_path=&quot;./gpt-j-6B&quot;</code>。</p>
+<h3 id="3-3-模型量化与显存优化"><a href="#3-3-模型量化与显存优化" class="headerlink" title="3.3 模型量化与显存优化"></a>3.3 模型量化与显存优化</h3><p>在本地单卡显存有限（如 16GB 或 24GB）的情况下，可使用 <code>bitsandbytes</code> 将模型加载为 8-bit 或 4-bit，以节省显存并加速推理。</p>
+<p><strong>安装前确保系统支持：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install bitsandbytes</span><br></pre></td></tr></table></figure>
+
+<p><strong>8-bit 加载示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoTokenizer, AutoModelForCausalLM</span><br><span class="line"><span class="keyword">import</span> bitsandbytes <span class="keyword">as</span> bnb</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">model_name_or_path = <span class="string">&quot;EleutherAI/gpt-j-6B&quot;</span></span><br><span class="line"></span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)</span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(</span><br><span class="line">    model_name_or_path,</span><br><span class="line">    load_in_8bit=<span class="literal">True</span>,             <span class="comment"># 关键参数：8-bit 加载</span></span><br><span class="line">    device_map=<span class="string">&quot;auto&quot;</span>,             <span class="comment"># 自动分配设备（多卡时可自动拆分）</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 推理</span></span><br><span class="line">input_ids = tokenizer(<span class="string">&quot;你好，世界！&quot;</span>, return_tensors=<span class="string">&quot;pt&quot;</span>).input_ids.to(model.device)</span><br><span class="line">out = model.generate(input_ids, max_new_tokens=<span class="number">50</span>)</span><br><span class="line"><span class="built_in">print</span>(tokenizer.decode(out[<span class="number">0</span>], skip_special_tokens=<span class="literal">True</span>))</span><br></pre></td></tr></table></figure>
+
+<p><strong>4-bit 加载示例（需较新版本的 Transformers + bitsandbytes）：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">model = AutoModelForCausalLM.from_pretrained(</span><br><span class="line">    model_name_or_path,</span><br><span class="line">    load_in_4bit=<span class="literal">True</span>,</span><br><span class="line">    device_map=<span class="string">&quot;auto&quot;</span>,</span><br><span class="line">    quantization_config=bnb.quantization.QuantizationConfig(</span><br><span class="line">        load_in_4bit=<span class="literal">True</span>,</span><br><span class="line">        llm_int8_threshold=<span class="number">6.0</span>  <span class="comment"># 可调阈值</span></span><br><span class="line">    )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意</strong>：4-bit 量化相较 8-bit 会带来更大的显存节省，但生成质量可能略有下降，需要在阈值与评估指标上进行调优。</p>
+</blockquote>
+<h3 id="3-4-推理示例代码"><a href="#3-4-推理示例代码" class="headerlink" title="3.4 推理示例代码"></a>3.4 推理示例代码</h3><p>以下示例展示如何使用 Hugging Face <code>pipeline</code> 简化推理流程（以 GPT-2 为例）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> pipeline</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建文本生成 pipeline</span></span><br><span class="line">generator = pipeline(</span><br><span class="line">    <span class="string">&quot;text-generation&quot;</span>,</span><br><span class="line">    model=<span class="string">&quot;gpt2-medium&quot;</span>,</span><br><span class="line">    tokenizer=<span class="string">&quot;gpt2-medium&quot;</span>,</span><br><span class="line">    device=<span class="number">0</span>  <span class="comment"># 使用 GPU 0；若无 GPU，可删除该参数</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成文本</span></span><br><span class="line">prompt = <span class="string">&quot;从前有一只小狐狸，&quot;</span></span><br><span class="line">results = generator(</span><br><span class="line">    prompt,</span><br><span class="line">    max_length=<span class="number">100</span>,</span><br><span class="line">    do_sample=<span class="literal">True</span>,</span><br><span class="line">    temperature=<span class="number">0.8</span>,</span><br><span class="line">    top_p=<span class="number">0.95</span>,</span><br><span class="line">    num_return_sequences=<span class="number">3</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i, res <span class="keyword">in</span> <span class="built_in">enumerate</span>(results):</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;=== 生成结果 <span class="subst">&#123;i+<span class="number">1</span>&#125;</span> ===&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(res[<span class="string">&quot;generated_text&quot;</span>])</span><br><span class="line">    <span class="built_in">print</span>()</span><br></pre></td></tr></table></figure>
+
+<p>如果需要自定义调度（如逐步移除注意力层缓存、强制禁用缓存以减少显存峰值等），可手动编写类似前节 3.2 的 <code>model.generate</code> 代码。</p>
+<h3 id="3-5-使用-DeepSpeed-In-8bit-推理加速"><a href="#3-5-使用-DeepSpeed-In-8bit-推理加速" class="headerlink" title="3.5 使用 DeepSpeed &#x2F; In-8bit 推理加速"></a>3.5 使用 DeepSpeed &#x2F; In-8bit 推理加速</h3><ul>
+<li><p><strong>DeepSpeed-Inference</strong>：适用于超大模型（如 30B+），可启用 ZeRO-Inference &#x2F; 8-bit 量化 &#x2F; CPU-Offload 等功能。</p>
+</li>
+<li><p><strong>配置示例</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install deepspeed</span><br></pre></td></tr></table></figure>
+
+<p>然后在脚本中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoTokenizer, AutoModelForCausalLM</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">model_name_or_path = <span class="string">&quot;facebook/opt-30b&quot;</span></span><br><span class="line"></span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)</span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(</span><br><span class="line">    model_name_or_path,</span><br><span class="line">    device_map=<span class="string">&quot;auto&quot;</span>,</span><br><span class="line">    torch_dtype=torch.float16,</span><br><span class="line">    low_cpu_mem_usage=<span class="literal">True</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 DeepSpeed 推理加速</span></span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> pipeline</span><br><span class="line">generator = pipeline(</span><br><span class="line">    <span class="string">&quot;text-generation&quot;</span>,</span><br><span class="line">    model=model,</span><br><span class="line">    tokenizer=tokenizer,</span><br><span class="line">    device=<span class="number">0</span>,</span><br><span class="line">    config=&#123;<span class="string">&quot;use_deepspeed&quot;</span>: <span class="literal">True</span>&#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">output = generator(<span class="string">&quot;今天天气如何？&quot;</span>, max_new_tokens=<span class="number">50</span>)</span><br><span class="line"><span class="built_in">print</span>(output)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>DeepSpeed 也支持自定义推理配置文件（JSON），可进一步优化 GPU&#x2F;CPU 资源分配。</p>
+</li>
+</ul>
+<hr>
+<h2 id="4-微调策略与实现"><a href="#4-微调策略与实现" class="headerlink" title="4. 微调策略与实现"></a>4. 微调策略与实现</h2><p>在本地环境下，直接对大模型（数十亿参数）做全参数微调往往会面临显存、计算量和时间成本过高的问题。因此，常用以下几种参数高效微调方法（PEFT）：</p>
+<ol>
+<li><strong>全参数微调（Full Fine-tuning）</strong><ul>
+<li>直接微调全部模型参数</li>
+<li>优点：最灵活，适用性最广</li>
+<li>缺点：参数量大（数十亿）、显存&#x2F;计算量需求高、不便于模型部署</li>
+</ul>
+</li>
+<li><strong>LoRA（Low-Rank Adaptation）</strong><ul>
+<li>仅在注意力层的权重矩阵上添加低秩矩阵（A、B 两个矩阵），只训练这部分权重</li>
+<li>大幅减少可训练参数（通常只需 1~2 亿参数），显存占用显著降低</li>
+<li>微调完成后保存 LoRA 权重，与基模型共享使用即可</li>
+</ul>
+</li>
+<li><strong>P-tuning &#x2F; Prompt Tuning</strong><ul>
+<li>在模型输入前加入可训练的“虚拟 token”（soft prompt）</li>
+<li>不修改模型权重，仅学习输入的 prompt 表示，参数量小（通常几百万）</li>
+<li>适合需要少量样本快速微调的场景</li>
+</ul>
+</li>
+<li><strong>Adapter-based 微调</strong><ul>
+<li>类似 LoRA，但在每个 Transformer 层中添加适配器（小型 MLP）</li>
+<li>训练时只更新适配器参数</li>
+</ul>
+</li>
+<li><strong>PEFT（Parameter-Efficient Fine-Tuning）</strong><ul>
+<li>Hugging Face 提供的统一库，封装上述 LoRA、P-tuning、Adapter 等多种微调方法</li>
+<li>方便多种方法对比、切换</li>
+</ul>
+</li>
+</ol>
+<p>本节将重点介绍 LoRA + PEFT，因为它兼顾效果与效率，且社区资料丰富。</p>
+<h3 id="4-1-微调方法概述"><a href="#4-1-微调方法概述" class="headerlink" title="4.1 微调方法概述"></a>4.1 微调方法概述</h3><h4 id="4-1-1-全参数微调（Full-Fine-tuning）"><a href="#4-1-1-全参数微调（Full-Fine-tuning）" class="headerlink" title="4.1.1 全参数微调（Full Fine-tuning）"></a>4.1.1 全参数微调（Full Fine-tuning）</h4><ul>
+<li><p><strong>步骤</strong>：</p>
+<ol>
+<li>加载预训练模型</li>
+<li>添加 task-specific 层（如分类头、多任务头等，若需要）</li>
+<li>使用下游数据进行训练（通常使用 AdamW 优化器）</li>
+<li>保存整个微调后的模型</li>
+</ol>
+</li>
+<li><p><strong>显存&#x2F;计算需求</strong>：</p>
+<ul>
+<li>7B 参数模型至少需要 40GB 显存才能以 FP16 运行单卡训练</li>
+<li>需要大量训练时间（数十万 ~ 一百万步）才能充分收敛</li>
+</ul>
+</li>
+<li><p><strong>示例代码</strong>（针对文本生成任务）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoTokenizer, AutoModelForCausalLM, Trainer, TrainingArguments</span><br><span class="line"><span class="keyword">from</span> datasets <span class="keyword">import</span> load_dataset</span><br><span class="line"></span><br><span class="line">model_name = <span class="string">&quot;EleutherAI/gpt-j-6B&quot;</span></span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(model_name)</span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载训练数据示例（这里以 wikitext-2 为例）</span></span><br><span class="line">dataset = load_dataset(<span class="string">&quot;wikitext&quot;</span>, <span class="string">&quot;wikitext-2-raw-v1&quot;</span>, split=<span class="string">&quot;train&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">tokenize_fn</span>(<span class="params">examples</span>):</span><br><span class="line">    <span class="keyword">return</span> tokenizer(examples[<span class="string">&quot;text&quot;</span>], truncation=<span class="literal">True</span>, max_length=<span class="number">512</span>)</span><br><span class="line"></span><br><span class="line">tokenized = dataset.<span class="built_in">map</span>(tokenize_fn, batched=<span class="literal">True</span>, remove_columns=[<span class="string">&quot;text&quot;</span>])</span><br><span class="line">tokenized.set_format(<span class="built_in">type</span>=<span class="string">&quot;torch&quot;</span>, columns=[<span class="string">&quot;input_ids&quot;</span>])</span><br><span class="line"></span><br><span class="line">training_args = TrainingArguments(</span><br><span class="line">    output_dir=<span class="string">&quot;./ft_gptj&quot;</span>,</span><br><span class="line">    per_device_train_batch_size=<span class="number">1</span>,</span><br><span class="line">    gradient_accumulation_steps=<span class="number">8</span>,</span><br><span class="line">    fp16=<span class="literal">True</span>,</span><br><span class="line">    num_train_epochs=<span class="number">1</span>,</span><br><span class="line">    learning_rate=<span class="number">1e-5</span>,</span><br><span class="line">    logging_steps=<span class="number">100</span>,</span><br><span class="line">    save_steps=<span class="number">500</span>,</span><br><span class="line">    save_total_limit=<span class="number">2</span>,</span><br><span class="line">    remove_unused_columns=<span class="literal">True</span>,</span><br><span class="line">    dataloader_num_workers=<span class="number">4</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">trainer = Trainer(</span><br><span class="line">    model=model,</span><br><span class="line">    args=training_args,</span><br><span class="line">    train_dataset=tokenized,</span><br><span class="line">    tokenizer=tokenizer,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">trainer.train()</span><br><span class="line">trainer.save_model(<span class="string">&quot;./ft_gptj_final&quot;</span>)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="4-1-2-LoRA（Low-Rank-Adaptation）"><a href="#4-1-2-LoRA（Low-Rank-Adaptation）" class="headerlink" title="4.1.2 LoRA（Low-Rank Adaptation）"></a>4.1.2 LoRA（Low-Rank Adaptation）</h4><ul>
+<li><p><strong>原理</strong>：在注意力层的查询（Q）和键（K）矩阵等位置插入两个低秩矩阵 A（降维）与 B（升维），只微调 A、B 的参数。</p>
+</li>
+<li><p><strong>优点</strong>：</p>
+<ul>
+<li>大幅减少可训练参数（通常只需基模型参数的 1% ~ 5%）</li>
+<li>显存占用降低，可在单卡 24GB 上微调 7B、13B 模型</li>
+<li>微调后可将 LoRA 参数与基模型分离，轻量化部署</li>
+</ul>
+</li>
+<li><p><strong>关键参数</strong>：</p>
+<ul>
+<li><code>r</code>（rank）：低秩矩阵的秩，决定投影维度（如 r&#x3D;8，代表 A: d×8，B: 8×d）</li>
+<li><code>alpha</code>：缩放系数，常用值与 r 共同调节最终更新幅度</li>
+<li><code>target_modules</code>：指定要插入 LoRA 的层名称列表，如 <code>[&quot;q_proj&quot;, &quot;v_proj&quot;]</code></li>
+</ul>
+</li>
+<li><p><strong>示例代码</strong>（针对 LLaMA-7B）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> LlamaForCausalLM, LlamaTokenizer</span><br><span class="line"><span class="keyword">from</span> peft <span class="keyword">import</span> get_peft_model, LoraConfig, TaskType</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">model_name = <span class="string">&quot;./llama-7b/&quot;</span></span><br><span class="line">tokenizer = LlamaTokenizer.from_pretrained(model_name)</span><br><span class="line">model = LlamaForCausalLM.from_pretrained(</span><br><span class="line">    model_name, </span><br><span class="line">    torch_dtype=torch.float16,</span><br><span class="line">    device_map=<span class="string">&quot;auto&quot;</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置 LoRA 参数</span></span><br><span class="line">peft_config = LoraConfig(</span><br><span class="line">    task_type=TaskType.CAUSAL_LM,</span><br><span class="line">    inference_mode=<span class="literal">False</span>,</span><br><span class="line">    r=<span class="number">16</span>,</span><br><span class="line">    lora_alpha=<span class="number">32</span>,</span><br><span class="line">    lora_dropout=<span class="number">0.05</span>,</span><br><span class="line">    target_modules=[<span class="string">&quot;q_proj&quot;</span>, <span class="string">&quot;k_proj&quot;</span>, <span class="string">&quot;v_proj&quot;</span>],</span><br><span class="line">)</span><br><span class="line">model = get_peft_model(model, peft_config)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 准备数据（同 5.1 小节示例）</span></span><br><span class="line"><span class="comment"># ...</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义 Trainer</span></span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> Trainer, TrainingArguments</span><br><span class="line"><span class="keyword">from</span> datasets <span class="keyword">import</span> load_dataset</span><br><span class="line"></span><br><span class="line">dataset = load_dataset(<span class="string">&quot;json&quot;</span>, data_files=&#123;<span class="string">&quot;train&quot;</span>: <span class="string">&quot;train_data.json&quot;</span>&#125;)[<span class="string">&quot;train&quot;</span>]</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">tokenize_fn</span>(<span class="params">examples</span>):</span><br><span class="line">    <span class="comment"># 示例：将输入拼接为 prompt-&gt;response 形式</span></span><br><span class="line">    inputs = [<span class="string">f&quot;### 指令：<span class="subst">&#123;item[<span class="string">&#x27;instruction&#x27;</span>]&#125;</span>\n### 上下文：<span class="subst">&#123;item.get(<span class="string">&#x27;context&#x27;</span>,<span class="string">&#x27;&#x27;</span>)&#125;</span>\n### 回答：&quot;</span> <span class="keyword">for</span> item <span class="keyword">in</span> examples]</span><br><span class="line">    outputs = [item[<span class="string">&quot;output&quot;</span>] <span class="keyword">for</span> item <span class="keyword">in</span> examples]</span><br><span class="line">    model_inputs = tokenizer(inputs, max_length=<span class="number">512</span>, truncation=<span class="literal">True</span>, padding=<span class="string">&quot;max_length&quot;</span>)</span><br><span class="line">    labels = tokenizer(outputs, max_length=<span class="number">256</span>, truncation=<span class="literal">True</span>, padding=<span class="string">&quot;max_length&quot;</span>)</span><br><span class="line">    model_inputs[<span class="string">&quot;labels&quot;</span>] = labels[<span class="string">&quot;input_ids&quot;</span>]</span><br><span class="line">    <span class="keyword">return</span> model_inputs</span><br><span class="line"></span><br><span class="line">tokenized_dataset = dataset.<span class="built_in">map</span>(tokenize_fn, batched=<span class="literal">True</span>, remove_columns=dataset.column_names)</span><br><span class="line">tokenized_dataset.set_format(<span class="built_in">type</span>=<span class="string">&quot;torch&quot;</span>, columns=[<span class="string">&quot;input_ids&quot;</span>, <span class="string">&quot;attention_mask&quot;</span>, <span class="string">&quot;labels&quot;</span>])</span><br><span class="line"></span><br><span class="line">training_args = TrainingArguments(</span><br><span class="line">    output_dir=<span class="string">&quot;./lora_llama7b&quot;</span>,</span><br><span class="line">    per_device_train_batch_size=<span class="number">1</span>,</span><br><span class="line">    gradient_accumulation_steps=<span class="number">4</span>,</span><br><span class="line">    num_train_epochs=<span class="number">3</span>,</span><br><span class="line">    learning_rate=<span class="number">3e-4</span>,</span><br><span class="line">    fp16=<span class="literal">True</span>,</span><br><span class="line">    logging_steps=<span class="number">50</span>,</span><br><span class="line">    save_steps=<span class="number">200</span>,</span><br><span class="line">    save_total_limit=<span class="number">3</span>,</span><br><span class="line">    report_to=<span class="string">&quot;none&quot;</span>,  <span class="comment"># 如果不使用 wandb 等日志服务</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">trainer = Trainer(</span><br><span class="line">    model=model,</span><br><span class="line">    args=training_args,</span><br><span class="line">    train_dataset=tokenized_dataset,</span><br><span class="line">    data_collator=<span class="keyword">lambda</span> data: &#123;</span><br><span class="line">        <span class="string">&quot;input_ids&quot;</span>: torch.stack([f[<span class="string">&quot;input_ids&quot;</span>] <span class="keyword">for</span> f <span class="keyword">in</span> data]),</span><br><span class="line">        <span class="string">&quot;attention_mask&quot;</span>: torch.stack([f[<span class="string">&quot;attention_mask&quot;</span>] <span class="keyword">for</span> f <span class="keyword">in</span> data]),</span><br><span class="line">        <span class="string">&quot;labels&quot;</span>: torch.stack([f[<span class="string">&quot;labels&quot;</span>] <span class="keyword">for</span> f <span class="keyword">in</span> data]),</span><br><span class="line">    &#125;,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">trainer.train()</span><br><span class="line"><span class="comment"># 保存 LoRA 微调结果</span></span><br><span class="line">model.save_pretrained(<span class="string">&quot;./lora_llama7b_final&quot;</span>)</span><br><span class="line">tokenizer.save_pretrained(<span class="string">&quot;./lora_llama7b_final&quot;</span>)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="4-1-3-P-tuning-Prompt-Tuning"><a href="#4-1-3-P-tuning-Prompt-Tuning" class="headerlink" title="4.1.3 P-tuning &#x2F; Prompt Tuning"></a>4.1.3 P-tuning &#x2F; Prompt Tuning</h4><ul>
+<li><strong>原理</strong>：在输入序列前添加可学习的“虚拟 token”表示，仅优化这些 prompt 向量，不修改模型参数。</li>
+<li><strong>适用</strong>：下游任务数据稀缺或仅想尝试少量超参</li>
+<li><strong>限制</strong>：效果通常略低于 LoRA，全参微调</li>
+<li><strong>示例代码</strong>：<br> Hugging Face PEFT 中对 P-tuning 的支持还在不断完善，可参考官方示例：<a target="_blank" rel="noopener" href="https://github.com/huggingface/peft">https://github.com/huggingface/peft</a></li>
+</ul>
+<h3 id="4-2-全参数微调（Full-Fine-tuning）详解"><a href="#4-2-全参数微调（Full-Fine-tuning）详解" class="headerlink" title="4.2 全参数微调（Full Fine-tuning）详解"></a>4.2 全参数微调（Full Fine-tuning）详解</h3><p>详见 4.1.1。若显存充足，可直接使用 <code>Trainer</code> API，或编写自定义 <code>Accelerator</code> 脚本完成更灵活的训练。</p>
+<h3 id="4-3-LoRA-实现要点"><a href="#4-3-LoRA-实现要点" class="headerlink" title="4.3 LoRA 实现要点"></a>4.3 LoRA 实现要点</h3><ol>
+<li><strong>选择插入位置</strong>：<ul>
+<li>对 Transformer 中的 Query、Key、Value、Output 等矩阵插入 LoRA。对于 LLaMA，可从源代码或模型 config 查找注意力层模块名。</li>
+</ul>
+</li>
+<li><strong>冻结原始权重</strong>：<ul>
+<li><code>get_peft_model</code> 会自动冻结基模型参数，只保留 LoRA 参数可训练。</li>
+</ul>
+</li>
+<li><strong>数据格式与标签对齐</strong>：<ul>
+<li>文本生成任务中，往往需要将输入和标签拼接在同一序列，并在 <code>labels</code> 中指定只计算输出部分 loss。</li>
+<li>可通过 <code>tokenizer.pad_token_id = tokenizer.eos_token_id</code> 处理填充 token。</li>
+</ul>
+</li>
+<li><strong>训练细节</strong>：<ul>
+<li>通常建议使用较大学习率（如 1e-4 ~ 3e-4），并配合梯度累积。</li>
+<li><code>fp16=True</code> 且 <code>gradient_checkpointing=True</code> 可进一步节省显存。</li>
+</ul>
+</li>
+</ol>
+<h3 id="4-4-P-tuning-Prompt-Tuning-详解"><a href="#4-4-P-tuning-Prompt-Tuning-详解" class="headerlink" title="4.4 P-tuning &#x2F; Prompt Tuning 详解"></a>4.4 P-tuning &#x2F; Prompt Tuning 详解</h3><ul>
+<li><strong>添加虚拟 token</strong>：<ol>
+<li>定义一个可学习的 embedding 矩阵，大小为 <code>[num_virtual_tokens, hidden_size]</code>。</li>
+<li>每次向模型前向时，将这段 embedding 与真实 token embedding 拼接，形成新的输入。</li>
+<li>仅对这段虚拟 embedding 参数进行梯度更新。</li>
+</ol>
+</li>
+<li><strong>框架</strong>：<ul>
+<li>目前 Hugging Face PEFT 对 P-tuning 的支持需搭配 <code>transformers.Trainer</code> 做自定义改写，或参考官方教程。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-5-PEFT（Parameter-Efficient-Fine-Tuning）架构介绍"><a href="#4-5-PEFT（Parameter-Efficient-Fine-Tuning）架构介绍" class="headerlink" title="4.5 PEFT（Parameter-Efficient Fine-Tuning）架构介绍"></a>4.5 PEFT（Parameter-Efficient Fine-Tuning）架构介绍</h3><p>PEFT 库统一了 LoRA、P-tuning、Adapter 等方法，提供以下核心接口：</p>
+<ul>
+<li><code>get_peft_model(model, config)</code>：将基模型与 PEFT 配置结合，返回可训练的 PEFT 模型。</li>
+<li><code>peft_config = LoraConfig(...)</code>：定义 LoRA 相关超参。</li>
+<li><code>peft_config = PromptTuningConfig(...)</code>：定义 P-tuning 相关超参。</li>
+<li><code>model.print_trainable_parameters()</code>：查看可训练参数与冻结参数占比。</li>
+</ul>
+<p>通过 PEFT，可以轻松切换不同微调方法，对比效果，且微调完成后仅保存少量权重，便于线上部署。</p>
+<h3 id="4-6-数据集准备与预处理"><a href="#4-6-数据集准备与预处理" class="headerlink" title="4.6 数据集准备与预处理"></a>4.6 数据集准备与预处理</h3><ol>
+<li><strong>选择数据格式</strong>：<ul>
+<li>文本分类：CSV&#x2F;JSON，字段包含 <code>input_text</code> 与 <code>label</code>；</li>
+<li>文本生成：JSON 格式，每条记录包含 <code>instruction</code>、<code>input</code>（可选）与 <code>output</code>；</li>
+<li>问答：SQuAD 格式 JSON；</li>
+</ul>
+</li>
+<li><strong>数据清洗</strong>：<ul>
+<li>去除空行、非法字符；</li>
+<li>统一编码为 UTF-8；</li>
+<li>字段对齐、检查空值或格式错误；</li>
+</ul>
+</li>
+<li><strong>分词与缓存</strong>：<ul>
+<li>使用 <code>datasets</code> 库的 <code>map</code> 方法将文本转换为 <code>input_ids</code>、<code>attention_mask</code>、<code>labels</code> 等；</li>
+<li>如果 GPU 显存不足，可先在 CPU 上完成预处理并将结果缓存到磁盘，以加快每次实验启动速度。</li>
+</ul>
+</li>
+<li><strong>构造 DataLoader</strong>：<ul>
+<li>对于自定义脚本：手动使用 <code>torch.utils.data.Dataset</code> 与 <code>DataLoader</code>；</li>
+<li>对于 <code>Trainer</code>：将 <code>datasets.Dataset</code> 传入，并配置 <code>data_collator</code>；</li>
+</ul>
+</li>
+</ol>
+<p>示例：构建简单的“指令-回复”训练集：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datasets <span class="keyword">import</span> Dataset</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="comment"># 假设 raw_data.json 格式为：[&#123; &quot;instruction&quot;: &quot;...&quot;, &quot;input&quot;: &quot;...&quot;, &quot;output&quot;: &quot;...&quot; &#125;, ...]</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;raw_data.json&quot;</span>, <span class="string">&quot;r&quot;</span>, encoding=<span class="string">&quot;utf-8&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    records = json.load(f)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">format_example</span>(<span class="params">ex</span>):</span><br><span class="line">    prompt = <span class="string">f&quot;### 指令：<span class="subst">&#123;ex[<span class="string">&#x27;instruction&#x27;</span>]&#125;</span>\n&quot;</span></span><br><span class="line">    <span class="keyword">if</span> ex.get(<span class="string">&quot;input&quot;</span>):</span><br><span class="line">        prompt += <span class="string">f&quot;### 上下文：<span class="subst">&#123;ex[<span class="string">&#x27;input&#x27;</span>]&#125;</span>\n&quot;</span></span><br><span class="line">    prompt += <span class="string">&quot;### 回答：&quot;</span></span><br><span class="line">    <span class="keyword">return</span> &#123;<span class="string">&quot;prompt&quot;</span>: prompt, <span class="string">&quot;output&quot;</span>: ex[<span class="string">&quot;output&quot;</span>]&#125;</span><br><span class="line"></span><br><span class="line">formatted = [format_example(rec) <span class="keyword">for</span> rec <span class="keyword">in</span> records]</span><br><span class="line">dataset = Dataset.from_list(formatted)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-实战示例：使用-LoRA-微调-LLaMA-7B"><a href="#5-实战示例：使用-LoRA-微调-LLaMA-7B" class="headerlink" title="5. 实战示例：使用 LoRA 微调 LLaMA-7B"></a>5. 实战示例：使用 LoRA 微调 LLaMA-7B</h2><p>下面将从头到尾演示如何在单卡 24GB 显存（或多卡环境）下，使用 LoRA 微调 LLaMA-7B，以一个“指令-回复”问答场景为例。</p>
+<h3 id="5-1-数据集选取与格式化"><a href="#5-1-数据集选取与格式化" class="headerlink" title="5.1 数据集选取与格式化"></a>5.1 数据集选取与格式化</h3><p>假设我们有一个自定义的 JSON 格式数据集 <code>train_data.json</code>，每条记录包含：</p>
+<figure class="highlight jsonc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;instruction&quot;</span><span class="punctuation">:</span> <span class="string">&quot;请介绍一下长江的地理位置。&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;input&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;output&quot;</span><span class="punctuation">:</span> <span class="string">&quot;长江，位于中国中部和东部，是世界第三长河，全长约6300公里。发源于青海省唐古拉山脉，流经多省市，最后注入东海。&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;instruction&quot;</span><span class="punctuation">:</span> <span class="string">&quot;如何使用 Python 读取一个 CSV 文件？&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;input&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;output&quot;</span><span class="punctuation">:</span> <span class="string">&quot;可以使用 pandas 库：\n```python\nimport pandas as pd\ndf = pd.read_csv(&#x27;file.csv&#x27;)\n```&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="comment">// … 其他样本 …</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>格式化逻辑</strong>：将每条记录转换为如下两部分：</p>
+<ul>
+<li><p><code>prompt</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">### 指令：&lt;instruction&gt;</span><br><span class="line">### 上下文：&lt;input&gt;  # 如果 input 为空，可省略该行</span><br><span class="line">### 回答：</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>response</code>：即 <code>output</code> 字段</p>
+</li>
+</ul>
+<p>将其保存为 Hugging Face <code>datasets.Dataset</code>，并在 <code>map</code> 函数中进行分词。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datasets <span class="keyword">import</span> load_dataset</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> LlamaTokenizer</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载原始 JSON 数据</span></span><br><span class="line">dataset = load_dataset(<span class="string">&quot;json&quot;</span>, data_files=&#123;<span class="string">&quot;train&quot;</span>: <span class="string">&quot;train_data.json&quot;</span>&#125;)[<span class="string">&quot;train&quot;</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载分词器</span></span><br><span class="line">tokenizer = LlamaTokenizer.from_pretrained(<span class="string">&quot;./llama-7b/&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 若 tokenizer 缺少 pad_token，设为 eos_token</span></span><br><span class="line"><span class="keyword">if</span> tokenizer.pad_token_id <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">    tokenizer.pad_token_id = tokenizer.eos_token_id</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">preprocess_fn</span>(<span class="params">examples</span>):</span><br><span class="line">    prompts, labels = [], []</span><br><span class="line">    <span class="keyword">for</span> inst, inp, out <span class="keyword">in</span> <span class="built_in">zip</span>(examples[<span class="string">&quot;instruction&quot;</span>], examples[<span class="string">&quot;input&quot;</span>], examples[<span class="string">&quot;output&quot;</span>]):</span><br><span class="line">        prompt = <span class="string">f&quot;### 指令：<span class="subst">&#123;inst&#125;</span>\n&quot;</span></span><br><span class="line">        <span class="keyword">if</span> inp <span class="keyword">and</span> inp.strip() != <span class="string">&quot;&quot;</span>:</span><br><span class="line">            prompt += <span class="string">f&quot;### 上下文：<span class="subst">&#123;inp&#125;</span>\n&quot;</span></span><br><span class="line">        prompt += <span class="string">&quot;### 回答：&quot;</span></span><br><span class="line">        prompts.append(prompt)</span><br><span class="line">        labels.append(out)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 合并 prompt 与 labels，便于一次性编码</span></span><br><span class="line">    input_encodings = tokenizer(prompts, padding=<span class="string">&quot;max_length&quot;</span>, truncation=<span class="literal">True</span>, max_length=<span class="number">512</span>)</span><br><span class="line">    label_encodings = tokenizer(labels, padding=<span class="string">&quot;max_length&quot;</span>, truncation=<span class="literal">True</span>, max_length=<span class="number">256</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 将未使用的部分设为 -100，以忽略 loss 计算</span></span><br><span class="line">    input_ids = input_encodings[<span class="string">&quot;input_ids&quot;</span>]</span><br><span class="line">    attention_mask = input_encodings[<span class="string">&quot;attention_mask&quot;</span>]</span><br><span class="line">    labels_ids = label_encodings[<span class="string">&quot;input_ids&quot;</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(labels_ids)):</span><br><span class="line">        <span class="comment"># 将 prompt 部分的 label 标记为 -100</span></span><br><span class="line">        prompt_len = <span class="built_in">len</span>(tokenizer(prompts[i], return_tensors=<span class="string">&quot;pt&quot;</span>).input_ids[<span class="number">0</span>])</span><br><span class="line">        labels_ids[i][:prompt_len] = [-<span class="number">100</span>] * prompt_len</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&quot;input_ids&quot;</span>: input_ids,</span><br><span class="line">        <span class="string">&quot;attention_mask&quot;</span>: attention_mask,</span><br><span class="line">        <span class="string">&quot;labels&quot;</span>: labels_ids</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 预处理并缓存</span></span><br><span class="line">tokenized_dataset = dataset.<span class="built_in">map</span>(</span><br><span class="line">    preprocess_fn,</span><br><span class="line">    batched=<span class="literal">True</span>,</span><br><span class="line">    remove_columns=dataset.column_names</span><br><span class="line">)</span><br><span class="line">tokenized_dataset.set_format(<span class="built_in">type</span>=<span class="string">&quot;torch&quot;</span>, columns=[<span class="string">&quot;input_ids&quot;</span>, <span class="string">&quot;attention_mask&quot;</span>, <span class="string">&quot;labels&quot;</span>])</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-2-PEFT-Transformers-微调脚本示例"><a href="#5-2-PEFT-Transformers-微调脚本示例" class="headerlink" title="5.2 PEFT + Transformers 微调脚本示例"></a>5.2 PEFT + Transformers 微调脚本示例</h3><p>将上节数据处理与 LoRA 配置结合，示例脚本如下保存为 <code>finetune_lora_llama7b.py</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> LlamaForCausalLM, LlamaTokenizer, Trainer, TrainingArguments</span><br><span class="line"><span class="keyword">from</span> peft <span class="keyword">import</span> LoraConfig, get_peft_model, TaskType</span><br><span class="line"><span class="keyword">from</span> datasets <span class="keyword">import</span> load_dataset</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    model_name = <span class="string">&quot;./llama-7b/&quot;</span></span><br><span class="line">    output_dir = <span class="string">&quot;./lora_llama7b_finetuned/&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 加载分词器与模型</span></span><br><span class="line">    tokenizer = LlamaTokenizer.from_pretrained(model_name)</span><br><span class="line">    <span class="keyword">if</span> tokenizer.pad_token_id <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        tokenizer.pad_token_id = tokenizer.eos_token_id</span><br><span class="line"></span><br><span class="line">    model = LlamaForCausalLM.from_pretrained(</span><br><span class="line">        model_name,</span><br><span class="line">        torch_dtype=torch.float16,</span><br><span class="line">        device_map=<span class="string">&quot;auto&quot;</span>,</span><br><span class="line">        low_cpu_mem_usage=<span class="literal">True</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 配置 LoRA</span></span><br><span class="line">    peft_config = LoraConfig(</span><br><span class="line">        task_type=TaskType.CAUSAL_LM,</span><br><span class="line">        inference_mode=<span class="literal">False</span>,</span><br><span class="line">        r=<span class="number">16</span>,</span><br><span class="line">        lora_alpha=<span class="number">32</span>,</span><br><span class="line">        lora_dropout=<span class="number">0.05</span>,</span><br><span class="line">        target_modules=[<span class="string">&quot;q_proj&quot;</span>, <span class="string">&quot;k_proj&quot;</span>, <span class="string">&quot;v_proj&quot;</span>]</span><br><span class="line">    )</span><br><span class="line">    model = get_peft_model(model, peft_config)</span><br><span class="line">    model.print_trainable_parameters()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 加载并预处理数据</span></span><br><span class="line">    raw_dataset = load_dataset(<span class="string">&quot;json&quot;</span>, data_files=&#123;<span class="string">&quot;train&quot;</span>: <span class="string">&quot;train_data.json&quot;</span>&#125;)[<span class="string">&quot;train&quot;</span>]</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">preprocess_fn</span>(<span class="params">examples</span>):</span><br><span class="line">        prompts, labels = [], []</span><br><span class="line">        <span class="keyword">for</span> inst, inp, out <span class="keyword">in</span> <span class="built_in">zip</span>(examples[<span class="string">&quot;instruction&quot;</span>], examples[<span class="string">&quot;input&quot;</span>], examples[<span class="string">&quot;output&quot;</span>]):</span><br><span class="line">            prompt = <span class="string">f&quot;### 指令：<span class="subst">&#123;inst&#125;</span>\n&quot;</span></span><br><span class="line">            <span class="keyword">if</span> inp <span class="keyword">and</span> inp.strip():</span><br><span class="line">                prompt += <span class="string">f&quot;### 上下文：<span class="subst">&#123;inp&#125;</span>\n&quot;</span></span><br><span class="line">            prompt += <span class="string">&quot;### 回答：&quot;</span></span><br><span class="line">            prompts.append(prompt)</span><br><span class="line">            labels.append(out)</span><br><span class="line"></span><br><span class="line">        input_enc = tokenizer(prompts, max_length=<span class="number">512</span>, truncation=<span class="literal">True</span>, padding=<span class="string">&quot;max_length&quot;</span>)</span><br><span class="line">        label_enc = tokenizer(labels, max_length=<span class="number">256</span>, truncation=<span class="literal">True</span>, padding=<span class="string">&quot;max_length&quot;</span>)</span><br><span class="line">        input_ids, attention_mask = input_enc[<span class="string">&quot;input_ids&quot;</span>], input_enc[<span class="string">&quot;attention_mask&quot;</span>]</span><br><span class="line">        labels_ids = label_enc[<span class="string">&quot;input_ids&quot;</span>]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(labels_ids)):</span><br><span class="line">            prompt_len = <span class="built_in">len</span>(tokenizer(prompts[i], return_tensors=<span class="string">&quot;pt&quot;</span>).input_ids[<span class="number">0</span>])</span><br><span class="line">            labels_ids[i][:prompt_len] = [-<span class="number">100</span>] * prompt_len</span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="string">&quot;input_ids&quot;</span>: input_ids, <span class="string">&quot;attention_mask&quot;</span>: attention_mask, <span class="string">&quot;labels&quot;</span>: labels_ids&#125;</span><br><span class="line"></span><br><span class="line">    tokenized = raw_dataset.<span class="built_in">map</span>(</span><br><span class="line">        preprocess_fn,</span><br><span class="line">        batched=<span class="literal">True</span>,</span><br><span class="line">        remove_columns=raw_dataset.column_names</span><br><span class="line">    )</span><br><span class="line">    tokenized.set_format(<span class="built_in">type</span>=<span class="string">&quot;torch&quot;</span>, columns=[<span class="string">&quot;input_ids&quot;</span>, <span class="string">&quot;attention_mask&quot;</span>, <span class="string">&quot;labels&quot;</span>])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 训练参数</span></span><br><span class="line">    training_args = TrainingArguments(</span><br><span class="line">        output_dir=output_dir,</span><br><span class="line">        per_device_train_batch_size=<span class="number">1</span>,</span><br><span class="line">        gradient_accumulation_steps=<span class="number">4</span>,</span><br><span class="line">        num_train_epochs=<span class="number">3</span>,</span><br><span class="line">        learning_rate=<span class="number">3e-4</span>,</span><br><span class="line">        fp16=<span class="literal">True</span>,</span><br><span class="line">        logging_steps=<span class="number">50</span>,</span><br><span class="line">        save_steps=<span class="number">200</span>,</span><br><span class="line">        save_total_limit=<span class="number">3</span>,</span><br><span class="line">        report_to=<span class="string">&quot;none&quot;</span></span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 定义 Trainer</span></span><br><span class="line">    trainer = Trainer(</span><br><span class="line">        model=model,</span><br><span class="line">        args=training_args,</span><br><span class="line">        train_dataset=tokenized,</span><br><span class="line">        data_collator=<span class="keyword">lambda</span> examples: &#123;</span><br><span class="line">            <span class="string">&quot;input_ids&quot;</span>: torch.stack([ex[<span class="string">&quot;input_ids&quot;</span>] <span class="keyword">for</span> ex <span class="keyword">in</span> examples]),</span><br><span class="line">            <span class="string">&quot;attention_mask&quot;</span>: torch.stack([ex[<span class="string">&quot;attention_mask&quot;</span>] <span class="keyword">for</span> ex <span class="keyword">in</span> examples]),</span><br><span class="line">            <span class="string">&quot;labels&quot;</span>: torch.stack([ex[<span class="string">&quot;labels&quot;</span>] <span class="keyword">for</span> ex <span class="keyword">in</span> examples]),</span><br><span class="line">        &#125;</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 开始训练</span></span><br><span class="line">    trainer.train()</span><br><span class="line">    <span class="comment"># 保存微调后模型（包含 LoRA 权重）</span></span><br><span class="line">    model.save_pretrained(output_dir)</span><br><span class="line">    tokenizer.save_pretrained(output_dir)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<p>运行方式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 单卡训练示例</span></span><br><span class="line">CUDA_VISIBLE_DEVICES=0 python finetune_lora_llama7b.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># 多卡训练示例（如果有 2 张卡）</span></span><br><span class="line">CUDA_VISIBLE_DEVICES=0,1 python -m torch.distributed.run --nproc_per_node=2 finetune_lora_llama7b.py</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-3-训练超参数与分布式训练配置"><a href="#5-3-训练超参数与分布式训练配置" class="headerlink" title="5.3 训练超参数与分布式训练配置"></a>5.3 训练超参数与分布式训练配置</h3><ul>
+<li><strong>学习率（learning_rate）</strong><ul>
+<li>LoRA 常用范围：1e-4 ~ 3e-4</li>
+<li>可结合 warmup 步骤（<code>warmup_steps=100</code>）缓冲学习率</li>
+</ul>
+</li>
+<li><strong>Batch Size 与梯度累积（gradient_accumulation_steps）</strong><ul>
+<li>如单卡显存有限，可设 <code>per_device_train_batch_size=1</code>，并使用 <code>gradient_accumulation_steps=4~8</code></li>
+</ul>
+</li>
+<li><strong>Epoch 数</strong><ul>
+<li>小数据集 1~3 个 epoch 即可</li>
+<li>大数据集（数万条以上）可适当增大，但注意过拟合</li>
+</ul>
+</li>
+<li><strong>分布式</strong><ul>
+<li>若多卡，可使用 <code>torch.distributed.run</code> 或 <code>Accelerate</code></li>
+<li><code>training_args = TrainingArguments(..., deepspeed=&quot;ds_config.json&quot;)</code> 可启用 DeepSpeed Zero 以进一步节省显存</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-4-检查点保存与模型导出"><a href="#5-4-检查点保存与模型导出" class="headerlink" title="5.4 检查点保存与模型导出"></a>5.4 检查点保存与模型导出</h3><ul>
+<li><p><strong>模型保存</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">model.save_pretrained(<span class="string">&quot;./lora_llama7b_final/&quot;</span>)</span><br><span class="line">tokenizer.save_pretrained(<span class="string">&quot;./lora_llama7b_final/&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>该目录下会包含：</p>
+<ul>
+<li><code>pytorch_model.bin</code>（LoRA 权重，与 base_model.bin 共存或可单独保存）</li>
+<li><code>adapter_config.json</code>（LoRA 配置）</li>
+<li><code>tokenizer.json</code>、<code>tokenizer_config.json</code></li>
+</ul>
+</li>
+<li><p><strong>导出合并模型（可选）</strong><br> 若想将 LoRA 权重与基模型合并为单个 <code>.bin</code>，方便部署，可使用 Hugging Face 提供的 <code>peft</code> 脚本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from peft import PeftModel</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载基模型与 LoRA 权重</span></span><br><span class="line">base_model = LlamaForCausalLM.from_pretrained(<span class="string">&quot;./llama-7b&quot;</span>, torch_dtype=torch.float16, device_map=<span class="string">&quot;auto&quot;</span>)</span><br><span class="line">lora_model = PeftModel.from_pretrained(base_model, <span class="string">&quot;./lora_llama7b_final/&quot;</span>)</span><br><span class="line"><span class="comment"># 导出合并后的模型</span></span><br><span class="line">lora_model.save_pretrained(<span class="string">&quot;./merged_llama7b/&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>合并后可直接通过 <code>from_pretrained(&quot;./merged_llama7b&quot;)</code> 加载。</p>
+</li>
+</ul>
+<h3 id="5-5-微调后模型推理对比"><a href="#5-5-微调后模型推理对比" class="headerlink" title="5.5 微调后模型推理对比"></a>5.5 微调后模型推理对比</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> LlamaForCausalLM, LlamaTokenizer</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载微调前后模型</span></span><br><span class="line">base_model = LlamaForCausalLM.from_pretrained(</span><br><span class="line">    <span class="string">&quot;./llama-7b/&quot;</span>, </span><br><span class="line">    torch_dtype=torch.float16, </span><br><span class="line">    device_map=<span class="string">&quot;auto&quot;</span></span><br><span class="line">)</span><br><span class="line">lora_model = LlamaForCausalLM.from_pretrained(</span><br><span class="line">    <span class="string">&quot;./lora_llama7b_final/&quot;</span>,</span><br><span class="line">    torch_dtype=torch.float16,</span><br><span class="line">    device_map=<span class="string">&quot;auto&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">tokenizer = LlamaTokenizer.from_pretrained(<span class="string">&quot;./llama-7b/&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> tokenizer.pad_token_id <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">    tokenizer.pad_token_id = tokenizer.eos_token_id</span><br><span class="line"></span><br><span class="line">prompt = <span class="string">&quot;### 指令：请简单介绍一下人工智能的历史。\n### 回答：&quot;</span></span><br><span class="line">inputs = tokenizer(prompt, return_tensors=<span class="string">&quot;pt&quot;</span>).to(base_model.device)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 微调前</span></span><br><span class="line">out_base = base_model.generate(</span><br><span class="line">    **inputs,</span><br><span class="line">    max_new_tokens=<span class="number">100</span>,</span><br><span class="line">    temperature=<span class="number">0.7</span>,</span><br><span class="line">    top_p=<span class="number">0.9</span>,</span><br><span class="line">    do_sample=<span class="literal">True</span>,</span><br><span class="line">)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;=== 微调前 输出 ===&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(tokenizer.decode(out_base[<span class="number">0</span>], skip_special_tokens=<span class="literal">True</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 微调后</span></span><br><span class="line">inputs_lora = tokenizer(prompt, return_tensors=<span class="string">&quot;pt&quot;</span>).to(lora_model.device)</span><br><span class="line">out_lora = lora_model.generate(</span><br><span class="line">    **inputs_lora,</span><br><span class="line">    max_new_tokens=<span class="number">100</span>,</span><br><span class="line">    temperature=<span class="number">0.7</span>,</span><br><span class="line">    top_p=<span class="number">0.9</span>,</span><br><span class="line">    do_sample=<span class="literal">True</span>,</span><br><span class="line">)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;\n=== 微调后 输出 ===&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(tokenizer.decode(out_lora[<span class="number">0</span>], skip_special_tokens=<span class="literal">True</span>))</span><br></pre></td></tr></table></figure>
+
+<p>对比两者在针对相同“指令”下的回答差异，验证 LoRA 微调效果。</p>
+<hr>
+<h2 id="6-推理部署优化"><a href="#6-推理部署优化" class="headerlink" title="6. 推理部署优化"></a>6. 推理部署优化</h2><p>在本地部署微调或预训练模型时，除了直接使用 CPU&#x2F;GPU 生成外，还可考虑更高级的加速方式。</p>
+<h3 id="6-1-8-bit-4-bit-量化推理"><a href="#6-1-8-bit-4-bit-量化推理" class="headerlink" title="6.1 8-bit &#x2F; 4-bit 量化推理"></a>6.1 8-bit &#x2F; 4-bit 量化推理</h3><p>如 3.3 小节所述，使用 <code>bitsandbytes</code> 将模型参数量化，可节省显存并提高推理速度；对已微调模型同样适用：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoModelForCausalLM, AutoTokenizer</span><br><span class="line"></span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(<span class="string">&quot;./lora_llama7b_final/&quot;</span>)</span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(</span><br><span class="line">    <span class="string">&quot;./lora_llama7b_final/&quot;</span>,</span><br><span class="line">    load_in_8bit=<span class="literal">True</span>,</span><br><span class="line">    device_map=<span class="string">&quot;auto&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 推理示例</span></span><br><span class="line">inputs = tokenizer(<span class="string">&quot;今天的新闻有哪些热点？&quot;</span>, return_tensors=<span class="string">&quot;pt&quot;</span>).to(model.device)</span><br><span class="line">out = model.generate(**inputs, max_new_tokens=<span class="number">50</span>)</span><br><span class="line"><span class="built_in">print</span>(tokenizer.decode(out[<span class="number">0</span>], skip_special_tokens=<span class="literal">True</span>))</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-ONNX-转换与加速"><a href="#6-2-ONNX-转换与加速" class="headerlink" title="6.2 ONNX 转换与加速"></a>6.2 ONNX 转换与加速</h3><p>将模型导出为 ONNX 后，可使用 ONNX Runtime、TensorRT 等进行推理优化。基本流程：</p>
+<ol>
+<li><p><strong>导出 ONNX</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install onnx onnxruntime onnxruntime-gpu</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoModelForCausalLM, AutoTokenizer</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(<span class="string">&quot;./llama-7b/&quot;</span>, torch_dtype=torch.float16).half().cuda()</span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(<span class="string">&quot;./llama-7b/&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 示例导出：仅导出编码部分为 ONNX</span></span><br><span class="line">input_str = <span class="string">&quot;测试&quot;</span></span><br><span class="line">inputs = tokenizer(input_str, return_tensors=<span class="string">&quot;pt&quot;</span>).to(model.device)</span><br><span class="line">torch.onnx.export(</span><br><span class="line">    model,</span><br><span class="line">    (inputs[<span class="string">&quot;input_ids&quot;</span>], inputs[<span class="string">&quot;attention_mask&quot;</span>]),</span><br><span class="line">    <span class="string">&quot;llama7b.onnx&quot;</span>,</span><br><span class="line">    input_names=[<span class="string">&quot;input_ids&quot;</span>, <span class="string">&quot;attention_mask&quot;</span>],</span><br><span class="line">    output_names=[<span class="string">&quot;output&quot;</span>],</span><br><span class="line">    dynamic_axes=&#123;</span><br><span class="line">        <span class="string">&quot;input_ids&quot;</span>: &#123;<span class="number">0</span>: <span class="string">&quot;batch&quot;</span>, <span class="number">1</span>: <span class="string">&quot;sequence&quot;</span>&#125;,</span><br><span class="line">        <span class="string">&quot;attention_mask&quot;</span>: &#123;<span class="number">0</span>: <span class="string">&quot;batch&quot;</span>, <span class="number">1</span>: <span class="string">&quot;sequence&quot;</span>&#125;,</span><br><span class="line">        <span class="string">&quot;output&quot;</span>: &#123;<span class="number">0</span>: <span class="string">&quot;batch&quot;</span>, <span class="number">1</span>: <span class="string">&quot;sequence&quot;</span>&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    opset_version=<span class="number">13</span>,</span><br><span class="line">    do_constant_folding=<span class="literal">True</span>,</span><br><span class="line">    use_external_data_format=<span class="literal">False</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>使用 ONNX Runtime 推理</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> onnxruntime <span class="keyword">as</span> ort</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoTokenizer</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">session = ort.InferenceSession(<span class="string">&quot;llama7b.onnx&quot;</span>, providers=[<span class="string">&quot;CUDAExecutionProvider&quot;</span>])</span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(<span class="string">&quot;./llama-7b/&quot;</span>)</span><br><span class="line"></span><br><span class="line">input_str = <span class="string">&quot;请概述物理学的发展史。&quot;</span></span><br><span class="line">inputs = tokenizer(input_str, return_tensors=<span class="string">&quot;np&quot;</span>)</span><br><span class="line">onnx_inputs = &#123;</span><br><span class="line">    <span class="string">&quot;input_ids&quot;</span>: inputs[<span class="string">&quot;input_ids&quot;</span>].astype(np.int64),</span><br><span class="line">    <span class="string">&quot;attention_mask&quot;</span>: inputs[<span class="string">&quot;attention_mask&quot;</span>].astype(np.int64)</span><br><span class="line">&#125;</span><br><span class="line">outputs = session.run(<span class="literal">None</span>, onnx_inputs)</span><br><span class="line"><span class="comment"># outputs[0] 为 logits，可自行后处理生成文本</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<blockquote>
+<p><strong>提示</strong>：ONNX 转换与后续推理需要额外编写生成逻辑（如 Greedy &#x2F; Beam Search），社区工具如 <code>onnxruntime-transformers</code> 可简化这一流程。</p>
+</blockquote>
+<h3 id="6-3-TensorRT-TVM-简述"><a href="#6-3-TensorRT-TVM-简述" class="headerlink" title="6.3 TensorRT &#x2F; TVM 简述"></a>6.3 TensorRT &#x2F; TVM 简述</h3><ul>
+<li><strong>TensorRT</strong>：NVIDIA 推出的高性能推理库，支持 FP16、INT8、动态 shape 等。可通过 <code>torch2trt</code>、<code>onnx-tensorrt</code> 等工具将 PyTorch&#x2F;ONNX 模型导入 TensorRT。</li>
+<li><strong>Apache TVM</strong>：开源深度学习编译器，可针对不同硬件自动生成高效执行代码。</li>
+</ul>
+<p>由于配置与使用较为复杂，这里仅简要提及。若有需求，可参考官方文档进行实验。</p>
+<h3 id="6-4-多-GPU-多机部署示例"><a href="#6-4-多-GPU-多机部署示例" class="headerlink" title="6.4 多 GPU &#x2F; 多机部署示例"></a>6.4 多 GPU &#x2F; 多机部署示例</h3><ul>
+<li><p><strong>Accelerate</strong>：Hugging Face 官方推荐工具，可通过交互式配置自动完成分布式训练与推理。例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">accelerate config</span><br></pre></td></tr></table></figure>
+
+<p>根据提示选择单机多卡 &#x2F; 多机多卡，填写主机 IP、端口、进程数等信息。完成后，可直接：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">accelerate launch finetune_lora_llama7b.py</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>DeepSpeed</strong>：编写 <code>ds_config.json</code> 配置文件，启用 ZeRO 分布式优化。例如：</p>
+<figure class="highlight jsonc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;train_micro_batch_size_per_gpu&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;gradient_accumulation_steps&quot;</span><span class="punctuation">:</span> <span class="number">4</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;optimizer&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;AdamW&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;lr&quot;</span><span class="punctuation">:</span> <span class="number">3e-4</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;betas&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="number">0.9</span><span class="punctuation">,</span> <span class="number">0.999</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;eps&quot;</span><span class="punctuation">:</span> <span class="number">1e-8</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;zero_optimization&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;stage&quot;</span><span class="punctuation">:</span> <span class="number">2</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;fp16&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deepspeed --num_gpus=2 finetune_lora_llama7b.py --deepspeed ds_config.json</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h2 id="7-常见问题与调优建议"><a href="#7-常见问题与调优建议" class="headerlink" title="7. 常见问题与调优建议"></a>7. 常见问题与调优建议</h2><h3 id="7-1-显存不足解决思路"><a href="#7-1-显存不足解决思路" class="headerlink" title="7.1 显存不足解决思路"></a>7.1 显存不足解决思路</h3><ol>
+<li><strong>使用 8-bit&#x2F;4-bit 量化</strong>：显存节省 2~4 倍，适合推理与微调。</li>
+<li><strong>启用梯度累积</strong>（gradient_accumulation_steps）：减小批量大小，使用多步梯度累计代替大批量。</li>
+<li><strong>开启梯度检查点</strong>（<code>model.gradient_checkpointing_enable()</code>）：在前向时丢弃部分中间激活，反向时重新计算，节省显存，但计算速度稍慢。</li>
+<li><strong>冻结部分层</strong>：若全参数微调，可冻结底层若干 Transformer 层，仅针对上层进行训练。</li>
+<li><strong>使用 CPU+GPU 混合训练</strong>：将部分参数（如 Embedding 层）放到 CPU，减少 GPU 显存消耗。可使用 DeepSpeed CPU Offload 功能。</li>
+</ol>
+<h3 id="7-2-学习率、Batch-Size-调试"><a href="#7-2-学习率、Batch-Size-调试" class="headerlink" title="7.2 学习率、Batch Size 调试"></a>7.2 学习率、Batch Size 调试</h3><ul>
+<li><strong>学习率</strong><ul>
+<li>LoRA 微调常用 1e-4 ~ 3e-4；若数据量较小，可适当降低至 5e-5。</li>
+<li>全参数微调一般使用 1e-5 ~ 1e-4，不同模型需调试。</li>
+</ul>
+</li>
+<li><strong>Batch Size</strong><ul>
+<li>若显存允许，可尝试 <code>per_device_train_batch_size=2~4</code>；否则用 1，配合梯度累积。</li>
+<li>关注训练损失曲线，若抖动剧烈，可尝试增大 batch 或添加学习率暖启动（warmup）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="7-3-收敛慢或过拟合应对"><a href="#7-3-收敛慢或过拟合应对" class="headerlink" title="7.3 收敛慢或过拟合应对"></a>7.3 收敛慢或过拟合应对</h3><ul>
+<li><strong>收敛慢</strong><ul>
+<li>增大学习率或调整学习率调度器（Scheduler）。</li>
+<li>增加训练数据量或数据多样性；</li>
+<li>检查数据预处理是否存在错误（如填充过长导致大部分为 -100）。</li>
+</ul>
+</li>
+<li><strong>过拟合</strong><ul>
+<li>增加正则化（如 LoRA dropout）；</li>
+<li>减少训练 epoch，或提前停止（Early Stopping）；</li>
+<li>数据增强、数据集划分合理（训练&#x2F;验证&#x2F;测试）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="7-4-推理速度瓶颈分析"><a href="#7-4-推理速度瓶颈分析" class="headerlink" title="7.4 推理速度瓶颈分析"></a>7.4 推理速度瓶颈分析</h3><ul>
+<li><strong>显存带宽与计算能力</strong>：若 GPU 计算能力不足，推理耗时较高，可降 precision（FP16、INT8）。</li>
+<li><strong>生成策略</strong>：Beam Search 会比 Greedy 或 Top-p 采样更慢，如无必要可使用 sampling。</li>
+<li><strong>I&#x2F;O 与 CPU 预处理</strong>：避免每次 generate 都重新加载 tokenizer 等，可将模型持久加载在进程中。</li>
+<li><strong>并发请求</strong>：可使用 FastAPI、Flask 部署时结合 NVIDIA Triton Inference Server 或 NVIDIA TensorRT Inference Server 提升吞吐。</li>
+</ul>
+<hr>
+<h2 id="8-附录"><a href="#8-附录" class="headerlink" title="8. 附录"></a>8. 附录</h2><h3 id="8-1-常用平台与工具链接"><a href="#8-1-常用平台与工具链接" class="headerlink" title="8.1 常用平台与工具链接"></a>8.1 常用平台与工具链接</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://huggingface.co/docs/transformers">Hugging Face Transformers 官方文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://huggingface.co/docs/datasets">Hugging Face Datasets 库</a></li>
+<li><a target="_blank" rel="noopener" href="https://huggingface.co/docs/accelerate">Hugging Face Accelerate 文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/huggingface/peft">Hugging Face PEFT 库</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/TimDettmers/bitsandbytes">bitsandbytes 文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.deepspeed.ai/">DeepSpeed 官方文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://onnxruntime.ai/docs">ONNX Runtime 官方文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.nvidia.com/tensorrt">NVIDIA TensorRT</a></li>
+</ul>
+<h3 id="8-2-参考文献与官方文档"><a href="#8-2-参考文献与官方文档" class="headerlink" title="8.2 参考文献与官方文档"></a>8.2 参考文献与官方文档</h3><ol>
+<li>Hu, E., Shen, Y., Wallis, P., Allen-Zhu, Z., Li, Y., Wang, L., Wang, L., &amp; Chen, W. (2021). LoRA: Low-Rank Adaptation of Large Language Models. <em>arXiv preprint arXiv:2106.09685</em>.</li>
+<li>Lester, B., Al-Rfou, R., &amp; Constant, N. (2021). The Power of Scale for Parameter-Efficient Prompt Tuning. <em>EMNLP 2021</em>.</li>
+<li>Wolf, T., Debut, L., Sanh, V., Chaumond, J., Delangue, C., Moi, A., Cistac, P., Rault, T., Louf, R., Funtowicz, M., &amp; Brew, J. (2020). Transformers: State-of-the-Art Natural Language Processing. <em>ACL 2020</em>.</li>
+<li>Sharma, A., Shi, Y., &amp; Peters, M. (2023). Parameter-Efficient Fine-Tuning for Pretrained Language Models: A Survey. <em>arXiv preprint arXiv:2304.03733</em>.</li>
+<li>NVIDIA. (2023). <em>TensorRT Documentation</em>.</li>
+<li>Microsoft. (2023). <em>DeepSpeed Documentation</em>.</li>
+</ol>
+<hr>
+<p>通过以上手册内容，读者应能掌握在本地环境下从零配置、下载预训练模型、进行推理、到高效微调并部署的全流程。后续可根据实际需求，深入研究更多加速技术（如 ZeRO-Offload、Triton Inference Server 等），以在有限硬件资源下最大化地发挥大语言模型的能力。祝使用顺利，如有疑问，可参考上述官方文档或社区示例，不断迭代优化。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2025/04/12/LLM/">本地部署大模型以及微调手册</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
+        <p><span>Created:</span>2025-04-12, 23:11:28</p>
+        <p><span>Updated:</span>2025-05-28, 20:15:06</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2025/04/12/LLM/" title="本地部署大模型以及微调手册">http://example.com/2025/04/12/LLM/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/04/12/LLM/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/05/24/ReConcile/">
+                    ReConcile
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/03/26/TF-IDF/">
+                    TF-IDF 详解
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%BB%A5%E5%8F%8A%E5%BE%AE%E8%B0%83%E6%89%8B%E5%86%8C"><span class="toc-number">1.</span> <span class="toc-text">本地部署大模型以及微调手册</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95"><span class="toc-number">1.2.</span> <span class="toc-text">目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.3.</span> <span class="toc-text">1. 前置条件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E7%A1%AC%E4%BB%B6%E8%A6%81%E6%B1%82"><span class="toc-number">1.3.1.</span> <span class="toc-text">1.1 硬件要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E8%BD%AF%E4%BB%B6%E4%B8%8E%E7%8E%AF%E5%A2%83%E4%BE%9D%E8%B5%96"><span class="toc-number">1.3.2.</span> <span class="toc-text">1.2 软件与环境依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E6%A6%82%E5%BF%B5%E6%9C%AF%E8%AF%AD%E8%AF%B4%E6%98%8E"><span class="toc-number">1.3.3.</span> <span class="toc-text">1.3 概念术语说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">1.4.</span> <span class="toc-text">2. 环境准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8E%E5%9F%BA%E7%A1%80%E4%BE%9D%E8%B5%96%E5%AE%89%E8%A3%85"><span class="toc-number">1.4.1.</span> <span class="toc-text">2.1 操作系统与基础依赖安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-Python-%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%8C%85%E7%AE%A1%E7%90%86"><span class="toc-number">1.4.2.</span> <span class="toc-text">2.2 Python 环境与包管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-CUDA%E3%80%81cuDNN%E3%80%81NCCL-%E5%AE%89%E8%A3%85%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">1.4.3.</span> <span class="toc-text">2.3 CUDA、cuDNN、NCCL 安装与验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-Conda-venv-%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.4.4.</span> <span class="toc-text">2.4 Conda&#x2F;venv 虚拟环境配置示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%A8%A1%E5%9E%8B%E8%8E%B7%E5%8F%96%E4%B8%8E%E9%83%A8%E7%BD%B2"><span class="toc-number">1.5.</span> <span class="toc-text">3. 模型获取与部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-Hugging-Face-Transformers-%E6%A6%82%E8%A7%88"><span class="toc-number">1.5.1.</span> <span class="toc-text">3.1 Hugging Face Transformers 概览</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E4%B8%8B%E8%BD%BD%E4%B8%8E%E5%8A%A0%E8%BD%BD%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.5.2.</span> <span class="toc-text">3.2 下载与加载预训练模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E6%A8%A1%E5%9E%8B%E9%87%8F%E5%8C%96%E4%B8%8E%E6%98%BE%E5%AD%98%E4%BC%98%E5%8C%96"><span class="toc-number">1.5.3.</span> <span class="toc-text">3.3 模型量化与显存优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E6%8E%A8%E7%90%86%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-number">1.5.4.</span> <span class="toc-text">3.4 推理示例代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-%E4%BD%BF%E7%94%A8-DeepSpeed-In-8bit-%E6%8E%A8%E7%90%86%E5%8A%A0%E9%80%9F"><span class="toc-number">1.5.5.</span> <span class="toc-text">3.5 使用 DeepSpeed &#x2F; In-8bit 推理加速</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%BE%AE%E8%B0%83%E7%AD%96%E7%95%A5%E4%B8%8E%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.6.</span> <span class="toc-text">4. 微调策略与实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%BE%AE%E8%B0%83%E6%96%B9%E6%B3%95%E6%A6%82%E8%BF%B0"><span class="toc-number">1.6.1.</span> <span class="toc-text">4.1 微调方法概述</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-1-%E5%85%A8%E5%8F%82%E6%95%B0%E5%BE%AE%E8%B0%83%EF%BC%88Full-Fine-tuning%EF%BC%89"><span class="toc-number">1.6.1.1.</span> <span class="toc-text">4.1.1 全参数微调（Full Fine-tuning）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-2-LoRA%EF%BC%88Low-Rank-Adaptation%EF%BC%89"><span class="toc-number">1.6.1.2.</span> <span class="toc-text">4.1.2 LoRA（Low-Rank Adaptation）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-3-P-tuning-Prompt-Tuning"><span class="toc-number">1.6.1.3.</span> <span class="toc-text">4.1.3 P-tuning &#x2F; Prompt Tuning</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%85%A8%E5%8F%82%E6%95%B0%E5%BE%AE%E8%B0%83%EF%BC%88Full-Fine-tuning%EF%BC%89%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.6.2.</span> <span class="toc-text">4.2 全参数微调（Full Fine-tuning）详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-LoRA-%E5%AE%9E%E7%8E%B0%E8%A6%81%E7%82%B9"><span class="toc-number">1.6.3.</span> <span class="toc-text">4.3 LoRA 实现要点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-P-tuning-Prompt-Tuning-%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.6.4.</span> <span class="toc-text">4.4 P-tuning &#x2F; Prompt Tuning 详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-PEFT%EF%BC%88Parameter-Efficient-Fine-Tuning%EF%BC%89%E6%9E%B6%E6%9E%84%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.6.5.</span> <span class="toc-text">4.5 PEFT（Parameter-Efficient Fine-Tuning）架构介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-6-%E6%95%B0%E6%8D%AE%E9%9B%86%E5%87%86%E5%A4%87%E4%B8%8E%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">1.6.6.</span> <span class="toc-text">4.6 数据集准备与预处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%AE%9E%E6%88%98%E7%A4%BA%E4%BE%8B%EF%BC%9A%E4%BD%BF%E7%94%A8-LoRA-%E5%BE%AE%E8%B0%83-LLaMA-7B"><span class="toc-number">1.7.</span> <span class="toc-text">5. 实战示例：使用 LoRA 微调 LLaMA-7B</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E6%95%B0%E6%8D%AE%E9%9B%86%E9%80%89%E5%8F%96%E4%B8%8E%E6%A0%BC%E5%BC%8F%E5%8C%96"><span class="toc-number">1.7.1.</span> <span class="toc-text">5.1 数据集选取与格式化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-PEFT-Transformers-%E5%BE%AE%E8%B0%83%E8%84%9A%E6%9C%AC%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.7.2.</span> <span class="toc-text">5.2 PEFT + Transformers 微调脚本示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E8%AE%AD%E7%BB%83%E8%B6%85%E5%8F%82%E6%95%B0%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%AD%E7%BB%83%E9%85%8D%E7%BD%AE"><span class="toc-number">1.7.3.</span> <span class="toc-text">5.3 训练超参数与分布式训练配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-%E6%A3%80%E6%9F%A5%E7%82%B9%E4%BF%9D%E5%AD%98%E4%B8%8E%E6%A8%A1%E5%9E%8B%E5%AF%BC%E5%87%BA"><span class="toc-number">1.7.4.</span> <span class="toc-text">5.4 检查点保存与模型导出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-%E5%BE%AE%E8%B0%83%E5%90%8E%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E5%AF%B9%E6%AF%94"><span class="toc-number">1.7.5.</span> <span class="toc-text">5.5 微调后模型推理对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E6%8E%A8%E7%90%86%E9%83%A8%E7%BD%B2%E4%BC%98%E5%8C%96"><span class="toc-number">1.8.</span> <span class="toc-text">6. 推理部署优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-8-bit-4-bit-%E9%87%8F%E5%8C%96%E6%8E%A8%E7%90%86"><span class="toc-number">1.8.1.</span> <span class="toc-text">6.1 8-bit &#x2F; 4-bit 量化推理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-ONNX-%E8%BD%AC%E6%8D%A2%E4%B8%8E%E5%8A%A0%E9%80%9F"><span class="toc-number">1.8.2.</span> <span class="toc-text">6.2 ONNX 转换与加速</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-TensorRT-TVM-%E7%AE%80%E8%BF%B0"><span class="toc-number">1.8.3.</span> <span class="toc-text">6.3 TensorRT &#x2F; TVM 简述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-%E5%A4%9A-GPU-%E5%A4%9A%E6%9C%BA%E9%83%A8%E7%BD%B2%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.8.4.</span> <span class="toc-text">6.4 多 GPU &#x2F; 多机部署示例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%B8%8E%E8%B0%83%E4%BC%98%E5%BB%BA%E8%AE%AE"><span class="toc-number">1.9.</span> <span class="toc-text">7. 常见问题与调优建议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E6%98%BE%E5%AD%98%E4%B8%8D%E8%B6%B3%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF"><span class="toc-number">1.9.1.</span> <span class="toc-text">7.1 显存不足解决思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E5%AD%A6%E4%B9%A0%E7%8E%87%E3%80%81Batch-Size-%E8%B0%83%E8%AF%95"><span class="toc-number">1.9.2.</span> <span class="toc-text">7.2 学习率、Batch Size 调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-%E6%94%B6%E6%95%9B%E6%85%A2%E6%88%96%E8%BF%87%E6%8B%9F%E5%90%88%E5%BA%94%E5%AF%B9"><span class="toc-number">1.9.3.</span> <span class="toc-text">7.3 收敛慢或过拟合应对</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4-%E6%8E%A8%E7%90%86%E9%80%9F%E5%BA%A6%E7%93%B6%E9%A2%88%E5%88%86%E6%9E%90"><span class="toc-number">1.9.4.</span> <span class="toc-text">7.4 推理速度瓶颈分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E9%99%84%E5%BD%95"><span class="toc-number">1.10.</span> <span class="toc-text">8. 附录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E5%B8%B8%E7%94%A8%E5%B9%B3%E5%8F%B0%E4%B8%8E%E5%B7%A5%E5%85%B7%E9%93%BE%E6%8E%A5"><span class="toc-number">1.10.1.</span> <span class="toc-text">8.1 常用平台与工具链接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE%E4%B8%8E%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3"><span class="toc-number">1.10.2.</span> <span class="toc-text">8.2 参考文献与官方文档</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"本地部署大模型以及微调手册　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/05/24/ReConcile/" title="Pre: ReConcile">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/03/26/TF-IDF/" title="Next: TF-IDF 详解">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/%E5%A4%A7%E4%B8%80%E6%80%BB%E7%BB%93/">大一总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/27/Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models/">Building Cooperative Embodied Agents Modularly with Large Language Models</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/26/Generative_Agents_Interactive_Simulacra_of_Human_Behavior/">Generative Agents Interactive Simulacra of Human Behavior</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/25/ChatEval/">ChatEval</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/Improving-Factuality-and-Reasoning-in-Language-Models-through-Multiagent-Debate/">Improving Factuality and Reasoning in Language Models through Multiagent Debate</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/ReConcile/">ReConcile</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/04/12/LLM/">本地部署大模型以及微调手册</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/TF-IDF/">TF-IDF 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN-%E5%AE%9E%E7%8E%B0%E8%8E%AB%E5%A5%88%E9%A3%8E%E6%A0%BC%E7%94%BB%E4%BD%9C%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%9C%9F%E5%AE%9E%E7%85%A7%E7%89%87/">CycleGAN 实现莫奈风格画作转化为真实照片</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN/">CycleGAN 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/WGAN-WGAN-GP/">WGAN与WGAN-GP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/DCGAN/">DCGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/ACGAN/">ACGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/15/SVM/">支持向量机（SVM）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/14/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/">逻辑回归（Logistic Regression）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">WGAN/WGAN-GP 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/12/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">ACGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">DCGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">GAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/06/BERT-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">BERT 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/02/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">房价预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/01/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">Transformer 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/27/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/">预测系外行星轨道周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2025 John Doe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

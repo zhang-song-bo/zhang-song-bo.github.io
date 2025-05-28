@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="John Doe" />
+
+
+
+<meta name="description" content="Building Cooperative Embodied Agents Modularly with Large Language Models原论文链接：arXiv:2307.02485 项目主页：CoELA Project 研究背景在多智能体系统中，实现高效的协作一直是一个挑战，尤其是在具身环境中，智能体需要处理原始感知数据、分布式控制以及昂贵的通信成本。传统方法通常依赖于中心化控制或假设通">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Building Cooperative Embodied Agents Modularly with Large Language Models">
+<meta property="og:url" content="http://example.com/2025/05/27/Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Building Cooperative Embodied Agents Modularly with Large Language Models原论文链接：arXiv:2307.02485 项目主页：CoELA Project 研究背景在多智能体系统中，实现高效的协作一直是一个挑战，尤其是在具身环境中，智能体需要处理原始感知数据、分布式控制以及昂贵的通信成本。传统方法通常依赖于中心化控制或假设通">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="d:\blog\source\img\%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD%E4%BD%93">
+<meta property="article:published_time" content="2025-05-27T11:49:42.000Z">
+<meta property="article:modified_time" content="2025-05-28T12:06:34.928Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="agent">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="具身智能">
+<meta property="article:tag" content="multi-agent">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="d:\blog\source\img\%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD%E4%BD%93">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Building Cooperative Embodied Agents Modularly with Large Language Models | Hexo</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                            <li><a href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a></li>
+                        
+                            <li><a href="/categories/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/">优化技术</a></li>
+                        
+                            <li><a href="/categories/project/">动手实践</a></li>
+                        
+                            <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                        
+                            <li><a href="/categories/%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0/">论文学习</a></li>
+                        
+                            <li><a href="/archives/">归档</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACGAN/" rel="tag">ACGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BERT/" rel="tag">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CycleGAN/" rel="tag">CycleGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DCGAN/" rel="tag">DCGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM/" rel="tag">LLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM-Evaluation/" rel="tag">LLM Evaluation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Multi-Agent/" rel="tag">Multi-Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVM/" rel="tag">SVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TF-IDF/" rel="tag">TF-IDF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent/" rel="tag">agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/multi-agent/" rel="tag">multi-agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" rel="tag">优化技术</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8F%90%E5%8F%96/" rel="tag">关键词提取</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD/" rel="tag">具身智能</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B/" rel="tag">分类模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/" rel="tag">分类算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%83%8F%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/" rel="tag">图像风格迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/" rel="tag">支持向量机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/" rel="tag">文本分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B/" rel="tag">模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E6%8B%9F%E4%BA%BA%E7%B1%BB%E8%A1%8C%E4%B8%BA/" rel="tag">模拟人类行为</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" rel="tag">逻辑回归</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a></li>
+                
+                    <li><a href="/categories/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/">优化技术</a></li>
+                
+                    <li><a href="/categories/project/">动手实践</a></li>
+                
+                    <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                
+                    <li><a href="/categories/%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0/">论文学习</a></li>
+                
+                    <li><a href="/archives/">归档</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/05/27/Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models/" class="article-date">
+      <time datetime="2025-05-27T11:49:42.000Z" itemprop="datePublished">2025-05-27</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Building Cooperative Embodied Agents Modularly with Large Language Models
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0/">论文学习</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LLM/" rel="tag">LLM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/agent/" rel="tag">agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/multi-agent/" rel="tag">multi-agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD/" rel="tag">具身智能</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models"><a href="#Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models" class="headerlink" title="Building Cooperative Embodied Agents Modularly with Large Language Models"></a>Building Cooperative Embodied Agents Modularly with Large Language Models</h1><p>原论文链接：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2307.02485">arXiv:2307.02485</a><br> 项目主页：<a target="_blank" rel="noopener" href="https://vis-www.cs.umass.edu/Co-LLM-Agents/">CoELA Project</a></p>
+<h2 id="研究背景"><a href="#研究背景" class="headerlink" title="研究背景"></a>研究背景</h2><p>在多智能体系统中，实现高效的协作一直是一个挑战，尤其是在具身环境中，智能体需要处理原始感知数据、分布式控制以及昂贵的通信成本。传统方法通常依赖于中心化控制或假设通信是无成本的，这在现实中难以实现。</p>
+<p>大型语言模型（LLMs）在自然语言理解和生成方面表现出色，具备丰富的常识知识和推理能力。本研究旨在探索如何将LLMs无缝集成到具身智能体中，赋予其计划、沟通和协作的能力，从而高效地完成复杂的长期任务。</p>
+<h2 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h2><p>论文提出了一个认知启发的模块化框架，构建了协作型具身语言智能体（Cooperative Embodied Language Agent，简称CoELA）。该框架结合了感知、记忆和执行模块，并利用LLMs的语言理解和生成能力，实现了以下目标：</p>
+<ul>
+<li><strong>计划能力</strong>：基于当前环境和记忆，生成高层次的行动计划。</li>
+<li><strong>沟通能力</strong>：通过自然语言与其他智能体交流，协调任务分工。</li>
+<li><strong>协作能力</strong>：与其他智能体共同完成复杂的长期任务。</li>
+</ul>
+<h2 id="方法流程详解"><a href="#方法流程详解" class="headerlink" title="方法流程详解"></a>方法流程详解</h2><p>在每个交互步骤中，CoELA 首先使用**（a）感知模块<strong>感知从环境中接收到的原始感官观察信息，然后用提取的新信息更新</strong>（b）记忆模块**，该模块存储了它对世界和他人的知识和经验。CoELA 采用两步法应对高效通信的挑战：首先决定发送什么信息，然后决定是发送该信息还是选择其他方案，具体方法是特意使用 <strong>(c) 通信模块</strong>从 <strong>(b) 模块</strong>中检索相关信息，并利用 LLM 事先在 “头脑中 ”生成要发送的最佳信息，然后利用 LLM 驱动的具有强大推理能力的 <strong>(d) 规划模块</strong>，根据从 <strong>(b) 模块</strong>中检索的相关信息和针对当前状态提出的可用行动，决定采取哪种方案。生成的计划随后用于更新 <strong>(b2) 事件记忆</strong>。最后，<strong>(e) 执行模块</strong>检索 <strong>(b3)</strong> 中存储的程序知识，将高级计划转化为可在环境中执行的基本行动。</p>
+<p>CoELA框架由以下五个关键模块组成：</p>
+<h3 id="感知模块（Perception-Module）"><a href="#感知模块（Perception-Module）" class="headerlink" title="感知模块（Perception Module）"></a>感知模块（Perception Module）</h3><p>处理来自环境的原始感知数据，如视觉信息，提取有用的特征供后续模块使用。</p>
+<p>直接处理从环境中接收到的复杂视觉观测信息，通过训练 Mask-RCNN 来预测 RGB 图像中的分割掩码，然后利用 RGB-D 图像构建三维点云，提取有用的高级信息，如关键物体的状态，并构建局部语义图。</p>
+<h3 id="记忆模块（Belief-Module）"><a href="#记忆模块（Belief-Module）" class="headerlink" title="记忆模块（Belief Module）"></a>记忆模块（Belief Module）</h3><p>维护智能体对环境和其他智能体状态的内部表示，更新对世界的理解。模仿人类的长期记忆，为 CoELA 设计了<strong>语义记忆</strong>、<strong>情节记忆</strong>和<strong>程序记忆</strong>。</p>
+<h4 id="语义记忆"><a href="#语义记忆" class="headerlink" title="语义记忆"></a>语义记忆</h4><p>存储了 CoELA 关于世界的知识，包括语义地图、任务进度、自身状态和他人状态。每当感知模型接收并感知到新的观察结果时，语义记忆就会相应地更新。需要注意的是，CoELA 对世界的了解可能并不准确，因为其他智能体可能会与对象进行交互，并在其不知情的情况下改变对象的状态。处理记忆与他人对世界的描述之间的不一致性也增加了更多的挑战。</p>
+<h4 id="情节记忆"><a href="#情节记忆" class="headerlink" title="情节记忆"></a>情节记忆</h4><p>存储了 CoELA 过去的经验，包括行动历史和对话历史。每当 CoELA 执行一项新的操作（包括发送信息或接收新信息）时，相关信息就会被添加到外显记忆中。 </p>
+<h4 id="程序记忆"><a href="#程序记忆" class="headerlink" title="程序记忆"></a>程序记忆</h4><p>包含的知识包括如何在特定环境中执行以代码和神经模型参数实现的特定高级计划。</p>
+<h3 id="通信模块（Communication-Module）"><a href="#通信模块（Communication-Module）" class="headerlink" title="通信模块（Communication Module）"></a>通信模块（Communication Module）</h3><p>利用LLMs生成自然语言消息，与其他智能体共享信息，协调行动。</p>
+<p>为了让智能体更好地完成合作任务，避免低效的闲聊，通信模块首先从记忆模块中获取相关信息，包括语义图、任务进度、智能体状态、他人状态、行动和对话历史等，然后利用模板将这些信息转化为文本描述，最后提示智能体将指令头、目标描述、状态描述、行动历史和对话历史串联起来，生成要发送的信息。</p>
+<h3 id="规划模块（Planning-Module）"><a href="#规划模块（Planning-Module）" class="headerlink" title="规划模块（Planning Module）"></a>规划模块（Planning Module）</h3><p>整合来自感知、记忆和通信模块的信息，进行高层次的推理和决策。</p>
+<p>CoELA 需要一个强大的规划模块，以利用迄今为止收集和存储的所有可用信息来决定采取何种行动，从而最大限度地提高合作效率。</p>
+<p>直接利用强大的 LLM 作为规划模块，首先从内存模块中检索相关信息，并将其转换为文本描述，就像在通信模块中一样、 然后，根据当前状态和存储的程序知识，将所有可用的高级计划建议汇编成一个行动列表，供 LLMs 进行选择。最后，根据当前信息和建议的行动列表提示 LLMs 生成高级计划。</p>
+<p>采用零样本思维链提示技术，鼓励 LLM 在给出最终答案前进行更多推理。</p>
+<h3 id="执行模块（Execution-Module）"><a href="#执行模块（Execution-Module）" class="headerlink" title="执行模块（Execution Module）"></a>执行模块（Execution Module）</h3><p>基于推理结果，制定具体的行动计划，并指导执行模块完成任务。</p>
+<p>为了在不同环境中实现有效和通用的合作决策，设计了一个执行模块来生成原始行动，以便在特定环境中稳健地执行给定的高层次计划，从而使规划模块具有通用性，并利用 LLMs 丰富的世界知识和强大的推理能力，更加专注于解决整体任务。这种设计还能减少 LLM 的推理时间，省时又经济。CoELA 会检索记忆模块中与规划模块生成的计划相关的程序，然后用适合环境的原始动作执行程序。</p>
+<p>整个流程如下图所示：</p>
+<p><img src="D:\blog\source\img\具身智能体" alt="image-20250528200144004"></p>
+<h2 id="实验设置与结果"><a href="#实验设置与结果" class="headerlink" title="实验设置与结果"></a>实验设置与结果</h2><p>研究团队在两个具身多智能体协作环境中对CoELA进行了评估：</p>
+<ul>
+<li><strong>C-WAH（Communicative Watch-And-Help）</strong>：智能体需要通过沟通协作完成观察和帮助任务。</li>
+<li><strong>TDW-MAT（ThreeDWorld Multi-Agent Transport）</strong>：智能体需要协同搬运物体，完成运输任务。</li>
+</ul>
+<p>实验结果表明，基于GPT-4的CoELA在任务完成率和协作效率方面均优于传统的基于规划的方法。此外，CoELA展现出自发的有效沟通能力，能够通过自然语言与其他智能体协调行动。</p>
+<p>研究还对CoELA与人类的交互进行了用户研究，发现使用自然语言进行沟通的CoELA更容易获得人类的信任，并能更有效地与人类协作完成任务。</p>
+<h2 id="与现有方法的对比"><a href="#与现有方法的对比" class="headerlink" title="与现有方法的对比"></a>与现有方法的对比</h2><p>传统的多智能体协作方法通常依赖于中心化控制或预定义的通信协议，缺乏灵活性和适应性。CoELA通过引入LLMs，实现了以下优势：</p>
+<ul>
+<li><strong>去中心化控制</strong>：每个智能体独立运行，通过自然语言进行协调，无需中心化指挥。</li>
+<li><strong>灵活的沟通机制</strong>：利用LLMs的语言生成能力，实现了灵活且高效的沟通。</li>
+<li><strong>可扩展性强</strong>：模块化设计使得系统易于扩展和适应不同的任务和环境。</li>
+</ul>
+<p>此外，CoELA还展示了与人类协作的潜力，为人机协作提供了新的可能性。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本研究提出的CoELA框架展示了将大型语言模型集成到具身智能体中，以实现高效多智能体协作的可能性。通过模块化设计和自然语言沟通，CoELA在复杂任务中表现出色，并展现出与人类协作的潜力。</p>
+<p>未来的研究方向可能包括：</p>
+<ul>
+<li><strong>增强感知能力</strong>：结合多模态感知，提高智能体对环境的理解能力。</li>
+<li><strong>优化沟通策略</strong>：研究更高效的沟通协议，减少通信成本。</li>
+<li><strong>扩展应用场景</strong>：将CoELA应用于更多实际场景，如灾难救援、智能制造等。</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2025/05/27/Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models/">Building Cooperative Embodied Agents Modularly with Large Language Models</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
+        <p><span>Created:</span>2025-05-27, 19:49:42</p>
+        <p><span>Updated:</span>2025-05-28, 20:06:34</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2025/05/27/Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models/" title="Building Cooperative Embodied Agents Modularly with Large Language Models">http://example.com/2025/05/27/Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/05/27/Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/05/28/%E5%A4%A7%E4%B8%80%E6%80%BB%E7%BB%93/">
+                    大一总结
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/05/26/Generative_Agents_Interactive_Simulacra_of_Human_Behavior/">
+                    Generative Agents Interactive Simulacra of Human Behavior
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models"><span class="toc-number">1.</span> <span class="toc-text">Building Cooperative Embodied Agents Modularly with Large Language Models</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF"><span class="toc-number">1.1.</span> <span class="toc-text">研究背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="toc-number">1.2.</span> <span class="toc-text">核心思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.3.</span> <span class="toc-text">方法流程详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%84%9F%E7%9F%A5%E6%A8%A1%E5%9D%97%EF%BC%88Perception-Module%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">感知模块（Perception Module）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%B0%E5%BF%86%E6%A8%A1%E5%9D%97%EF%BC%88Belief-Module%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">记忆模块（Belief Module）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%AD%E4%B9%89%E8%AE%B0%E5%BF%86"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">语义记忆</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%83%85%E8%8A%82%E8%AE%B0%E5%BF%86"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">情节记忆</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E8%AE%B0%E5%BF%86"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">程序记忆</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E6%A8%A1%E5%9D%97%EF%BC%88Communication-Module%EF%BC%89"><span class="toc-number">1.3.3.</span> <span class="toc-text">通信模块（Communication Module）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E5%88%92%E6%A8%A1%E5%9D%97%EF%BC%88Planning-Module%EF%BC%89"><span class="toc-number">1.3.4.</span> <span class="toc-text">规划模块（Planning Module）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E6%A8%A1%E5%9D%97%EF%BC%88Execution-Module%EF%BC%89"><span class="toc-number">1.3.5.</span> <span class="toc-text">执行模块（Execution Module）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE%E4%B8%8E%E7%BB%93%E6%9E%9C"><span class="toc-number">1.4.</span> <span class="toc-text">实验设置与结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E%E7%8E%B0%E6%9C%89%E6%96%B9%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">1.5.</span> <span class="toc-text">与现有方法的对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.6.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"Building Cooperative Embodied Agents Modularly with Large Language Models　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/05/28/%E5%A4%A7%E4%B8%80%E6%80%BB%E7%BB%93/" title="Pre: 大一总结">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/05/26/Generative_Agents_Interactive_Simulacra_of_Human_Behavior/" title="Next: Generative Agents Interactive Simulacra of Human Behavior">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/%E5%A4%A7%E4%B8%80%E6%80%BB%E7%BB%93/">大一总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/27/Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models/">Building Cooperative Embodied Agents Modularly with Large Language Models</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/26/Generative_Agents_Interactive_Simulacra_of_Human_Behavior/">Generative Agents Interactive Simulacra of Human Behavior</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/25/ChatEval/">ChatEval</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/Improving-Factuality-and-Reasoning-in-Language-Models-through-Multiagent-Debate/">Improving Factuality and Reasoning in Language Models through Multiagent Debate</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/ReConcile/">ReConcile</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/04/12/LLM/">本地部署大模型以及微调手册</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/TF-IDF/">TF-IDF 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN-%E5%AE%9E%E7%8E%B0%E8%8E%AB%E5%A5%88%E9%A3%8E%E6%A0%BC%E7%94%BB%E4%BD%9C%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%9C%9F%E5%AE%9E%E7%85%A7%E7%89%87/">CycleGAN 实现莫奈风格画作转化为真实照片</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN/">CycleGAN 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/WGAN-WGAN-GP/">WGAN与WGAN-GP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/DCGAN/">DCGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/ACGAN/">ACGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/15/SVM/">支持向量机（SVM）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/14/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/">逻辑回归（Logistic Regression）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">WGAN/WGAN-GP 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/12/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">ACGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">DCGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">GAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/06/BERT-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">BERT 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/02/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">房价预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/01/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">Transformer 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/27/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/">预测系外行星轨道周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2025 John Doe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
