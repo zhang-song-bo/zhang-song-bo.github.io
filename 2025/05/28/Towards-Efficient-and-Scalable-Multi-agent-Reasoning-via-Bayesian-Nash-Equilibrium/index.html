@@ -15,16 +15,19 @@
 
 
 
-<meta name="description" content="省流层归一化就是对每个样本的所有特征进行归一化处理，而不是像批归一化那样对一批数据的同一特征维度进行归一化。  层归一化的原理是通过对每个样本的特征进行独立处理，计算每个样本在所有特征上的均值和方差，然后对该样本进行归一化。这样，每个样本在其所有特征维度上的值都会被调整到一个相对统一的尺度。  这种方法的好处在于，它消除了批次大小的依赖，适用于那些批次大小较小或者批次中样本数量不一致（NLP）的任">
+<meta name="description" content="《Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium核心思想是利用**贝叶斯纳什均衡（Bayesian Nash Equilibrium, BNE）**来解决多智能体（Multi-agent）推理中的效率和可扩展性问题，特别是针对大型语言模型（LLMs）构成的多智能体系统。 由于对贝叶">
 <meta property="og:type" content="article">
-<meta property="og:title" content="层归一化">
-<meta property="og:url" content="http://example.com/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/index.html">
+<meta property="og:title" content="Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium">
+<meta property="og:url" content="http://example.com/2025/05/28/Towards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="省流层归一化就是对每个样本的所有特征进行归一化处理，而不是像批归一化那样对一批数据的同一特征维度进行归一化。  层归一化的原理是通过对每个样本的特征进行独立处理，计算每个样本在所有特征上的均值和方差，然后对该样本进行归一化。这样，每个样本在其所有特征维度上的值都会被调整到一个相对统一的尺度。  这种方法的好处在于，它消除了批次大小的依赖，适用于那些批次大小较小或者批次中样本数量不一致（NLP）的任">
+<meta property="og:description" content="《Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium核心思想是利用**贝叶斯纳什均衡（Bayesian Nash Equilibrium, BNE）**来解决多智能体（Multi-agent）推理中的效率和可扩展性问题，特别是针对大型语言模型（LLMs）构成的多智能体系统。 由于对贝叶">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2025-03-23T10:37:26.000Z">
-<meta property="article:modified_time" content="2025-03-26T13:01:53.946Z">
+<meta property="article:published_time" content="2025-05-28T13:54:07.000Z">
+<meta property="article:modified_time" content="2025-05-28T14:19:13.835Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="multi-agent">
+<meta property="article:tag" content="推理优化">
 <meta name="twitter:card" content="summary">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
@@ -59,7 +62,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>层归一化 | Hexo</title>
+<title>Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium | Hexo</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -255,11 +258,11 @@
     </div>
     <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
 </nav>
-      <div class="body-wrap"><article id="post-层归一化" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-Towards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/" class="article-date">
-      <time datetime="2025-03-23T10:37:26.000Z" itemprop="datePublished">2025-03-23</time>
+      <a href="/2025/05/28/Towards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium/" class="article-date">
+      <time datetime="2025-05-28T13:54:07.000Z" itemprop="datePublished">2025-05-28</time>
 </a>
 
 
@@ -274,7 +277,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      层归一化
+      Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium
     </h1>
   
 
@@ -283,11 +286,15 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/">优化技术</a>
+    <a class="article-category-link" href="/categories/%E8%AE%BA%E6%96%87%E5%AD%A6%E4%B9%A0/">论文学习</a>
     </div>
 
 
         
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LLM/" rel="tag">LLM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/multi-agent/" rel="tag">multi-agent</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8E%A8%E7%90%86%E4%BC%98%E5%8C%96/" rel="tag">推理优化</a></li></ul>
+    </div>
+
         <div class="clearfix"></div>
       </div>
       
@@ -295,73 +302,158 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h1 id="省流"><a href="#省流" class="headerlink" title="省流"></a>省流</h1><p>层归一化就是<strong>对每个样本的所有特征进行归一化处理</strong>，而不是像批归一化那样对一批数据的同一特征维度进行归一化。 </p>
-<p>层归一化的原理是通过对每个样本的特征进行独立处理，计算每个样本在所有特征上的均值和方差，然后对该样本进行归一化。这样，每个样本在其所有特征维度上的值都会被调整到一个相对统一的尺度。 </p>
-<p>这种方法的好处在于，它<strong>消除了批次大小的依赖</strong>，适用于那些<strong>批次大小较小</strong>或者<strong>批次中样本数量不一致</strong>（NLP）的任务。对于RNN、Transformer等序列模型来说，层归一化表现尤为出色，因为这些模型的输入数据通常是具有时序性质的，批归一化可能会在这种情况下丧失时序信息。</p>
-<p>层归一化相较于批归一化，在模型训练过程中更适合处理长序列数据。层归一化则能够确保每个样本的特征独立归一化，从而保持模型在每个时刻的数据分布稳定。</p>
-<p>比如：<br>假设我们有一个 <strong>批次大小为 2，序列长度为 3，隐藏维度为 4</strong> 的输入张量：<br>[<br>X \in \mathbb{R}^{\text{Batch_size} \times \text{Seq_len} \times \text{Dim}}<br>]<br>假设数据如下：<br>[<br>X &#x3D;<br>\begin{bmatrix}<br>\begin{bmatrix} 1.0 &amp; 2.0 &amp; 3.0 &amp; 4.0 \end{bmatrix} \<br>\begin{bmatrix} 5.0 &amp; 6.0 &amp; 7.0 &amp; 8.0 \end{bmatrix} \<br>\begin{bmatrix} 9.0 &amp; 10.0 &amp; 11.0 &amp; 12.0 \end{bmatrix}<br>\end{bmatrix}<br>]</p>
-<p>计算层归一化<br>层归一化是在 <strong>每个 token（每一行）</strong> 内部进行归一化，即 <strong>沿着 <code>Dim</code> 维度计算均值和标准差</strong>。</p>
-<p>第一个 token：([1.0, 2.0, 3.0, 4.0])</p>
-<p>计算均值<br>[<br>\mu &#x3D; \frac{1.0 + 2.0 + 3.0 + 4.0}{4} &#x3D; 2.5<br>]</p>
-<p>计算标准差<br>[<br>\sigma &#x3D; \sqrt{\frac{(1.0 - 2.5)^2 + (2.0 - 2.5)^2 + (3.0 - 2.5)^2 + (4.0 - 2.5)^2}{4}}<br>]<br>[<br>&#x3D; \sqrt{\frac{2.25 + 0.25 + 0.25 + 2.25}{4}} &#x3D; \sqrt{1.25} \approx 1.12<br>]</p>
-<p>归一化<br>[<br>\hat{x} &#x3D; \frac{x - \mu}{\sigma} &#x3D; \left[ \frac{1.0 - 2.5}{1.12}, \frac{2.0 - 2.5}{1.12}, \frac{3.0 - 2.5}{1.12}, \frac{4.0 - 2.5}{1.12} \right]<br>]<br>[<br>\approx [-1.34, -0.45, 0.45, 1.34]<br>]</p>
-<p>第二个 token：([5.0, 6.0, 7.0, 8.0])<br>[<br>\mu &#x3D; \frac{5+6+7+8}{4} &#x3D; 6.5, \quad \sigma &#x3D; \sqrt{\frac{(-1.5)^2 + (-0.5)^2 + (0.5)^2 + (1.5)^2}{4}} &#x3D; 1.12<br>]<br>[<br>\hat{x} &#x3D; \left[ \frac{5.0 - 6.5}{1.12}, \frac{6.0 - 6.5}{1.12}, \frac{7.0 - 6.5}{1.12}, \frac{8.0 - 6.5}{1.12} \right]<br>]<br>[<br>\approx [-1.34, -0.45, 0.45, 1.34]<br>]</p>
-<p>第三个 token：([9.0, 10.0, 11.0, 12.0])<br>[<br>\mu &#x3D; 10.5, \quad \sigma &#x3D; 1.12<br>]<br>[<br>\hat{x} \approx [-1.34, -0.45, 0.45, 1.34]<br>]</p>
+        <p>《Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium核心思想是利用**贝叶斯纳什均衡（Bayesian Nash Equilibrium, BNE）**来解决多智能体（Multi-agent）推理中的效率和可扩展性问题，特别是针对大型语言模型（LLMs）构成的多智能体系统。</p>
+<p>由于对贝叶斯纳什均衡不是很了解，先从基础概念开始，然后逐步深入到论文的应用。</p>
+<h3 id="1-什么是纳什均衡-Nash-Equilibrium-？"><a href="#1-什么是纳什均衡-Nash-Equilibrium-？" class="headerlink" title="1. 什么是纳什均衡 (Nash Equilibrium)？"></a>1. 什么是纳什均衡 (Nash Equilibrium)？</h3><p>在理解贝叶斯纳什均衡之前，我们需要先了解普通的纳什均衡。纳什均衡是博弈论中的一个核心概念，它描述了这样一种状态：在一个多方参与的博弈中，<strong>每个参与者都选择了自己的最优策略，并且假设其他参与者也选择了他们的最优策略，在这种情况下，没有任何一个参与者可以通过单方面改变自己的策略来获得更好的结果。</strong></p>
+<p><strong>举个例子：囚徒困境</strong></p>
+<p>假设有两个嫌疑犯，A和B，因涉嫌犯罪被捕。警方分别审问他们，并提供以下条件：</p>
 <ul>
-<li><p>最终归一化结果<br>[<br>\hat{X} &#x3D;<br>\begin{bmatrix}<br>\begin{bmatrix} -1.34 &amp; -0.45 &amp; 0.45 &amp; 1.34 \end{bmatrix} \<br>\begin{bmatrix} -1.34 &amp; -0.45 &amp; 0.45 &amp; 1.34 \end{bmatrix} \<br>\begin{bmatrix} -1.34 &amp; -0.45 &amp; 0.45 &amp; 1.34 \end{bmatrix}<br>\end{bmatrix}<br>]</p>
-</li>
-<li><p>乘以缩放参数 (\gamma) 并加上偏移参数 (\beta)<br>[<br>y &#x3D; \hat{x} \cdot \gamma + \beta<br>]<br>其中，(\gamma) 和 (\beta) 是可学习参数（形状为 <code>(Dim,)</code>），它们帮助恢复特征表达能力。</p>
-</li>
+<li>如果A和B都保持沉默，他们都只判1年监禁。</li>
+<li>如果A背叛B（告发B），B保持沉默，A无罪释放，B判10年监禁。</li>
+<li>如果B背叛A，A保持沉默，B无罪释放，A判10年监禁。</li>
+<li>如果A和B都背叛对方，他们都判5年监禁。</li>
 </ul>
-<p>如果 (\gamma &#x3D; [1, 1, 1, 1]) 且 (\beta &#x3D; [0, 0, 0, 0])，则最终输出与 (\hat{x}) 相同。</p>
-<p>总的来说，层归一化不仅提高了模型的稳定性，也让模型在处理时序数据时具有更好的表现，特别是在自然语言处理和序列生成任务中。</p>
-<h1 id="层归一化（Layer-Normalization）详解"><a href="#层归一化（Layer-Normalization）详解" class="headerlink" title="层归一化（Layer Normalization）详解"></a>层归一化（Layer Normalization）详解</h1><h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><p>层归一化（Layer Normalization, LN）是一种用于深度神经网络的归一化方法，通常用于 <strong>自然语言处理（NLP）</strong> 和 <strong>自注意力网络（Transformer）</strong> 中。与批归一化（Batch Normalization, BN）不同，LN 主要 <strong>针对单个样本的所有特征维度</strong> 进行归一化，而不是在 batch 维度上计算均值和标准差。</p>
-<h2 id="2-计算公式"><a href="#2-计算公式" class="headerlink" title="2. 计算公式"></a>2. 计算公式</h2><p>对于输入 ( X \in \mathbb{R}^{\text{Batch_size} \times \text{Seq_len} \times \text{Dim}} )，层归一化的计算过程如下：</p>
-<h3 id="计算均值"><a href="#计算均值" class="headerlink" title="计算均值"></a><strong>计算均值</strong></h3><p>对 <strong>每个 token 的所有特征维度</strong> 计算均值：<br>[<br>\mu &#x3D; \frac{1}{\text{Dim}} \sum_{i&#x3D;1}^{\text{Dim}} x_i<br>]</p>
-<h3 id="计算标准差"><a href="#计算标准差" class="headerlink" title="计算标准差"></a><strong>计算标准差</strong></h3><p>[<br>\sigma &#x3D; \sqrt{\frac{1}{\text{Dim}} \sum_{i&#x3D;1}^{\text{Dim}} (x_i - \mu)^2 + \epsilon}<br>]<br>其中，(\epsilon) 是一个很小的数，用于防止分母为零。</p>
-<h3 id="归一化"><a href="#归一化" class="headerlink" title="归一化"></a><strong>归一化</strong></h3><p>[<br>\hat{x} &#x3D; \frac{x - \mu}{\sigma}<br>]</p>
-<h3 id="缩放和平移"><a href="#缩放和平移" class="headerlink" title="缩放和平移"></a><strong>缩放和平移</strong></h3><p>为了恢复模型的表达能力，LN 引入了可学习参数 (\gamma) 和 (\beta)（形状均为 <code>(Dim,)</code>）：<br>[<br>y &#x3D; \hat{x} \cdot \gamma + \beta<br>]</p>
-<h2 id="3-归一化作用范围"><a href="#3-归一化作用范围" class="headerlink" title="3. 归一化作用范围"></a>3. 归一化作用范围</h2><p>假设输入数据形状为：<br>[<br>X \in \mathbb{R}^{\text{Batch_size} \times \text{Seq_len} \times \text{Dim}}<br>]<br>层归一化会 <strong>针对每个 token 的 <code>Dim</code> 维度进行归一化</strong>，即计算每个 token 内部的均值和标准差，而 <strong>不考虑 batch 维度或序列长度 <code>Seq_len</code></strong>。</p>
-<h2 id="4-层归一化-vs-批归一化"><a href="#4-层归一化-vs-批归一化" class="headerlink" title="4. 层归一化 vs. 批归一化"></a>4. 层归一化 vs. 批归一化</h2><table>
+<p>我们用一个表格来表示他们的收益（负数表示监禁年数）：</p>
+<table>
 <thead>
 <tr>
-<th>归一化方法</th>
-<th>归一化维度</th>
-<th>计算均值&#x2F;方差的范围</th>
-<th>适用场景</th>
+<th></th>
+<th><strong>B 保持沉默</strong></th>
+<th><strong>B 背叛</strong></th>
 </tr>
 </thead>
 <tbody><tr>
-<td>批归一化（BN）</td>
-<td>纵向（Batch 维度）</td>
-<td>计算相同特征维度在整个 batch 维度上的均值和标准差</td>
-<td>CNN，计算机视觉</td>
+<td><strong>A 保持沉默</strong></td>
+<td>(-1, -1)</td>
+<td>(-10, 0)</td>
 </tr>
 <tr>
-<td>层归一化（LN）</td>
-<td>横向（特征维度）</td>
-<td>计算每个 token 的所有特征维度的均值和标准差</td>
-<td>NLP，Transformer</td>
+<td><strong>A 背叛</strong></td>
+<td>(0, -10)</td>
+<td>(-5, -5)</td>
 </tr>
 </tbody></table>
-<h2 id="5-计算示例"><a href="#5-计算示例" class="headerlink" title="5. 计算示例"></a>5. 计算示例</h2><p>假设：<br>[<br>X &#x3D;<br>\begin{bmatrix}<br>\begin{bmatrix} 1.0 &amp; 2.0 &amp; 3.0 &amp; 4.0 \end{bmatrix} \<br>\begin{bmatrix} 5.0 &amp; 6.0 &amp; 7.0 &amp; 8.0 \end{bmatrix} \<br>\begin{bmatrix} 9.0 &amp; 10.0 &amp; 11.0 &amp; 12.0 \end{bmatrix}<br>\end{bmatrix}<br>]</p>
-<p>对于第一行 ([1.0, 2.0, 3.0, 4.0])：<br>[<br>\mu &#x3D; 2.5, \quad \sigma &#x3D; \sqrt{1.25} \approx 1.12<br>]</p>
-<p>归一化：<br>[<br>\hat{x} \approx [-1.34, -0.45, 0.45, 1.34]<br>]</p>
-<p>最终：<br>[<br>y &#x3D; \hat{x} \cdot \gamma + \beta<br>]</p>
-<h2 id="6-为什么-Transformer-使用层归一化？"><a href="#6-为什么-Transformer-使用层归一化？" class="headerlink" title="6. 为什么 Transformer 使用层归一化？"></a>6. 为什么 Transformer 使用层归一化？</h2><ol>
-<li><strong>适用于变长序列</strong><ul>
-<li>Transformer 处理变长文本，BN 依赖 batch 统计信息，不适用于 NLP。</li>
+<p>（括号内第一个数字是A的收益，第二个是B的收益）</p>
+<p>现在，我们来分析纳什均衡：</p>
+<ul>
+<li>对A而言：<ul>
+<li>如果B保持沉默，A选择“背叛”会更好（从-1变成0）。</li>
+<li>如果B背叛，A选择“背叛”也会更好（从-10变成-5）。</li>
+<li>所以，无论B做什么，A的最佳策略都是“背叛”。</li>
 </ul>
 </li>
-<li><strong>对 batch size 不敏感</strong><ul>
-<li>BN 在 batch size 小（甚至为 1）时效果较差，而 LN 仍然稳定。</li>
+<li>对B而言：<ul>
+<li>如果A保持沉默，B选择“背叛”会更好（从-1变成0）。</li>
+<li>如果A背叛，B选择“背叛”也会更好（从-10变成-5）。</li>
+<li>所以，无论A做什么，B的最佳策略都是“背叛”。</li>
 </ul>
 </li>
-<li><strong>更适合自注意力机制</strong><ul>
-<li>Transformer 依赖 token 间的关系，LN 可以在 <strong>每个 token 内部</strong> 归一化，使模型更加稳定。</li>
+</ul>
+<p>结果是，A和B最终都会选择“背叛”，并且他们都将被判5年监禁。在这个“都背叛”的状态下，任何一方单方面改变策略（例如A从“背叛”改为“保持沉默”）都不会让自己的情况变好（A会从-5变成-10）。因此，<strong>(背叛, 背叛)</strong> 就是这个博弈的纳什均衡。</p>
+<h3 id="2-什么是贝叶斯纳什均衡-Bayesian-Nash-Equilibrium-BNE-？"><a href="#2-什么是贝叶斯纳什均衡-Bayesian-Nash-Equilibrium-BNE-？" class="headerlink" title="2. 什么是贝叶斯纳什均衡 (Bayesian Nash Equilibrium, BNE)？"></a>2. 什么是贝叶斯纳什均衡 (Bayesian Nash Equilibrium, BNE)？</h3><p>普通的纳什均衡假设所有参与者都<strong>完全知道</strong>博弈的规则、其他玩家的策略以及他们的偏好（收益）。但在现实世界中，这种情况很少见。很多时候，玩家对其他玩家的“类型”（比如他们的能力、信息、偏好等）存在<strong>不确定性</strong>。</p>
+<p>**贝叶斯纳什均衡就是在这种“信息不完全”的博弈中应用的纳什均衡概念。**它考虑了玩家的“信念”（beliefs）——即玩家对其他玩家类型的概率分布的判断。在贝叶斯纳什均衡中，每个玩家选择一个策略，使得在给定自己所知道的信息（自己的类型）以及对其他玩家类型的“信念”下，自己的**期望收益**最大化，并且这个策略是针对其他玩家的最优策略的。</p>
+<p><strong>核心思想：</strong></p>
+<ul>
+<li><strong>不完全信息：</strong> 玩家不完全知道其他玩家的“类型”（比如，他们是高效率的还是低效率的，是激进的还是保守的）。</li>
+<li><strong>类型（Type）：</strong> 每个玩家都有一个“类型”，这个类型包含了玩家的私有信息（比如成本、能力、偏好等）。这个类型是玩家自己知道，但其他玩家不完全知道的。</li>
+<li><strong>信念（Beliefs）：</strong> 玩家会根据他们所知道的信息，对其他玩家的类型形成一个概率分布的“信念”。例如，玩家A可能认为玩家B是“激进型”的概率是0.7，是“保守型”的概率是0.3。</li>
+<li><strong>期望收益（Expected Payoff）：</strong> 由于存在不确定性，玩家不能直接知道其他玩家会做什么，所以他们会根据自己的“信念”来计算选择某个策略可能带来的平均收益，即期望收益。</li>
+<li><strong>最优策略：</strong> 在贝叶斯纳什均衡中，每个玩家选择的策略是：在给定自己类型和对其他玩家类型信念的情况下，使其<strong>期望收益最大化</strong>的策略。同时，这些策略是相互最佳回应的。</li>
+</ul>
+<p><strong>举个例子：拍卖会（第一价格密封竞价拍卖）</strong></p>
+<p>假设有一个艺术品拍卖会，有两位竞拍者A和B。他们各自对艺术品有一个<strong>私人估价</strong>（valuation），这个估价只有他们自己知道。</p>
+<ul>
+<li>A的估价vA可以是高（H）或低（L）。</li>
+<li>B的估价vB可以是高（H）或低（L）。</li>
+<li>假设双方都知道，对方估价为H的概率是p，估价为L的概率是1−p。</li>
+<li>出价最高者赢得艺术品，并支付自己的出价。如果出价相同，则随机决定。</li>
+<li>收益 &#x3D; 艺术品估价 - 支付价格（如果赢了），否则为0。</li>
+</ul>
+<p>在这个例子中：</p>
+<ul>
+<li><strong>玩家：</strong> A和B。</li>
+<li><strong>行动：</strong> 出价（任何非负实数）。</li>
+<li><strong>类型：</strong> 玩家的私人估价（高估价或低估价）。这是私人信息。</li>
+<li><strong>信念：</strong> 玩家对对方估价的概率分布（例如，A相信B是高估价的概率是p）。</li>
+<li><strong>贝叶斯纳什均衡：</strong> 双方会根据自己的估价类型，以及对对方估价的信念，选择一个最优的出价策略，使得自己的期望收益最大化。</li>
+</ul>
+<p>例如，一个简化的贝叶斯纳什均衡策略可能是：</p>
+<ul>
+<li>如果你的估价是高（H），你出价XH。</li>
+<li>如果你的估价是低（L），你出价XL。</li>
+</ul>
+<p>并且，XH和XL是各自估价类型下的最佳出价，考虑到对方也可能采取类似的策略（根据其估价类型选择出价）。</p>
+<p>在第一价格密封竞价拍卖中，常见的贝叶斯纳什均衡策略是**“压低出价”**：每个竞拍者会出价低于自己的真实估价，以在赢得拍卖的同时保留一部分收益。具体压低多少取决于他们对其他竞拍者估价分布的信念。</p>
+<h3 id="3-《Towards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium》论文解读"><a href="#3-《Towards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium》论文解读" class="headerlink" title="3. 《Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium》论文解读"></a>3. 《Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium》论文解读</h3><p>这篇论文旨在解决多智能体推理系统（特别是基于LLM的系统）中存在的<strong>高计算成本</strong>和<strong>缺乏理论收敛性保证</strong>的问题。传统的LLM多智能体系统（例如，通过多轮辩论来达成共识）虽然能提高答案准确性，但其交互成本巨大，且不总是能保证最终收敛到最优解。</p>
+<p>论文提出了一个名为 <strong>EcoNash (Efficient Coordination via Nash Equilibrium)</strong> 的新框架，它将贝叶斯纳什均衡的概念引入到多LLM系统中，以实现高效和可扩展的多智能体推理。</p>
+<p><strong>论文的核心观点和方法：</strong></p>
+<ol>
+<li><strong>将多LLM推理建模为具有不完全信息的博弈：</strong><ul>
+<li>在多LLM系统中，每个LLM可以被视为一个“智能体”。</li>
+<li>每个LLM可能拥有“私有信息”或“私有能力”，例如它所“知道”的知识（基于其训练数据和检索到的信息）、它的推理能力、它对某个特定问题的理解侧重等。这些是其他LLM不完全知道的。</li>
+<li>因此，当一个LLM需要与其他LLM协作解决问题时，它对其他LLM的“类型”（即其内部信息和能力）存在不确定性。这正好符合贝叶斯博弈的设定。</li>
+<li>论文认为，通过让LLM在不完全信息下达成贝叶斯纳什均衡，可以减少它们之间的通信量，从而提高效率。</li>
+</ul>
+</li>
+<li><strong>EcoNash 框架：</strong><ul>
+<li>EcoNash 框架采用<strong>分层强化学习</strong>的结构，包含一个**中央LLM（Coordinator&#x2F;Central LLM）**和多个**执行LLM（Execution LLMs）**。</li>
+<li><strong>中央LLM（协调者）：</strong> 负责提供高层次的策略、指导和格式要求。它就像一个“项目经理”，设定方向和规则。</li>
+<li><strong>执行LLMs：</strong> 独立地根据中央LLM的指导和自身所掌握的“信念”（私有信息），生成答案或推理步骤。它们就像“具体执行者”，根据自己的理解去完成任务。</li>
+<li>贝叶斯纳什均衡的应用：<ul>
+<li>每个执行LLM在生成答案时，会考虑它对其他执行LLM可能“知道”什么或可能如何行动的<strong>信念</strong>。</li>
+<li>中央LLM在设计指导策略时，也会考虑执行LLM的各种“类型”可能性，并试图找到一个能让所有执行LLM（根据它们的类型和信念）都能最优地做出回应的策略。</li>
+<li>这种设计使得每个执行LLM可以在<strong>不进行大量实时沟通</strong>的情况下，独立地生成“最优”响应，因为它们对其他智能体行为的预期已经通过贝叶斯信念融入了它们的决策过程。</li>
+<li>最终，中央LLM会整合所有执行LLM的答案，形成最终的“承诺”（commitment）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>效率和可扩展性：</strong><ul>
+<li>通过贝叶斯纳什均衡，LLM之间<strong>不需要进行高成本的实时交互和多轮辩论</strong>来达成共识。每个LLM基于其自身的信念和对其他LLM的预期来独立决策，大大减少了通信和计算开销。</li>
+<li>这种设计使得系统更容易扩展到更多的LLM智能体，因为智能体之间不再需要密集地互相通信。</li>
+<li>论文还提供了一些理论分析，证明了EcoNash在性能改进上具有较好的理论界限，并且其后悔（regret）增长与时间T呈亚线性关系，优于其他未达到BNE的多智能体框架。</li>
 </ul>
 </li>
 </ol>
+<p><strong>结合实例理解：一个多LLM的法律咨询系统</strong></p>
+<p>假设我们有一个由多个LLM组成的法律咨询系统，用户输入一个复杂的法律问题，需要系统给出详细的法律建议。</p>
+<ul>
+<li><p><strong>传统多智能体辩论方法（非BNE）：</strong></p>
+<ul>
+<li>用户输入问题。</li>
+<li>LLM1生成一个初步回答。</li>
+<li>LLM2对LLM1的回答进行批评和补充。</li>
+<li>LLM3再对LLM2的批评进行反驳或整合。</li>
+<li>这个过程可能持续多轮，直到所有LLM达成一个共识。</li>
+<li><strong>问题：</strong> 每轮都需要LLM之间进行大量信息交换和推理，耗时且计算资源消耗大。如果某个LLM“固执己见”，可能导致长时间的僵持或无法收敛。</li>
+</ul>
+</li>
+<li><p><strong>EcoNash 框架（基于BNE）：</strong></p>
+<ul>
+<li><p><strong>中央LLM（协调者）：</strong> 接收用户的法律问题。它首先对问题进行分解，并提供一个“框架”或“思考路径”。例如，它可能指示：“请各位执行LLM分别从以下几个方面分析：1. 相关法律条文；2. 历史判例；3. 潜在风险；4. 建议方案。每部分请提供两段概括性文字。”</p>
+</li>
+<li><p>执行LLMs：</p>
+<p> 假设有LLM_A（擅长刑法）、LLM_B（擅长民法）、LLM_C（擅长合同法）。</p>
+<ul>
+<li>中央LLM将框架发给它们。</li>
+<li>LLM_A知道自己擅长刑法，并且它“相信”（或者系统设定让它相信）LLM_B更擅长民法，LLM_C更擅长合同法。</li>
+<li>LLM_A在分析“相关法律条文”时，会根据自己的刑法知识进行深入检索和推理。它同时会预期到LLM_B和LLM_C也会在各自擅长的领域提供有价值的信息。它不需要和LLM_B、LLM_C实时“讨论”哪些法律条文更重要，而是基于对它们“类型”的信念，自行判断自己的最优贡献。</li>
+<li>每个执行LLM独立地生成其指定部分的答案，并按照中央LLM要求的格式返回。</li>
+</ul>
+</li>
+<li><p><strong>中央LLM（整合者）：</strong> 接收所有执行LLM独立生成的答案。它会根据预设的整合机制（例如，投票、加权平均、或进一步的总结）将这些答案整合起来，形成最终的、全面的法律咨询报告。</p>
+</li>
+<li><p>优点：</p>
+<ul>
+<li><strong>效率高：</strong> LLM之间无需频繁交互，降低了通信开销。每个LLM可以并行工作。</li>
+<li><strong>可扩展性强：</strong> 很容易增加或减少执行LLM的数量，因为它们之间的依赖性较低，主要通过中央LLM进行协调。</li>
+<li><strong>理论保证：</strong> 论文通过贝叶斯纳什均衡的理论，为这种分布式推理提供了更强的收敛性和性能保证，避免了传统辩论系统可能出现的僵局。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p>《Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium》这篇论文的核心在于，它认识到多智能体系统中的“信息不完全”是常态，并创造性地引入了贝叶斯纳什均衡来解决这个问题。通过构建一个分层结构（中央LLM负责协调，执行LLM独立推理），并让智能体基于对其他智能体“类型”的信念来优化自己的期望收益，该框架显著提高了多LLM推理的效率和可扩展性，同时提供了更强的理论收敛性保障。这对于构建更强大、更实用的基于LLM的智能系统具有重要意义。</p>
 
       
     </div>
@@ -370,13 +462,13 @@
   
     
     <div class="copyright">
-        <p><span>Title:</span><a href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></p>
+        <p><span>Title:</span><a href="/2025/05/28/Towards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium/">Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium</a></p>
         <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
-        <p><span>Created:</span>2025-03-23, 18:37:26</p>
-        <p><span>Updated:</span>2025-03-26, 21:01:53</p>
+        <p><span>Created:</span>2025-05-28, 21:54:07</p>
+        <p><span>Updated:</span>2025-05-28, 22:19:13</p>
         <p>
-            <span>Full URL:</span><a class="post-url" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/" title="层归一化">http://example.com/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/</a>
-            <span class="copy-path" data-clipboard-text="From http://example.com/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <span>Full URL:</span><a class="post-url" href="/2025/05/28/Towards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium/" title="Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium">http://example.com/2025/05/28/Towards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/05/28/Towards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -388,16 +480,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">
-                    多生成器架构
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2025/03/23/Inception-Score/">
-                    Inception Score
+                <a href="/2025/05/28/LoRA/">
+                    LoRA
                 </a>
             </div>
         
@@ -409,7 +495,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9C%81%E6%B5%81"><span class="toc-number">1.</span> <span class="toc-text">省流</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96%EF%BC%88Layer-Normalization%EF%BC%89%E8%AF%A6%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">层归一化（Layer Normalization）详解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%A6%82%E8%BF%B0"><span class="toc-number">2.1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F"><span class="toc-number">2.2.</span> <span class="toc-text">2. 计算公式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%9D%87%E5%80%BC"><span class="toc-number">2.2.1.</span> <span class="toc-text">计算均值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%A0%87%E5%87%86%E5%B7%AE"><span class="toc-number">2.2.2.</span> <span class="toc-text">计算标准差</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-number">2.2.3.</span> <span class="toc-text">归一化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%A9%E6%94%BE%E5%92%8C%E5%B9%B3%E7%A7%BB"><span class="toc-number">2.2.4.</span> <span class="toc-text">缩放和平移</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%BD%92%E4%B8%80%E5%8C%96%E4%BD%9C%E7%94%A8%E8%8C%83%E5%9B%B4"><span class="toc-number">2.3.</span> <span class="toc-text">3. 归一化作用范围</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96-vs-%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96"><span class="toc-number">2.4.</span> <span class="toc-text">4. 层归一化 vs. 批归一化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E8%AE%A1%E7%AE%97%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.5.</span> <span class="toc-text">5. 计算示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E4%B8%BA%E4%BB%80%E4%B9%88-Transformer-%E4%BD%BF%E7%94%A8%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96%EF%BC%9F"><span class="toc-number">2.6.</span> <span class="toc-text">6. 为什么 Transformer 使用层归一化？</span></a></li></ol></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%B3%E4%BB%80%E5%9D%87%E8%A1%A1-Nash-Equilibrium-%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">1. 什么是纳什均衡 (Nash Equilibrium)？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BB%80%E4%B9%88%E6%98%AF%E8%B4%9D%E5%8F%B6%E6%96%AF%E7%BA%B3%E4%BB%80%E5%9D%87%E8%A1%A1-Bayesian-Nash-Equilibrium-BNE-%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">2. 什么是贝叶斯纳什均衡 (Bayesian Nash Equilibrium, BNE)？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E3%80%8ATowards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium%E3%80%8B%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB"><span class="toc-number">3.</span> <span class="toc-text">3. 《Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium》论文解读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">4.</span> <span class="toc-text">总结：</span></a></li></ol>
         
     </div>
     <style>
@@ -445,7 +531,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"层归一化　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -465,15 +551,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/" title="Pre: 多生成器架构">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="Back to Homepage"><i class="fa fa-home"></i></a>
         
 
         <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2025/03/23/Inception-Score/" title="Next: Inception Score">
+            <a href="/2025/05/28/LoRA/" title="Next: LoRA">
                 <i class="fa fa-angle-right"></i>
             </a>
         
