@@ -258,6 +258,191 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-WGAN-WGAN-GP" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/03/16/WGAN-WGAN-GP/" class="article-date">
+      <time datetime="2025-03-16T12:45:00.000Z" itemprop="datePublished">2025-03-16</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2025/03/16/WGAN-WGAN-GP/">WGAN与WGAN-GP</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="省流"><a href="#省流" class="headerlink" title="省流"></a>省流</h1><p>*生成对抗网络（GAN）在图像生成等任务上表现出色，但传统的 GAN 训练存在诸多问题，如<strong>模式崩溃（Mode Collapse）</strong>、<strong>梯度消失或爆炸</strong>等。为了解决这些问题，WGAN（Wasserstein GAN）及其改进版本 WGAN-GP（WGAN with Gradient Penalty）被提出，使得 GAN 的训练更加稳定，并能够生成质量更高的样本。*</p>
+<p>传统的GAN模型的很多问题来自于它的损失函数的数学缺陷上。使用原损失函数其实是等价于去优化一个JS散度，假如两个分布完全没有重合的情况下，损失函数值是一个常数log2，这个时候梯度为0，这一点对于模型训练是致命的，会导致梯度消失的问题，那么如何修改这个损失函数，才能使得缓解这个问题呢，所以研究人员提出了使用 Wasserstein 距离来替代原设计。</p>
+<p>从直观上来看，Wasserstein 好像就是将原损失函数的取对数的操作取消掉，成为</p>
+<ul>
+<li><strong>批评器的损失函数</strong>：<br>$$ L_D &#x3D; E[D(X)] - E[D(G(Z))] $$</li>
+<li><strong>生成器的损失函数</strong>：<br>$$ L_G &#x3D; -E[D(G(Z))] $$</li>
+</ul>
+<p>为了使得这一替换有效，模型必须满足 1-李普希兹 函数条件，这一点需要使用 <strong>梯度裁剪</strong> 或 <strong>梯度惩罚</strong> 的操作。</p>
+<p>最终证明效果很好。</p>
+<h1 id="WGAN-简介"><a href="#WGAN-简介" class="headerlink" title="WGAN 简介"></a>WGAN 简介</h1><p>WGAN（Wasserstein GAN）由 Martin Arjovsky 等人在 2017 年提出，并在论文《Wasserstein GAN》中进行了详细介绍。WGAN 通过引入<strong>Wasserstein 距离（也称 Earth Mover’s Distance, EMD）</strong> 来度量真实分布和生成分布之间的差距，从而改善训练稳定性。</p>
+<h2 id="WGAN-的改进点"><a href="#WGAN-的改进点" class="headerlink" title="WGAN 的改进点"></a>WGAN 的改进点</h2><p>相较于传统 GAN，WGAN 主要有以下改进：</p>
+<ol>
+<li><strong>引入 Wasserstein 距离</strong>：<ul>
+<li>传统 GAN 使用 JS 散度（Jensen-Shannon Divergence）度量真实分布和生成分布的差异，但容易导致梯度消失。</li>
+<li>WGAN 采用 Wasserstein 距离（EMD），它可以提供更稳定的训练信号。</li>
+</ul>
+</li>
+<li><strong>去掉 Sigmoid 及交叉熵损失</strong>：<ul>
+<li>WGAN 直接使用神经网络的输出值作为衡量分布距离的指标，不再使用 Sigmoid 激活函数。</li>
+</ul>
+</li>
+<li><strong>使用权重裁剪（Weight Clipping）</strong>：<ul>
+<li>WGAN 要求判别器（Critic）的参数保持在一定范围（如 [-0.01, 0.01]），以满足 1-Lipschitz 条件。</li>
+</ul>
+</li>
+<li><strong>不再使用传统的判别器（Discriminator），改用批评器（Critic）</strong>：<ul>
+<li>批评器不再输出样本是真假，而是输出 Wasserstein 距离的估计值。</li>
+</ul>
+</li>
+</ol>
+<h1 id="WGAN-结构"><a href="#WGAN-结构" class="headerlink" title="WGAN 结构"></a>WGAN 结构</h1><h2 id="生成器（Generator）"><a href="#生成器（Generator）" class="headerlink" title="生成器（Generator）"></a>生成器（Generator）</h2><ul>
+<li>生成器的结构与普通 GAN 类似，输入为随机噪声 <code>Z</code>，输出为生成的图像 <code>G(Z)</code>。</li>
+<li>目标是最小化 Wasserstein 距离，使生成样本的分布接近真实分布。</li>
+</ul>
+<h2 id="批评器（Critic）"><a href="#批评器（Critic）" class="headerlink" title="批评器（Critic）"></a>批评器（Critic）</h2><ul>
+<li>取代传统判别器，输入为真实图像 <code>X</code> 或生成图像 <code>G(Z)</code>。</li>
+<li>输出一个<strong>任意实数</strong>，其值用于衡量真实数据和生成数据的 Wasserstein 距离。</li>
+<li>训练时优化 Wasserstein 损失，使得批评器可以正确衡量两者的距离。</li>
+</ul>
+<h2 id="WGAN-损失函数"><a href="#WGAN-损失函数" class="headerlink" title="WGAN 损失函数"></a>WGAN 损失函数</h2><ul>
+<li><strong>批评器的损失函数</strong>：<br>$$ L_D &#x3D; E[D(X)] - E[D(G(Z))] $$</li>
+<li><strong>生成器的损失函数</strong>：<br>$$ L_G &#x3D; -E[D(G(Z))] $$</li>
+</ul>
+<h1 id="WGAN-GP-简介"><a href="#WGAN-GP-简介" class="headerlink" title="WGAN-GP 简介"></a>WGAN-GP 简介</h1><p>虽然 WGAN 通过权重裁剪保证了 1-Lipschitz 条件，但这种方法存在一定的弊端，如<strong>梯度消失、参数空间受限</strong>。为了解决这些问题，Gulrajani 等人提出了 WGAN-GP（WGAN with Gradient Penalty），用**梯度惩罚（Gradient Penalty）**取代权重裁剪。</p>
+<h2 id="WGAN-GP-的改进点"><a href="#WGAN-GP-的改进点" class="headerlink" title="WGAN-GP 的改进点"></a>WGAN-GP 的改进点</h2><ol>
+<li><strong>去掉权重裁剪，改用梯度惩罚</strong>：<ul>
+<li>直接限制批评器的梯度范数，使其满足 1-Lipschitz 条件。</li>
+</ul>
+</li>
+<li><strong>更稳定的训练</strong>：<ul>
+<li>由于不再强制限制参数范围，模型可以更自由地学习复杂分布。</li>
+</ul>
+</li>
+</ol>
+<h2 id="WGAN-GP-的损失函数"><a href="#WGAN-GP-的损失函数" class="headerlink" title="WGAN-GP 的损失函数"></a>WGAN-GP 的损失函数</h2><ul>
+<li><p><strong>批评器的损失函数</strong>：<br>$$ L_D &#x3D; E[D(X)] - E[D(G(Z))] + \lambda E[(||\nabla_{\hat{x}} D(\hat{x})||_2 - 1)^2] $$<br>其中：</p>
+<ul>
+<li>( \lambda ) 是梯度惩罚项的权重，一般设为 10。</li>
+<li>( \hat{x} ) 是真实样本和生成样本之间的插值。</li>
+<li>目标是让梯度范数接近 1，以满足 1-Lipschitz 条件。</li>
+</ul>
+</li>
+<li><p><strong>生成器的损失函数</strong>（与 WGAN 相同）：<br>$$ L_G &#x3D; -E[D(G(Z))] $$</p>
+</li>
+</ul>
+<h1 id="WGAN-GP-训练过程"><a href="#WGAN-GP-训练过程" class="headerlink" title="WGAN-GP 训练过程"></a>WGAN-GP 训练过程</h1><ol>
+<li><strong>批评器训练</strong><ul>
+<li>使用真实数据 <code>X</code> 和生成数据 <code>G(Z)</code> 计算 Wasserstein 距离。</li>
+<li>计算梯度惩罚项，调整批评器的参数。</li>
+</ul>
+</li>
+<li><strong>生成器训练</strong><ul>
+<li>生成器更新参数，使 <code>D(G(Z))</code> 尽可能大，即最小化 Wasserstein 距离。</li>
+</ul>
+</li>
+<li><strong>交替训练</strong><ul>
+<li>通常训练 <strong>5 次批评器</strong>，再训练 <strong>1 次生成器</strong>。</li>
+</ul>
+</li>
+</ol>
+<h1 id="WGAN-和-WGAN-GP-的对比"><a href="#WGAN-和-WGAN-GP-的对比" class="headerlink" title="WGAN 和 WGAN-GP 的对比"></a>WGAN 和 WGAN-GP 的对比</h1><table>
+<thead>
+<tr>
+<th></th>
+<th>WGAN</th>
+<th>WGAN-GP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Lipschitz 约束</td>
+<td>权重裁剪</td>
+<td>梯度惩罚</td>
+</tr>
+<tr>
+<td>训练稳定性</td>
+<td>相对稳定</td>
+<td>更加稳定</td>
+</tr>
+<tr>
+<td>适用于高维数据</td>
+<td>可能受限</td>
+<td>适用于更复杂的数据</td>
+</tr>
+<tr>
+<td>生成质量</td>
+<td>良好</td>
+<td>更高质量</td>
+</tr>
+</tbody></table>
+<h1 id="WGAN-WGAN-GP-的应用"><a href="#WGAN-WGAN-GP-的应用" class="headerlink" title="WGAN &#x2F; WGAN-GP 的应用"></a>WGAN &#x2F; WGAN-GP 的应用</h1><p>WGAN 及 WGAN-GP 由于训练稳定，广泛应用于<strong>图像生成、风格迁移、数据增强</strong>等任务。例如：</p>
+<ul>
+<li><strong>高质量人脸生成</strong>（如 CelebA 数据集）</li>
+<li><strong>医学影像合成</strong>（用于补充训练数据）</li>
+<li><strong>图像超分辨率</strong></li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>WGAN 通过 Wasserstein 距离提高了 GAN 训练的稳定性，而 WGAN-GP 进一步优化了 Lipschitz 约束，使得训练更加稳定，生成效果更好。两者的主要改进点包括：</p>
+<ul>
+<li>WGAN <strong>引入 Wasserstein 距离，改进损失函数</strong>，但仍需权重裁剪。</li>
+<li>WGAN-GP <strong>用梯度惩罚替代权重裁剪，提高稳定性</strong>。</li>
+<li>WGAN-GP 适用于更复杂的数据分布，效果更优。</li>
+</ul>
+<p>WGAN 和 WGAN-GP 的提出极大地推动了 GAN 的发展，后续许多生成模型（如 StyleGAN）都在其基础上进行改进。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-DCGAN" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -1192,81 +1377,6 @@
       
     <div class="article-tag tagcloud">
         <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" rel="tag">优化技术</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-DCGAN-实现手写数字生成" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2025/03/09/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/" class="article-date">
-      <time datetime="2025-03-09T14:26:19.000Z" itemprop="datePublished">2025-03-09</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2025/03/09/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">DCGAN 实现手写数字生成</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><ol>
-<li>本次挑战使用的MNIST手写数字数据集，包含60,000张28x28的灰度图像，分为10个类别（数字0-9）。此数据集将用于训练你的生成对抗网络。</li>
-<li>你的任务是使用DCGAN模型，对该数据集进行图像生成。具体要求如下：<ol>
-<li>数据集下载：请下载MNIST数据集，并确保数据集中包含训练集和测试集。</li>
-<li>数据预处理：将图像数据进行必要的预处理，使其适合于DCGAN模型的训练。</li>
-<li>模型训练：搭建DCGAN模型，并利用训练数据集进行训练，调整模型参数，尝试生成高质量的数字图像。</li>
-<li>模型评估：在训练过程中，监控生成图像的质量，并可视化不同训练阶段生成的图像。</li>
-</ol>
-</li>
-</ol>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> datasets, transforms</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader</span><br><span class="line"><span class="keyword">import</span> torchvision.utils <span class="keyword">as</span> vutils</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">batch_size = <span class="number">128</span></span><br><span class="line">lr = <span class="number">0.0002</span></span><br><span class="line">noise_dim = <span class="number">100</span></span><br><span class="line">epochs = <span class="number">20</span></span><br><span class="line">channel_size = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">device = torch.device(<span class="string">&quot;cuda&quot;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span>)</span><br><span class="line">os.makedirs(<span class="string">&quot;output_dcgan&quot;</span>, exist_ok=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据预处理</span></span><br><span class="line">transform = transforms.Compose([</span><br><span class="line">    transforms.Grayscale(num_output_channels=<span class="number">1</span>),</span><br><span class="line">    transforms.ToTensor(),</span><br><span class="line">    transforms.Normalize((<span class="number">0.5</span>,), (<span class="number">0.5</span>,))</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用 ImageFolder 读取数据</span></span><br><span class="line">dataset = datasets.ImageFolder(root=<span class="string">&#x27;data/mnist_jpg&#x27;</span>, transform=transform)</span><br><span class="line">dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Generator</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, noise_dim, channel_size</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        基于卷积层的生成器</span></span><br><span class="line"><span class="string">        实现生成器的若干卷积层的叠加</span></span><br><span class="line"><span class="string">        :param noise_dim: 输入的噪音维度</span></span><br><span class="line"><span class="string">        :param channel_size: 目标图像的通道数</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        <span class="variable language_">self</span>.main = nn.Sequential(</span><br><span class="line">            nn.ConvTranspose2d(noise_dim, <span class="number">64</span> * <span class="number">2</span>, kernel_size=<span class="number">7</span>, stride=<span class="number">1</span>, padding=<span class="number">0</span>), <span class="comment"># (batch_size, noise_dim, 1, 1) -&gt; (batch_size, 128, 7, 7)</span></span><br><span class="line">            nn.BatchNorm2d(<span class="number">64</span> * <span class="number">2</span>),</span><br><span class="line">            nn.ReLU(<span class="literal">True</span>),</span><br><span class="line"></span><br><span class="line">            nn.ConvTranspose2d(<span class="number">64</span> * <span class="number">2</span>, <span class="number">64</span>, kernel_size=<span class="number">4</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>), <span class="comment"># (batch_size, 128, 7, 7) -&gt; (batch_size, 64, 14, 14)</span></span><br><span class="line">            nn.BatchNorm2d(<span class="number">64</span>),</span><br><span class="line">            nn.ReLU(<span class="literal">True</span>),</span><br><span class="line"></span><br><span class="line">            nn.ConvTranspose2d(<span class="number">64</span>, channel_size, kernel_size=<span class="number">4</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>), <span class="comment"># (batch_size, 64, 14, 14) -&gt; (batch_size, channel_size, 28, 28)</span></span><br><span class="line">            nn.Tanh()</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, <span class="built_in">input</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;完成前向传播&quot;&quot;&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">self</span>.main(<span class="built_in">input</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Discriminator</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, channel_size</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        基于卷积层的判别器</span></span><br><span class="line"><span class="string">        实现判别器的若干卷积层的叠加</span></span><br><span class="line"><span class="string">        :param channel_size: 欲判别的图像通道数</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        <span class="variable language_">self</span>.main = nn.Sequential(</span><br><span class="line">            nn.Conv2d(channel_size, <span class="number">64</span>, kernel_size=<span class="number">4</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>), <span class="comment"># (batch_size, channel_size, 28, 28)-&gt;(batch_size, 64, 14, 14)</span></span><br><span class="line">            nn.LeakyReLU(<span class="number">0.2</span>, inplace=<span class="literal">True</span>),</span><br><span class="line"></span><br><span class="line">            nn.Conv2d(<span class="number">64</span>, <span class="number">64</span> * <span class="number">2</span>, kernel_size=<span class="number">4</span>, stride=<span class="number">2</span>, padding=<span class="number">1</span>), <span class="comment"># (batch_size, 64, 14, 14)-&gt;(batch_size, 128, 7, 7)</span></span><br><span class="line">            nn.BatchNorm2d(<span class="number">64</span> * <span class="number">2</span>),</span><br><span class="line">            nn.LeakyReLU(<span class="number">0.2</span>, inplace=<span class="literal">True</span>),</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.flatten = nn.Flatten()</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.fc = nn.Sequential(</span><br><span class="line">            nn.Linear(<span class="number">128</span> * <span class="number">7</span> * <span class="number">7</span>, <span class="number">1</span>),</span><br><span class="line">            nn.Sigmoid()</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, <span class="built_in">input</span></span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        完成前向传播</span></span><br><span class="line"><span class="string">        :param input: 欲判别的图像数据</span></span><br><span class="line"><span class="string">        :return: 返回分类结果</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        x = <span class="variable language_">self</span>.main(<span class="built_in">input</span>)</span><br><span class="line">        x = <span class="variable language_">self</span>.flatten(x)</span><br><span class="line">        output = <span class="variable language_">self</span>.fc(x)</span><br><span class="line">        <span class="keyword">return</span> output</span><br><span class="line"></span><br><span class="line"><span class="comment"># 模型,优化器,损失函数</span></span><br><span class="line">netG = Generator(noise_dim, channel_size).to(device)</span><br><span class="line">netD = Discriminator(channel_size).to(device)</span><br><span class="line"></span><br><span class="line">criterion = nn.BCELoss()</span><br><span class="line"></span><br><span class="line">optimizerD = optim.Adam(netD.parameters(), lr=lr, betas=(<span class="number">0.5</span>, <span class="number">0.999</span>))</span><br><span class="line">optimizerG = optim.Adam(netG.parameters(), lr=lr, betas=(<span class="number">0.5</span>, <span class="number">0.999</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练过程</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(epochs):</span><br><span class="line">    <span class="keyword">for</span> i, (data, _) <span class="keyword">in</span> <span class="built_in">enumerate</span>(dataloader):</span><br><span class="line">        <span class="comment"># 训练判别器</span></span><br><span class="line">            <span class="comment"># 使 D_model 对真实数据集里的真实图像进行分类判断，将 label 视作 1</span></span><br><span class="line">        netD.zero_grad()</span><br><span class="line">        real_imgs = data.to(device)</span><br><span class="line">        batch_size = real_imgs.size(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">        label_real = torch.full((batch_size, <span class="number">1</span>), <span class="number">1.0</span>, device=device)</span><br><span class="line">        output_real = netD(real_imgs)</span><br><span class="line">        lossD_real = criterion(output_real, label_real)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 使 D_model 对 G_model 生成的虚假图像进行分类判断，将 label 视作 0</span></span><br><span class="line">        noise = torch.randn(batch_size, noise_dim, <span class="number">1</span>, <span class="number">1</span>, device=device)</span><br><span class="line">        fake_imgs = netG(noise)</span><br><span class="line">        label_fake = torch.full((batch_size, <span class="number">1</span>), <span class="number">0.0</span>, device=device)</span><br><span class="line">        output_fake = netD(fake_imgs.detach())</span><br><span class="line">        lossD_fake = criterion(output_fake, label_fake)</span><br><span class="line">            <span class="comment"># 通过真实图像上的损失和虚假图像上的损失相加，得到原论文中的损失表达，可以衡量模型在真假图形分类上的表现</span></span><br><span class="line">        lossD = lossD_real + lossD_fake</span><br><span class="line">        lossD.backward()</span><br><span class="line">        optimizerD.step()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 训练生成器</span></span><br><span class="line">        netG.zero_grad()</span><br><span class="line">        label_gen = torch.full((batch_size, <span class="number">1</span>), <span class="number">1.0</span>, device=device)   <span class="comment"># 生成器希望判别器将假样本判为真实,故标签设置为 1</span></span><br><span class="line">        output_gen = netD(fake_imgs)</span><br><span class="line">        lossG = criterion(output_gen, label_gen)</span><br><span class="line">        lossG.backward()</span><br><span class="line">        optimizerG.step()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> i % <span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Epoch [<span class="subst">&#123;epoch + <span class="number">1</span>&#125;</span>/<span class="subst">&#123;epochs&#125;</span>] Batch <span class="subst">&#123;i&#125;</span>/<span class="subst">&#123;<span class="built_in">len</span>(dataloader)&#125;</span> Loss_D: <span class="subst">&#123;(lossD_real + lossD_fake).item():<span class="number">.4</span>f&#125;</span> Loss_G: <span class="subst">&#123;lossG.item():<span class="number">.4</span>f&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 保存每个 epoch 的生成结果</span></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        fixed_noise = torch.randn(<span class="number">16</span>, noise_dim, <span class="number">1</span>, <span class="number">1</span>, device=device)</span><br><span class="line">        fake = netG(fixed_noise)</span><br><span class="line">    vutils.save_image(fake, <span class="string">f&quot;output_dcgan/fake_samples_epoch_<span class="subst">&#123;epoch + <span class="number">1</span>&#125;</span>.png&quot;</span>, normalize=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>30 epoches:<br><img src="/img/dcgan_mnist.png" alt="alt text"></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/project/">project</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DCGAN/" rel="tag">DCGAN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/code/" rel="tag">code</a></li></ul>
     </div>
 
       

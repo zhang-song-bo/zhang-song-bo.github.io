@@ -258,6 +258,122 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-TF-IDF" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/03/26/TF-IDF/" class="article-date">
+      <time datetime="2025-03-26T13:10:00.000Z" itemprop="datePublished">2025-03-26</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2025/03/26/TF-IDF/">TF-IDF 详解</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>在自然语言处理（NLP）和信息检索领域，TF-IDF（Term Frequency-Inverse Document Frequency，词频-逆文档频率）是一种常用的文本权重计算方法。它能够衡量单词在文档中的重要性，并在文本分类、关键词提取、搜索引擎等多个领域广泛应用。</p>
+<p>TF-IDF 是一种经典的文本表示方法，能够衡量单词在文档中的重要性。它在信息检索、文本分类和关键词提取等任务中广泛应用。然而，它无法捕捉语义信息，通常与词向量（如 Word2Vec、BERT）等方法结合使用，以提高文本分析的效果</p>
+<h1 id="1-TF-IDF-简介"><a href="#1-TF-IDF-简介" class="headerlink" title="1. TF-IDF 简介"></a>1. TF-IDF 简介</h1><p>TF-IDF 主要用于评估某个词语在一篇文档中的重要性，基本思想是：</p>
+<ul>
+<li><strong>词频（Term Frequency, TF）</strong> 衡量某个词在文档中出现的频率。</li>
+<li><strong>逆文档频率（Inverse Document Frequency, IDF）</strong> 衡量该词在整个语料库中的稀有程度。</li>
+</ul>
+<p>通过 TF 和 IDF 的结合，我们可以计算出一个词的重要性，常见应用包括：</p>
+<ul>
+<li><strong>关键词提取</strong>：自动识别文档的核心词汇。</li>
+<li><strong>文本相似度计算</strong>：用于文本分类和推荐系统。</li>
+<li><strong>搜索引擎排序</strong>：衡量查询词与文档的相关性。</li>
+</ul>
+<h1 id="2-TF-IDF-计算公式"><a href="#2-TF-IDF-计算公式" class="headerlink" title="2. TF-IDF 计算公式"></a>2. TF-IDF 计算公式</h1><p>TF-IDF 的计算包含两个部分：</p>
+<h2 id="2-1-词频（TF）"><a href="#2-1-词频（TF）" class="headerlink" title="2.1 词频（TF）"></a>2.1 词频（TF）</h2><p>词频用于衡量某个单词在一篇文档中出现的频率。常见的计算方法如下：</p>
+<p>$$ TF(t, d) &#x3D; \frac{f(t, d)}{\sum_{w \in d} f(w, d)} $$</p>
+<p>其中：</p>
+<ul>
+<li>( f(t, d) ) 表示词 ( t ) 在文档 ( d ) 中出现的次数。</li>
+<li>( \sum_{w \in d} f(w, d) ) 表示文档 ( d ) 中所有单词的总出现次数。</li>
+</ul>
+<h2 id="2-2-逆文档频率（IDF）"><a href="#2-2-逆文档频率（IDF）" class="headerlink" title="2.2 逆文档频率（IDF）"></a>2.2 逆文档频率（IDF）</h2><p>逆文档频率用于衡量某个单词在整个文档集合中是否具有区分度。其计算公式为：</p>
+<p>$$ IDF(t) &#x3D; \log \frac{N}{1 + DF(t)} $$</p>
+<p>其中：</p>
+<ul>
+<li>( N ) 是文档总数。</li>
+<li>( DF(t) ) 是包含词 ( t ) 的文档数量。</li>
+<li>分母加 1 是为了避免除零错误。</li>
+</ul>
+<h2 id="2-3-TF-IDF-计算"><a href="#2-3-TF-IDF-计算" class="headerlink" title="2.3 TF-IDF 计算"></a>2.3 TF-IDF 计算</h2><p>最终，TF-IDF 计算公式为：</p>
+<p>$$ TFIDF(t, d) &#x3D; TF(t, d) \times IDF(t) $$</p>
+<h1 id="3-TF-IDF-计算示例"><a href="#3-TF-IDF-计算示例" class="headerlink" title="3. TF-IDF 计算示例"></a>3. TF-IDF 计算示例</h1><p>假设我们有如下三篇文档：</p>
+<p><strong>文档 1</strong>: “机器学习 是 人工智能 的 一个 分支”</p>
+<p><strong>文档 2</strong>: “深度学习 是 机器学习 的 一个 重要 方向”</p>
+<p><strong>文档 3</strong>: “自然语言处理 是 人工智能 的 一个 重要 领域”</p>
+<p>计算 “机器学习” 在 <strong>文档 2</strong> 中的 TF-IDF 值：</p>
+<ul>
+<li>TF(“机器学习”, 文档 2) &#x3D; 1 &#x2F; 7 ≈ 0.142</li>
+<li>IDF(“机器学习”) &#x3D; log(3 &#x2F; 2) ≈ 0.176</li>
+<li>TF-IDF(“机器学习”, 文档 2) ≈ 0.142 × 0.176 ≈ 0.025</li>
+</ul>
+<h1 id="4-TF-IDF-的优缺点"><a href="#4-TF-IDF-的优缺点" class="headerlink" title="4. TF-IDF 的优缺点"></a>4. TF-IDF 的优缺点</h1><h2 id="4-1-优点"><a href="#4-1-优点" class="headerlink" title="4.1 优点"></a>4.1 优点</h2><p>✅ 计算简单，易于理解和实现。<br>✅ 在搜索引擎和文本分析任务中表现良好。<br>✅ 适用于高维文本数据。</p>
+<h2 id="4-2-缺点"><a href="#4-2-缺点" class="headerlink" title="4.2 缺点"></a>4.2 缺点</h2><p>❌ 无法捕捉单词的<strong>语义信息</strong>，例如 “苹果” 可以指水果也可以指公司。<br>❌ 对<strong>长文本</strong>不够鲁棒，容易造成高频词权重偏高。<br>❌ 不能处理<strong>同义词、上下文信息</strong>，需要结合词向量等方法。</p>
+<h1 id="5-TF-IDF-在-NLP-领域的应用"><a href="#5-TF-IDF-在-NLP-领域的应用" class="headerlink" title="5. TF-IDF 在 NLP 领域的应用"></a>5. TF-IDF 在 NLP 领域的应用</h1><ul>
+<li><strong>搜索引擎</strong>：计算查询词与网页的相关性，提高搜索质量。</li>
+<li><strong>文本分类</strong>：作为文本特征用于机器学习模型。</li>
+<li><strong>关键词提取</strong>：自动提取文档的核心关键词。</li>
+<li><strong>文档相似度计算</strong>：用于推荐系统、聚类分析等。</li>
+</ul>
+<h1 id="6-Python-代码实现-TF-IDF"><a href="#6-Python-代码实现-TF-IDF" class="headerlink" title="6. Python 代码实现 TF-IDF"></a>6. Python 代码实现 TF-IDF</h1><p>Python 提供了 <code>sklearn.feature_extraction.text.TfidfVectorizer</code> 方便计算 TF-IDF，示例如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.feature_extraction.text <span class="keyword">import</span> TfidfVectorizer</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义文档集</span></span><br><span class="line">documents = [</span><br><span class="line">    <span class="string">&quot;机器学习 是 人工智能 的 一个 分支&quot;</span>,</span><br><span class="line">    <span class="string">&quot;深度学习 是 机器学习 的 一个 重要 方向&quot;</span>,</span><br><span class="line">    <span class="string">&quot;自然语言处理 是 人工智能 的 一个 重要 领域&quot;</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化 TF-IDF 计算器</span></span><br><span class="line">vectorizer = TfidfVectorizer()</span><br><span class="line">tf_idf_matrix = vectorizer.fit_transform(documents)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取特征词汇表</span></span><br><span class="line">words = vectorizer.get_feature_names_out()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 转换为数组并输出</span></span><br><span class="line"><span class="built_in">print</span>(tf_idf_matrix.toarray())</span><br></pre></td></tr></table></figure>
+
+
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/">自然语言处理</a><a class="article-category-link" href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/%E4%BF%A1%E6%81%AF%E6%A3%80%E7%B4%A2/">信息检索</a><a class="article-category-link" href="/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/%E4%BF%A1%E6%81%AF%E6%A3%80%E7%B4%A2/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TF-IDF/" rel="tag">TF-IDF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8F%90%E5%8F%96/" rel="tag">关键词提取</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/" rel="tag">文本分析</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-多生成器架构" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -1179,191 +1295,6 @@
       
     <div class="article-tag tagcloud">
         <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CycleGAN/" rel="tag">CycleGAN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9B%BE%E5%83%8F%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/" rel="tag">图像风格迁移</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-WGAN-WGAN-GP" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2025/03/16/WGAN-WGAN-GP/" class="article-date">
-      <time datetime="2025-03-16T12:45:00.000Z" itemprop="datePublished">2025-03-16</time>
-</a>
-
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2025/03/16/WGAN-WGAN-GP/">WGAN与WGAN-GP</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-        <h1 id="省流"><a href="#省流" class="headerlink" title="省流"></a>省流</h1><p>*生成对抗网络（GAN）在图像生成等任务上表现出色，但传统的 GAN 训练存在诸多问题，如<strong>模式崩溃（Mode Collapse）</strong>、<strong>梯度消失或爆炸</strong>等。为了解决这些问题，WGAN（Wasserstein GAN）及其改进版本 WGAN-GP（WGAN with Gradient Penalty）被提出，使得 GAN 的训练更加稳定，并能够生成质量更高的样本。*</p>
-<p>传统的GAN模型的很多问题来自于它的损失函数的数学缺陷上。使用原损失函数其实是等价于去优化一个JS散度，假如两个分布完全没有重合的情况下，损失函数值是一个常数log2，这个时候梯度为0，这一点对于模型训练是致命的，会导致梯度消失的问题，那么如何修改这个损失函数，才能使得缓解这个问题呢，所以研究人员提出了使用 Wasserstein 距离来替代原设计。</p>
-<p>从直观上来看，Wasserstein 好像就是将原损失函数的取对数的操作取消掉，成为</p>
-<ul>
-<li><strong>批评器的损失函数</strong>：<br>$$ L_D &#x3D; E[D(X)] - E[D(G(Z))] $$</li>
-<li><strong>生成器的损失函数</strong>：<br>$$ L_G &#x3D; -E[D(G(Z))] $$</li>
-</ul>
-<p>为了使得这一替换有效，模型必须满足 1-李普希兹 函数条件，这一点需要使用 <strong>梯度裁剪</strong> 或 <strong>梯度惩罚</strong> 的操作。</p>
-<p>最终证明效果很好。</p>
-<h1 id="WGAN-简介"><a href="#WGAN-简介" class="headerlink" title="WGAN 简介"></a>WGAN 简介</h1><p>WGAN（Wasserstein GAN）由 Martin Arjovsky 等人在 2017 年提出，并在论文《Wasserstein GAN》中进行了详细介绍。WGAN 通过引入<strong>Wasserstein 距离（也称 Earth Mover’s Distance, EMD）</strong> 来度量真实分布和生成分布之间的差距，从而改善训练稳定性。</p>
-<h2 id="WGAN-的改进点"><a href="#WGAN-的改进点" class="headerlink" title="WGAN 的改进点"></a>WGAN 的改进点</h2><p>相较于传统 GAN，WGAN 主要有以下改进：</p>
-<ol>
-<li><strong>引入 Wasserstein 距离</strong>：<ul>
-<li>传统 GAN 使用 JS 散度（Jensen-Shannon Divergence）度量真实分布和生成分布的差异，但容易导致梯度消失。</li>
-<li>WGAN 采用 Wasserstein 距离（EMD），它可以提供更稳定的训练信号。</li>
-</ul>
-</li>
-<li><strong>去掉 Sigmoid 及交叉熵损失</strong>：<ul>
-<li>WGAN 直接使用神经网络的输出值作为衡量分布距离的指标，不再使用 Sigmoid 激活函数。</li>
-</ul>
-</li>
-<li><strong>使用权重裁剪（Weight Clipping）</strong>：<ul>
-<li>WGAN 要求判别器（Critic）的参数保持在一定范围（如 [-0.01, 0.01]），以满足 1-Lipschitz 条件。</li>
-</ul>
-</li>
-<li><strong>不再使用传统的判别器（Discriminator），改用批评器（Critic）</strong>：<ul>
-<li>批评器不再输出样本是真假，而是输出 Wasserstein 距离的估计值。</li>
-</ul>
-</li>
-</ol>
-<h1 id="WGAN-结构"><a href="#WGAN-结构" class="headerlink" title="WGAN 结构"></a>WGAN 结构</h1><h2 id="生成器（Generator）"><a href="#生成器（Generator）" class="headerlink" title="生成器（Generator）"></a>生成器（Generator）</h2><ul>
-<li>生成器的结构与普通 GAN 类似，输入为随机噪声 <code>Z</code>，输出为生成的图像 <code>G(Z)</code>。</li>
-<li>目标是最小化 Wasserstein 距离，使生成样本的分布接近真实分布。</li>
-</ul>
-<h2 id="批评器（Critic）"><a href="#批评器（Critic）" class="headerlink" title="批评器（Critic）"></a>批评器（Critic）</h2><ul>
-<li>取代传统判别器，输入为真实图像 <code>X</code> 或生成图像 <code>G(Z)</code>。</li>
-<li>输出一个<strong>任意实数</strong>，其值用于衡量真实数据和生成数据的 Wasserstein 距离。</li>
-<li>训练时优化 Wasserstein 损失，使得批评器可以正确衡量两者的距离。</li>
-</ul>
-<h2 id="WGAN-损失函数"><a href="#WGAN-损失函数" class="headerlink" title="WGAN 损失函数"></a>WGAN 损失函数</h2><ul>
-<li><strong>批评器的损失函数</strong>：<br>$$ L_D &#x3D; E[D(X)] - E[D(G(Z))] $$</li>
-<li><strong>生成器的损失函数</strong>：<br>$$ L_G &#x3D; -E[D(G(Z))] $$</li>
-</ul>
-<h1 id="WGAN-GP-简介"><a href="#WGAN-GP-简介" class="headerlink" title="WGAN-GP 简介"></a>WGAN-GP 简介</h1><p>虽然 WGAN 通过权重裁剪保证了 1-Lipschitz 条件，但这种方法存在一定的弊端，如<strong>梯度消失、参数空间受限</strong>。为了解决这些问题，Gulrajani 等人提出了 WGAN-GP（WGAN with Gradient Penalty），用**梯度惩罚（Gradient Penalty）**取代权重裁剪。</p>
-<h2 id="WGAN-GP-的改进点"><a href="#WGAN-GP-的改进点" class="headerlink" title="WGAN-GP 的改进点"></a>WGAN-GP 的改进点</h2><ol>
-<li><strong>去掉权重裁剪，改用梯度惩罚</strong>：<ul>
-<li>直接限制批评器的梯度范数，使其满足 1-Lipschitz 条件。</li>
-</ul>
-</li>
-<li><strong>更稳定的训练</strong>：<ul>
-<li>由于不再强制限制参数范围，模型可以更自由地学习复杂分布。</li>
-</ul>
-</li>
-</ol>
-<h2 id="WGAN-GP-的损失函数"><a href="#WGAN-GP-的损失函数" class="headerlink" title="WGAN-GP 的损失函数"></a>WGAN-GP 的损失函数</h2><ul>
-<li><p><strong>批评器的损失函数</strong>：<br>$$ L_D &#x3D; E[D(X)] - E[D(G(Z))] + \lambda E[(||\nabla_{\hat{x}} D(\hat{x})||_2 - 1)^2] $$<br>其中：</p>
-<ul>
-<li>( \lambda ) 是梯度惩罚项的权重，一般设为 10。</li>
-<li>( \hat{x} ) 是真实样本和生成样本之间的插值。</li>
-<li>目标是让梯度范数接近 1，以满足 1-Lipschitz 条件。</li>
-</ul>
-</li>
-<li><p><strong>生成器的损失函数</strong>（与 WGAN 相同）：<br>$$ L_G &#x3D; -E[D(G(Z))] $$</p>
-</li>
-</ul>
-<h1 id="WGAN-GP-训练过程"><a href="#WGAN-GP-训练过程" class="headerlink" title="WGAN-GP 训练过程"></a>WGAN-GP 训练过程</h1><ol>
-<li><strong>批评器训练</strong><ul>
-<li>使用真实数据 <code>X</code> 和生成数据 <code>G(Z)</code> 计算 Wasserstein 距离。</li>
-<li>计算梯度惩罚项，调整批评器的参数。</li>
-</ul>
-</li>
-<li><strong>生成器训练</strong><ul>
-<li>生成器更新参数，使 <code>D(G(Z))</code> 尽可能大，即最小化 Wasserstein 距离。</li>
-</ul>
-</li>
-<li><strong>交替训练</strong><ul>
-<li>通常训练 <strong>5 次批评器</strong>，再训练 <strong>1 次生成器</strong>。</li>
-</ul>
-</li>
-</ol>
-<h1 id="WGAN-和-WGAN-GP-的对比"><a href="#WGAN-和-WGAN-GP-的对比" class="headerlink" title="WGAN 和 WGAN-GP 的对比"></a>WGAN 和 WGAN-GP 的对比</h1><table>
-<thead>
-<tr>
-<th></th>
-<th>WGAN</th>
-<th>WGAN-GP</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Lipschitz 约束</td>
-<td>权重裁剪</td>
-<td>梯度惩罚</td>
-</tr>
-<tr>
-<td>训练稳定性</td>
-<td>相对稳定</td>
-<td>更加稳定</td>
-</tr>
-<tr>
-<td>适用于高维数据</td>
-<td>可能受限</td>
-<td>适用于更复杂的数据</td>
-</tr>
-<tr>
-<td>生成质量</td>
-<td>良好</td>
-<td>更高质量</td>
-</tr>
-</tbody></table>
-<h1 id="WGAN-WGAN-GP-的应用"><a href="#WGAN-WGAN-GP-的应用" class="headerlink" title="WGAN &#x2F; WGAN-GP 的应用"></a>WGAN &#x2F; WGAN-GP 的应用</h1><p>WGAN 及 WGAN-GP 由于训练稳定，广泛应用于<strong>图像生成、风格迁移、数据增强</strong>等任务。例如：</p>
-<ul>
-<li><strong>高质量人脸生成</strong>（如 CelebA 数据集）</li>
-<li><strong>医学影像合成</strong>（用于补充训练数据）</li>
-<li><strong>图像超分辨率</strong></li>
-</ul>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>WGAN 通过 Wasserstein 距离提高了 GAN 训练的稳定性，而 WGAN-GP 进一步优化了 Lipschitz 约束，使得训练更加稳定，生成效果更好。两者的主要改进点包括：</p>
-<ul>
-<li>WGAN <strong>引入 Wasserstein 距离，改进损失函数</strong>，但仍需权重裁剪。</li>
-<li>WGAN-GP <strong>用梯度惩罚替代权重裁剪，提高稳定性</strong>。</li>
-<li>WGAN-GP 适用于更复杂的数据分布，效果更优。</li>
-</ul>
-<p>WGAN 和 WGAN-GP 的提出极大地推动了 GAN 的发展，后续许多生成模型（如 StyleGAN）都在其基础上进行改进。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0/">模型学习</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li></ul>
     </div>
 
       
