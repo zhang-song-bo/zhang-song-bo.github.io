@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="John Doe" />
+
+
+
+<meta name="description" content="KMP 算法：字符串匹配的艺术1. 为什么需要 KMP？暴力匹配的痛点让我们先回顾一下暴力匹配（Brute Force）是如何工作的。假设主串 text &#x3D; &quot;ABABCABABAB&quot;，模式串 pattern &#x3D; &quot;ABAB&quot;。 123456789101112131415161718192021222324252627282930text:    A B A">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kmp">
+<meta property="og:url" content="http://example.com/2025/05/30/kmp/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="KMP 算法：字符串匹配的艺术1. 为什么需要 KMP？暴力匹配的痛点让我们先回顾一下暴力匹配（Brute Force）是如何工作的。假设主串 text &#x3D; &quot;ABABCABABAB&quot;，模式串 pattern &#x3D; &quot;ABAB&quot;。 123456789101112131415161718192021222324252627282930text:    A B A">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-05-30T12:50:56.000Z">
+<meta property="article:modified_time" content="2025-05-30T12:52:04.990Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>kmp | Hexo</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                            <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                        
+                            <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></li>
+                        
+                            <li><a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li>
+                        
+                            <li><a href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACGAN/" rel="tag">ACGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BERT/" rel="tag">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CycleGAN/" rel="tag">CycleGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DCGAN/" rel="tag">DCGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM/" rel="tag">LLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM-Evaluation/" rel="tag">LLM Evaluation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LoRA/" rel="tag">LoRA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Multi-Agent/" rel="tag">Multi-Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVM/" rel="tag">SVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TF-IDF/" rel="tag">TF-IDF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent/" rel="tag">agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/multi-agent/" rel="tag">multi-agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" rel="tag">优化技术</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8F%90%E5%8F%96/" rel="tag">关键词提取</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD/" rel="tag">具身智能</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B/" rel="tag">分类模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/" rel="tag">分类算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%83%8F%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/" rel="tag">图像风格迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E8%B0%83/" rel="tag">微调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8E%A8%E7%90%86%E4%BC%98%E5%8C%96/" rel="tag">推理优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/" rel="tag">支持向量机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/" rel="tag">文本分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B/" rel="tag">模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E6%8B%9F%E4%BA%BA%E7%B1%BB%E8%A1%8C%E4%B8%BA/" rel="tag">模拟人类行为</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" rel="tag">逻辑回归</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></li>
+                
+                    <li><a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li>
+                
+                    <li><a href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-kmp" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/05/30/kmp/" class="article-date">
+      <time datetime="2025-05-30T12:50:56.000Z" itemprop="datePublished">2025-05-30</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      kmp
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+    </div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="KMP-算法：字符串匹配的艺术"><a href="#KMP-算法：字符串匹配的艺术" class="headerlink" title="KMP 算法：字符串匹配的艺术"></a>KMP 算法：字符串匹配的艺术</h2><h3 id="1-为什么需要-KMP？暴力匹配的痛点"><a href="#1-为什么需要-KMP？暴力匹配的痛点" class="headerlink" title="1. 为什么需要 KMP？暴力匹配的痛点"></a>1. 为什么需要 KMP？暴力匹配的痛点</h3><p>让我们先回顾一下<strong>暴力匹配</strong>（Brute Force）是如何工作的。假设主串 <code>text = &quot;ABABCABABAB&quot;</code>，模式串 <code>pattern = &quot;ABAB&quot;</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">text:    A B A B C A B A B A B</span><br><span class="line">pattern: A B A B</span><br><span class="line">         ^</span><br><span class="line">         (匹配A)</span><br><span class="line"></span><br><span class="line">text:    A B A B C A B A B A B</span><br><span class="line">pattern: A B A B</span><br><span class="line">           ^</span><br><span class="line">           (匹配B)</span><br><span class="line"></span><br><span class="line">text:    A B A B C A B A B A B</span><br><span class="line">pattern: A B A B</span><br><span class="line">             ^</span><br><span class="line">             (匹配A)</span><br><span class="line"></span><br><span class="line">text:    A B A B C A B A B A B</span><br><span class="line">pattern: A B A B</span><br><span class="line">               ^</span><br><span class="line">               (匹配B)</span><br><span class="line"></span><br><span class="line">text:    A B A B C A B A B A B</span><br><span class="line">pattern: A B A B</span><br><span class="line">                 ^</span><br><span class="line">                 (匹配C 与 B 不匹配，模式串整体后移一位，从头开始比较)</span><br><span class="line"></span><br><span class="line">text:    A B A B C A B A B A B</span><br><span class="line">pattern:   A B A B</span><br><span class="line">           ^</span><br><span class="line">           (重新从头开始比较)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>当发生不匹配时，暴力匹配会将模式串整体向后移动一位，并重新从模式串的第一个字符开始与主串当前位置的字符进行比较。在最坏情况下（例如 <code>text = &quot;AAAAAAAAB&quot;</code>, <code>pattern = &quot;AAAB&quot;</code>），暴力匹配会进行大量的重复比较，导致时间复杂度高达 O(mn)。</p>
+<p>观察上述过程，我们发现一个问题：当 <code>pattern[j]</code> 与 <code>text[i]</code> 不匹配时，我们已经知道 <code>text[i-j ... i-1]</code> 和 <code>pattern[0 ... j-1]</code> 是匹配的。暴力匹配却直接抛弃了这些已匹配的信息，从头再来。KMP 算法正是利用了这些已匹配的信息，避免了主串指针 <code>i</code> 的回溯，从而提高了效率。</p>
+<h3 id="2-KMP-算法的核心思想：利用“前缀”和“后缀”"><a href="#2-KMP-算法的核心思想：利用“前缀”和“后缀”" class="headerlink" title="2. KMP 算法的核心思想：利用“前缀”和“后缀”"></a>2. KMP 算法的核心思想：利用“前缀”和“后缀”</h3><p>KMP 算法的关键在于，当模式串与主串发生不匹配时，它不回溯主串的指针，而是根据模式串自身的特点，将模式串向右滑动尽可能远的距离。这个距离的计算依赖于模式串的**“最长公共前后缀”**信息。</p>
+<p><strong>什么是“最长公共前后缀”？</strong></p>
+<p>对于模式串的任意一个前缀 <code>pattern[0 ... j-1]</code>（即 <code>pattern</code> 的一个子串），我们想找到一个最长的<strong>真前缀</strong>（不包括整个子串本身）和最长的<strong>真后缀</strong>（不包括整个子串本身）是相同的。</p>
+<p>例如，模式串 <code>pattern = &quot;ABABA&quot;</code>：</p>
+<ul>
+<li>当子串是 <code>&quot;A&quot;</code> 时：无公共前后缀。</li>
+<li>当子串是 <code>&quot;AB&quot;</code> 时：无公共前后缀。</li>
+<li>当子串是 <code>&quot;ABA&quot;</code> 时：前缀 <code>A</code>，后缀 <code>A</code>。最长公共前后缀长度为 1。</li>
+<li>当子串是 <code>&quot;ABAB&quot;</code> 时：前缀 <code>A</code>，后缀 <code>B</code>。前缀 <code>AB</code>，后缀 <code>AB</code>。最长公共前后缀长度为 2。</li>
+<li>当子串是 <code>&quot;ABABA&quot;</code> 时：前缀 <code>A</code>，后缀 <code>A</code>。前缀 <code>AB</code>，后缀 <code>BA</code>。前缀 <code>ABA</code>，后缀 <code>ABA</code>。最长公共前后缀长度为 3。</li>
+</ul>
+<p>KMP 算法预处理模式串，生成一个 <code>next</code> 数组（也常被称为 <code>lps</code> 数组，即 Longest Proper Prefix which is also Suffix），这个数组记录了模式串每个前缀的最长公共前后缀的长度。</p>
+<h3 id="3-next-数组（或-lps-数组）的构建"><a href="#3-next-数组（或-lps-数组）的构建" class="headerlink" title="3. next 数组（或 lps 数组）的构建"></a>3. <code>next</code> 数组（或 <code>lps</code> 数组）的构建</h3><p>next[j] 表示 pattern[0 … j-1] 这个子串的最长公共前后缀的长度。</p>
+<p>约定 next[0] &#x3D; -1 (或 next[0] &#x3D; 0，取决于实现细节)，表示模式串第一个字符失配时，模式串应整体后移一位。</p>
+<p>以 <code>pattern = &quot;ABABCABAB&quot;</code> 为例，我们来手动构建 <code>next</code> 数组：</p>
+<table>
+<thead>
+<tr>
+<th><strong>索引 j</strong></th>
+<th><strong>pattern[j]</strong></th>
+<th><strong>pattern[0…j] (子串)</strong></th>
+<th><strong>最长公共前后缀 (长度)</strong></th>
+<th><strong>next[j+1] (模式串下一个位置的值)</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-</td>
+<td>-</td>
+<td>空串</td>
+<td>-</td>
+<td><code>next[0] = -1</code> (约定)</td>
+</tr>
+<tr>
+<td>0</td>
+<td><code>A</code></td>
+<td><code>A</code></td>
+<td>空串 (0)</td>
+<td><code>next[1] = 0</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>B</code></td>
+<td><code>AB</code></td>
+<td>空串 (0)</td>
+<td><code>next[2] = 0</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>A</code></td>
+<td><code>ABA</code></td>
+<td><code>A</code> (1)</td>
+<td><code>next[3] = 1</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>B</code></td>
+<td><code>ABAB</code></td>
+<td><code>AB</code> (2)</td>
+<td><code>next[4] = 2</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>C</code></td>
+<td><code>ABABC</code></td>
+<td>空串 (0)</td>
+<td><code>next[5] = 0</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>A</code></td>
+<td><code>ABabca</code></td>
+<td><code>A</code> (1)</td>
+<td><code>next[6] = 1</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>B</code></td>
+<td><code>ABabcAB</code></td>
+<td><code>AB</code> (2)</td>
+<td><code>next[7] = 2</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>A</code></td>
+<td><code>ABabcABA</code></td>
+<td><code>ABA</code> (3)</td>
+<td><code>next[8] = 3</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>B</code></td>
+<td><code>ABabcABAB</code></td>
+<td><code>ABAB</code> (4)</td>
+<td><code>next[9] = 4</code></td>
+</tr>
+</tbody></table>
+<p><strong>构建 <code>next</code> 数组的算法：</strong></p>
+<p>我们可以使用动态规划的思想来构建 next 数组。</p>
+<p>设 next[j] 已经计算好，我们来计算 next[j+1]。</p>
+<p>next[j+1] 实际是 pattern[0…j] 这个子串的最长公共前后缀长度。</p>
+<ul>
+<li>用 <code>k</code> 表示当前已知的最长公共前后缀的长度。初始 <code>k=0</code>。</li>
+<li>用 <code>j</code> 遍历模式串的索引。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 构建 next 数组 (next[i] 表示 pattern[0...i-1] 的最长公共前后缀长度)</span></span><br><span class="line"><span class="comment">// next[0] 通常设为 -1 (或 0)</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">computeNextArray</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* pattern, <span class="type">int</span> m, <span class="type">int</span>* next)</span> &#123;</span><br><span class="line">    next[<span class="number">0</span>] = <span class="number">-1</span>; <span class="comment">// 或 next[0] = 0，取决于后续匹配逻辑</span></span><br><span class="line">    <span class="type">int</span> k = <span class="number">-1</span>;   <span class="comment">// k 表示当前已匹配的模式串前缀的长度</span></span><br><span class="line">    <span class="type">int</span> j = <span class="number">0</span>;    <span class="comment">// j 遍历模式串的索引</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (j &lt; m - <span class="number">1</span>) &#123; <span class="comment">// 遍历到 pattern 的倒数第二个字符</span></span><br><span class="line">        <span class="comment">// k == -1 (说明k回溯到-1，或者j=0时) 或 pattern[k] == pattern[j]</span></span><br><span class="line">        <span class="keyword">if</span> (k == <span class="number">-1</span> || pattern[k] == pattern[j]) &#123;</span><br><span class="line">            k++; <span class="comment">// 匹配成功，前缀长度增加</span></span><br><span class="line">            j++; <span class="comment">// 模式串的当前字符后移</span></span><br><span class="line">            next[j] = k; <span class="comment">// 更新 next 数组</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 不匹配，回溯 k 到 next[k]</span></span><br><span class="line">            <span class="comment">// 这意味着我们尝试用模式串的更短的前缀来匹配</span></span><br><span class="line">            k = next[k];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意： 这里的 next 数组定义是 next[j] 表示 pattern[0…j-1] 的最长公共前后缀的长度，即 pattern[j] 失配时，模式串应该移动到 pattern[next[j]] 处继续比较。</p>
+<p>或者，更常见的定义是 next[i] 表示 pattern[0…i] 的最长公共前后缀的长度，那么失配时回溯到 next[j-1]。这里我们采用前者，方便后续匹配。</p>
+<h3 id="4-KMP-匹配算法"><a href="#4-KMP-匹配算法" class="headerlink" title="4. KMP 匹配算法"></a>4. KMP 匹配算法</h3><p>有了 <code>next</code> 数组，KMP 匹配过程就变得高效了。</p>
+<ul>
+<li><code>i</code>：主串 <code>text</code> 的当前比较位置。</li>
+<li><code>j</code>：模式串 <code>pattern</code> 的当前比较位置。</li>
+</ul>
+<p><strong>匹配过程：</strong></p>
+<ol>
+<li><p>当 <code>text[i]</code> 和 <code>pattern[j]</code> 匹配时，<code>i</code> 和 <code>j</code> 同时向后移动一位 (<code>i++</code>, <code>j++</code>)。</p>
+</li>
+<li><p>当 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">text[i]</span><br></pre></td></tr></table></figure>
+
+<p> 和 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pattern[j]</span><br></pre></td></tr></table></figure>
+
+<p> 不匹配时：</p>
+<ul>
+<li>如果 <code>j &gt; 0</code>（即不是模式串的第一个字符失配），则将 <code>j</code> 更新为 <code>next[j]</code>。这表示我们将模式串向右滑动，使得 <code>pattern[0 ... next[j]-1]</code> 与 <code>text[i - next[j] ... i-1]</code> 保持对齐，然后从 <code>pattern[next[j]]</code> 处开始重新比较。主串指针 <code>i</code> <strong>不回溯</strong>。</li>
+<li>如果 <code>j = 0</code>（即模式串的第一个字符就失配），则只将 <code>i</code> 向后移动一位 (<code>i++</code>)，<code>j</code> 保持为 0（模式串整体后移一位，从头开始比较）。</li>
+</ul>
+</li>
+</ol>
+<p>当 <code>j</code> 等于模式串的长度 <code>m</code> 时，表示找到了一个匹配。此时，<code>text</code> 中匹配的起始位置是 <code>i - m</code>。找到后，为了寻找下一个匹配，我们将 <code>j</code> 更新为 <code>next[j]</code> (即 <code>next[m]</code>)，然后继续匹配。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// KMP 字符串匹配算法</span></span><br><span class="line"><span class="comment">// 返回模式串在主串中第一次出现的起始索引，未找到则返回 -1</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">kmpSearch</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* text, <span class="type">const</span> <span class="type">char</span>* pattern)</span> &#123;</span><br><span class="line">    <span class="type">int</span> n = <span class="number">0</span>; <span class="comment">// 主串长度</span></span><br><span class="line">    <span class="keyword">while</span> (text[n] != <span class="string">&#x27;\0&#x27;</span>) n++;</span><br><span class="line">    <span class="type">int</span> m = <span class="number">0</span>; <span class="comment">// 模式串长度</span></span><br><span class="line">    <span class="keyword">while</span> (pattern[m] != <span class="string">&#x27;\0&#x27;</span>) m++;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (m == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 空模式串总是在0位置匹配</span></span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// 空主串无法匹配</span></span><br><span class="line"></span><br><span class="line">    <span class="type">int</span>* next = (<span class="type">int</span>*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="type">int</span>) * m);</span><br><span class="line">    <span class="keyword">if</span> (next == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;内存分配失败！\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 1. 构建 next 数组</span></span><br><span class="line">    computeNextArray(pattern, m, next);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. KMP 匹配过程</span></span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>; <span class="comment">// 主串指针</span></span><br><span class="line">    <span class="type">int</span> j = <span class="number">0</span>; <span class="comment">// 模式串指针</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (i &lt; n) &#123;</span><br><span class="line">        <span class="comment">// 当 pattern[j] 和 text[i] 匹配时，或 j 已经回溯到 -1 (模式串整体右移)</span></span><br><span class="line">        <span class="keyword">if</span> (j == <span class="number">-1</span> || text[i] == pattern[j]) &#123;</span><br><span class="line">            i++;</span><br><span class="line">            j++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 不匹配，根据 next 数组移动模式串指针 j</span></span><br><span class="line">            j = next[j];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 找到了一个匹配</span></span><br><span class="line">        <span class="keyword">if</span> (j == m) &#123;</span><br><span class="line">            <span class="built_in">free</span>(next);</span><br><span class="line">            <span class="keyword">return</span> i - m; <span class="comment">// 返回匹配的起始位置</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">free</span>(next);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// 未找到匹配</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-完整-C-语言代码示例"><a href="#5-完整-C-语言代码示例" class="headerlink" title="5. 完整 C 语言代码示例"></a>5. 完整 C 语言代码示例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span> <span class="comment">// for strlen</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 构建 next 数组 (next[j] 表示 pattern[0...j-1] 的最长公共前后缀长度)</span></span><br><span class="line"><span class="comment">// next[0] 设为 -1</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">computeNextArray</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* pattern, <span class="type">int</span> m, <span class="type">int</span>* next)</span> &#123;</span><br><span class="line">    next[<span class="number">0</span>] = <span class="number">-1</span>; <span class="comment">// 哨兵值，表示模式串第一个字符失配时，主串指针 i 向右移，模式串从头开始</span></span><br><span class="line">    <span class="type">int</span> k = <span class="number">-1</span>;   <span class="comment">// k 表示当前已匹配的模式串前缀的长度</span></span><br><span class="line">    <span class="type">int</span> j = <span class="number">0</span>;    <span class="comment">// j 遍历模式串的索引 (pattern[j] 是当前正在考察的字符)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (j &lt; m - <span class="number">1</span>) &#123; <span class="comment">// 遍历到 pattern 的倒数第二个字符</span></span><br><span class="line">        <span class="comment">// 如果 k == -1 (说明模式串已完全回溯，或者 j=0 时)</span></span><br><span class="line">        <span class="comment">// 或者当前考察的字符 pattern[j] 与模式串的第 k 个字符 pattern[k] 相同</span></span><br><span class="line">        <span class="keyword">if</span> (k == <span class="number">-1</span> || pattern[k] == pattern[j]) &#123;</span><br><span class="line">            k++; <span class="comment">// 匹配成功，前缀长度 k 增加</span></span><br><span class="line">            j++; <span class="comment">// 模式串的当前字符 j 增加</span></span><br><span class="line">            next[j] = k; <span class="comment">// 更新 next 数组</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 不匹配，回溯 k 到 next[k]</span></span><br><span class="line">            <span class="comment">// 尝试用模式串的更短的前缀来匹配</span></span><br><span class="line">            k = next[k];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// KMP 字符串匹配算法</span></span><br><span class="line"><span class="comment">// 返回模式串在主串中第一次出现的起始索引，未找到则返回 -1</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">kmpSearch</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* text, <span class="type">const</span> <span class="type">char</span>* pattern)</span> &#123;</span><br><span class="line">    <span class="type">int</span> n = <span class="built_in">strlen</span>(text);</span><br><span class="line">    <span class="type">int</span> m = <span class="built_in">strlen</span>(pattern);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (m == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 空模式串总是在0位置匹配</span></span><br><span class="line">    <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// 空主串无法匹配</span></span><br><span class="line"></span><br><span class="line">    <span class="type">int</span>* next = (<span class="type">int</span>*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="type">int</span>) * m);</span><br><span class="line">    <span class="keyword">if</span> (next == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;内存分配失败！\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 1. 构建 next 数组</span></span><br><span class="line">    computeNextArray(pattern, m, next);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. KMP 匹配过程</span></span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>; <span class="comment">// 主串指针</span></span><br><span class="line">    <span class="type">int</span> j = <span class="number">0</span>; <span class="comment">// 模式串指针</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (i &lt; n) &#123;</span><br><span class="line">        <span class="comment">// 当 pattern[j] 和 text[i] 匹配时，或 j 已经回溯到 -1 (模式串整体右移)</span></span><br><span class="line">        <span class="keyword">if</span> (j == <span class="number">-1</span> || text[i] == pattern[j]) &#123;</span><br><span class="line">            i++; <span class="comment">// 主串指针前进</span></span><br><span class="line">            j++; <span class="comment">// 模式串指针前进</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 不匹配，根据 next 数组移动模式串指针 j</span></span><br><span class="line">            <span class="comment">// 主串指针 i 不回溯</span></span><br><span class="line">            j = next[j];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 找到了一个匹配</span></span><br><span class="line">        <span class="keyword">if</span> (j == m) &#123;</span><br><span class="line">            <span class="built_in">free</span>(next);</span><br><span class="line">            <span class="keyword">return</span> i - m; <span class="comment">// 返回匹配的起始位置 (i 是匹配结束的后一个位置)</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">free</span>(next);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>; <span class="comment">// 未找到匹配</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* text1 = <span class="string">&quot;ABABCABABAB&quot;</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* pattern1 = <span class="string">&quot;ABAB&quot;</span>;</span><br><span class="line">    <span class="type">int</span> index1 = kmpSearch(text1, pattern1);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;在 \&quot;%s\&quot; 中查找 \&quot;%s\&quot;，第一次出现位置: %d\n&quot;</span>, text1, pattern1, index1); <span class="comment">// Expected: 0</span></span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* text2 = <span class="string">&quot;ABCDEFGH&quot;</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* pattern2 = <span class="string">&quot;FGH&quot;</span>;</span><br><span class="line">    <span class="type">int</span> index2 = kmpSearch(text2, pattern2);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;在 \&quot;%s\&quot; 中查找 \&quot;%s\&quot;，第一次出现位置: %d\n&quot;</span>, text2, pattern2, index2); <span class="comment">// Expected: 5</span></span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* text3 = <span class="string">&quot;AAAAAAAAB&quot;</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* pattern3 = <span class="string">&quot;AAAB&quot;</span>;</span><br><span class="line">    <span class="type">int</span> index3 = kmpSearch(text3, pattern3);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;在 \&quot;%s\&quot; 中查找 \&quot;%s\&quot;，第一次出现位置: %d\n&quot;</span>, text3, pattern3, index3); <span class="comment">// Expected: 4</span></span><br><span class="line"></span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* text4 = <span class="string">&quot;HELLO WORLD&quot;</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* pattern4 = <span class="string">&quot;XYZ&quot;</span>;</span><br><span class="line">    <span class="type">int</span> index4 = kmpSearch(text4, pattern4);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;在 \&quot;%s\&quot; 中查找 \&quot;%s\&quot;，第一次出现位置: %d\n&quot;</span>, text4, pattern4, index4); <span class="comment">// Expected: -1</span></span><br><span class="line">    </span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* text5 = <span class="string">&quot;ABCBABCDABCD&quot;</span>;</span><br><span class="line">    <span class="type">const</span> <span class="type">char</span>* pattern5 = <span class="string">&quot;ABCD&quot;</span>;</span><br><span class="line">    <span class="type">int</span> index5 = kmpSearch(text5, pattern5);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;在 \&quot;%s\&quot; 中查找 \&quot;%s\&quot;，第一次出现位置: %d\n&quot;</span>, text5, pattern5, index5); <span class="comment">// Expected: 3</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-KMP-算法的优势与复杂度分析"><a href="#6-KMP-算法的优势与复杂度分析" class="headerlink" title="6. KMP 算法的优势与复杂度分析"></a>6. KMP 算法的优势与复杂度分析</h3><ul>
+<li><strong>时间复杂度：</strong><ul>
+<li>构建 <code>next</code> 数组：O(m)，其中 m 是模式串的长度。</li>
+<li>匹配过程：O(n)，其中 n 是主串的长度。主串指针 <code>i</code> 永不回溯，模式串指针 <code>j</code> 最多回溯 m 次（每次回溯都会导致 <code>j</code> 减小），但每次 <code>i</code> 和 <code>j</code> 至少有一个会前进，所以总操作次数是线性的。</li>
+<li><strong>总时间复杂度：*<em>O(m+n)*</em></strong>。</li>
+</ul>
+</li>
+<li><strong>空间复杂度：</strong><ul>
+<li>O(m)，用于存储 <code>next</code> 数组。</li>
+</ul>
+</li>
+</ul>
+<p><strong>与暴力匹配相比，KMP 算法的优势在于：</strong> 它在模式串与主串发生不匹配时，能够利用已匹配的模式串前缀信息，避免主串指针的回溯，从而在最坏情况下也能保持线性时间复杂度。这使得它在处理长文本和重复模式的字符串匹配问题时表现出色。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2025/05/30/kmp/">kmp</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
+        <p><span>Created:</span>2025-05-30, 20:50:56</p>
+        <p><span>Updated:</span>2025-05-30, 20:52:04</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2025/05/30/kmp/" title="kmp">http://example.com/2025/05/30/kmp/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/05/30/kmp/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/05/30/%E5%A0%86/">
+                    堆
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/05/30/DP/">
+                    DP
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#KMP-%E7%AE%97%E6%B3%95%EF%BC%9A%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%9A%84%E8%89%BA%E6%9C%AF"><span class="toc-number">1.</span> <span class="toc-text">KMP 算法：字符串匹配的艺术</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-KMP%EF%BC%9F%E6%9A%B4%E5%8A%9B%E5%8C%B9%E9%85%8D%E7%9A%84%E7%97%9B%E7%82%B9"><span class="toc-number">1.1.</span> <span class="toc-text">1. 为什么需要 KMP？暴力匹配的痛点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-KMP-%E7%AE%97%E6%B3%95%E7%9A%84%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%EF%BC%9A%E5%88%A9%E7%94%A8%E2%80%9C%E5%89%8D%E7%BC%80%E2%80%9D%E5%92%8C%E2%80%9C%E5%90%8E%E7%BC%80%E2%80%9D"><span class="toc-number">1.2.</span> <span class="toc-text">2. KMP 算法的核心思想：利用“前缀”和“后缀”</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-next-%E6%95%B0%E7%BB%84%EF%BC%88%E6%88%96-lps-%E6%95%B0%E7%BB%84%EF%BC%89%E7%9A%84%E6%9E%84%E5%BB%BA"><span class="toc-number">1.3.</span> <span class="toc-text">3. next 数组（或 lps 数组）的构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-KMP-%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95"><span class="toc-number">1.4.</span> <span class="toc-text">4. KMP 匹配算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%AE%8C%E6%95%B4-C-%E8%AF%AD%E8%A8%80%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.5.</span> <span class="toc-text">5. 完整 C 语言代码示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-KMP-%E7%AE%97%E6%B3%95%E7%9A%84%E4%BC%98%E5%8A%BF%E4%B8%8E%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="toc-number">1.6.</span> <span class="toc-text">6. KMP 算法的优势与复杂度分析</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"kmp　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/05/30/%E5%A0%86/" title="Pre: 堆">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/05/30/DP/" title="Next: DP">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/">十字链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%A0%86/">堆</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/kmp/">kmp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/DP/">DP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%9B%BE/">图</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E4%BA%8C%E5%8F%89%E6%A0%91/">二叉树</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E9%93%BE%E8%A1%A8/">链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E4%BA%8C%E5%88%86/">二分</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E6%AC%A7%E6%8B%89%E8%B4%A8%E6%95%B0%E7%AD%9B/">欧拉质数筛</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/Towards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium/">Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/LoRA/">LoRA</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/%E5%A4%A7%E4%B8%80%E6%80%BB%E7%BB%93/">大一总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/27/Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models/">Building Cooperative Embodied Agents Modularly with Large Language Models</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/26/Generative_Agents_Interactive_Simulacra_of_Human_Behavior/">Generative Agents Interactive Simulacra of Human Behavior</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/26/HuggingGPT-Solving-AI-Tasks-with-ChatGPT-and-its-Friends-in-Hugging-Face/">HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/25/ChatEval/">ChatEval</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/Improving-Factuality-and-Reasoning-in-Language-Models-through-Multiagent-Debate/">Improving Factuality and Reasoning in Language Models through Multiagent Debate</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/ReConcile/">ReConcile</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/04/12/LLM/">本地部署大模型以及微调手册</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/TF-IDF/">TF-IDF 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN-%E5%AE%9E%E7%8E%B0%E8%8E%AB%E5%A5%88%E9%A3%8E%E6%A0%BC%E7%94%BB%E4%BD%9C%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%9C%9F%E5%AE%9E%E7%85%A7%E7%89%87/">CycleGAN 实现莫奈风格画作转化为真实照片</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN/">CycleGAN 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/WGAN-WGAN-GP/">WGAN与WGAN-GP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/DCGAN/">DCGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/ACGAN/">ACGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/15/SVM/">支持向量机（SVM）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/14/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/">逻辑回归（Logistic Regression）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">WGAN/WGAN-GP 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/12/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">ACGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">GAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">DCGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/06/BERT-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">BERT 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/02/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">房价预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/01/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">Transformer 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/27/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/">预测系外行星轨道周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2025 John Doe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

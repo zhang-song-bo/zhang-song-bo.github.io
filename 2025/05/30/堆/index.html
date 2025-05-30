@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="John Doe" />
+
+
+
+<meta name="description" content="揭秘“堆”：高效的优先级队列与排序利器1. 什么是堆？堆是一种特殊的完全二叉树。它的主要特性是：  完全二叉树： 堆必须是一棵完全二叉树。这意味着除了最后一层，其他层都被完全填满，并且最后一层的节点都尽可能地靠左排列。这种结构使得堆可以用数组来高效地表示，无需使用指针，节省了内存空间。 在一个完全二叉树中，如果一个节点的索引是 i： 它的左子节点的索引是 2i+1。 它的右子节点的索引是 2i+2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="堆">
+<meta property="og:url" content="http://example.com/2025/05/30/%E5%A0%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="揭秘“堆”：高效的优先级队列与排序利器1. 什么是堆？堆是一种特殊的完全二叉树。它的主要特性是：  完全二叉树： 堆必须是一棵完全二叉树。这意味着除了最后一层，其他层都被完全填满，并且最后一层的节点都尽可能地靠左排列。这种结构使得堆可以用数组来高效地表示，无需使用指针，节省了内存空间。 在一个完全二叉树中，如果一个节点的索引是 i： 它的左子节点的索引是 2i+1。 它的右子节点的索引是 2i+2">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-05-30T12:52:47.000Z">
+<meta property="article:modified_time" content="2025-05-30T12:56:35.470Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>堆 | Hexo</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                            <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                        
+                            <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></li>
+                        
+                            <li><a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li>
+                        
+                            <li><a href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACGAN/" rel="tag">ACGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BERT/" rel="tag">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CycleGAN/" rel="tag">CycleGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DCGAN/" rel="tag">DCGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM/" rel="tag">LLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM-Evaluation/" rel="tag">LLM Evaluation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LoRA/" rel="tag">LoRA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Multi-Agent/" rel="tag">Multi-Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVM/" rel="tag">SVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TF-IDF/" rel="tag">TF-IDF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent/" rel="tag">agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/multi-agent/" rel="tag">multi-agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" rel="tag">优化技术</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8F%90%E5%8F%96/" rel="tag">关键词提取</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD/" rel="tag">具身智能</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B/" rel="tag">分类模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/" rel="tag">分类算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%83%8F%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/" rel="tag">图像风格迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E8%B0%83/" rel="tag">微调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8E%A8%E7%90%86%E4%BC%98%E5%8C%96/" rel="tag">推理优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/" rel="tag">支持向量机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/" rel="tag">文本分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B/" rel="tag">模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E6%8B%9F%E4%BA%BA%E7%B1%BB%E8%A1%8C%E4%B8%BA/" rel="tag">模拟人类行为</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" rel="tag">逻辑回归</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></li>
+                
+                    <li><a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li>
+                
+                    <li><a href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-堆" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/05/30/%E5%A0%86/" class="article-date">
+      <time datetime="2025-05-30T12:52:47.000Z" itemprop="datePublished">2025-05-30</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      堆
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+    </div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="揭秘“堆”：高效的优先级队列与排序利器"><a href="#揭秘“堆”：高效的优先级队列与排序利器" class="headerlink" title="揭秘“堆”：高效的优先级队列与排序利器"></a>揭秘“堆”：高效的优先级队列与排序利器</h2><h3 id="1-什么是堆？"><a href="#1-什么是堆？" class="headerlink" title="1. 什么是堆？"></a>1. 什么是堆？</h3><p>堆是一种特殊的<strong>完全二叉树</strong>。它的主要特性是：</p>
+<ol>
+<li><strong>完全二叉树：</strong> 堆必须是一棵完全二叉树。这意味着除了最后一层，其他层都被完全填满，并且最后一层的节点都尽可能地靠左排列。这种结构使得堆可以用<strong>数组</strong>来高效地表示，无需使用指针，节省了内存空间。<ul>
+<li>在一个完全二叉树中，如果一个节点的索引是 i：<ul>
+<li>它的左子节点的索引是 2i+1。</li>
+<li>它的右子节点的索引是 2i+2。</li>
+<li>它的父节点的索引是 (i−1)&#x2F;2（整数除法）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>堆序性（Heap Property）：</strong> 堆中的每个节点都满足特定的顺序关系。根据这个关系，堆可以分为两种：<ul>
+<li><strong>最大堆（Max-Heap）：</strong> 每个父节点的值都<strong>大于或等于</strong>其子节点的值。因此，根节点是整个堆中的最大值。</li>
+<li><strong>最小堆（Min-Heap）：</strong> 每个父节点的值都<strong>小于或等于</strong>其子节点的值。因此，根节点是整个堆中的最小值。</li>
+</ul>
+</li>
+</ol>
+<p>本文后续将以<strong>最小堆</strong>为例进行讲解和实现。</p>
+<p><strong>为何用数组表示？</strong></p>
+<p>完全二叉树的这种特性使得它的节点可以紧密地存储在一个数组中，而不会有任何空隙。通过简单的数学计算，我们就能找到任何一个节点的父节点或子节点，从而避免了传统树结构中因指针操作带来的额外开销和复杂性。</p>
+<h3 id="2-堆的基本操作"><a href="#2-堆的基本操作" class="headerlink" title="2. 堆的基本操作"></a>2. 堆的基本操作</h3><p>堆的核心操作包括：<strong>插入（Insert）</strong> 和 <strong>删除根节点（Extract Min&#x2F;Max）</strong>。这两个操作都通过维护堆的“堆序性”来实现。</p>
+<h4 id="2-1-插入操作（Insert）"><a href="#2-1-插入操作（Insert）" class="headerlink" title="2.1 插入操作（Insert）"></a>2.1 插入操作（Insert）</h4><p>向堆中插入一个新元素时，为了保持堆的完全二叉树结构和堆序性，我们通常这样做：</p>
+<ol>
+<li>将新元素添加到堆的<strong>末尾</strong>（数组的最后一个位置），以保持完全二叉树的特性。</li>
+<li>然后，进行**“上浮”（Heapify-up &#x2F; Sift-up &#x2F; Bubble-up）** 操作：将新元素与其父节点进行比较。如果新元素比父节点小（最小堆）或大（最大堆），则交换它们的位置。这个过程重复进行，直到新元素到达正确的位置（满足堆序性）或者到达根节点。</li>
+</ol>
+<p>这个上浮过程的时间复杂度是 O(logn)，因为每次比较和交换都会使元素向上移动一层。</p>
+<h4 id="2-2-删除根节点（Extract-Min-Max）"><a href="#2-2-删除根节点（Extract-Min-Max）" class="headerlink" title="2.2 删除根节点（Extract Min&#x2F;Max）"></a>2.2 删除根节点（Extract Min&#x2F;Max）</h4><p>删除堆中的根节点（例如，从最小堆中取出最小值）是另一个核心操作：</p>
+<ol>
+<li>取出根节点的值。</li>
+<li>为了保持完全二叉树的结构，将堆中的<strong>最后一个元素</strong>移动到根节点的位置。</li>
+<li>然后，进行**“下沉”（Heapify-down &#x2F; Sift-down &#x2F; Bubble-down）** 操作：将新根元素与其子节点进行比较。如果它比子节点大（最小堆）或小（最大堆），则与合适的子节点（最小堆选较小的子节点，最大堆选较大的子节点）交换位置。这个过程重复进行，直到元素到达正确的位置（满足堆序性）或者到达叶子节点。</li>
+</ol>
+<p>这个下沉过程的时间复杂度也是 O(logn)，因为它每次比较和交换都会使元素向下移动一层。</p>
+<hr>
+<h3 id="3-C-语言实现最小堆"><a href="#3-C-语言实现最小堆" class="headerlink" title="3. C 语言实现最小堆"></a>3. C 语言实现最小堆</h3><p>我们用一个数组来表示堆，并实现其核心操作。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;limits.h&gt;</span> <span class="comment">// for INT_MAX</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAX_HEAP_SIZE 100 <span class="comment">// 定义堆的最大容量</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 最小堆结构体</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">MinHeap</span> &#123;</span></span><br><span class="line">    <span class="type">int</span>* arr;       <span class="comment">// 存储堆元素的数组</span></span><br><span class="line">    <span class="type">int</span> capacity;  <span class="comment">// 堆的最大容量</span></span><br><span class="line">    <span class="type">int</span> size;      <span class="comment">// 堆当前元素的数量</span></span><br><span class="line">&#125; MinHeap;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个最小堆</span></span><br><span class="line">MinHeap* <span class="title function_">createMinHeap</span><span class="params">(<span class="type">int</span> capacity)</span> &#123;</span><br><span class="line">    MinHeap* heap = (MinHeap*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(MinHeap));</span><br><span class="line">    <span class="keyword">if</span> (heap == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;内存分配失败！\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    heap-&gt;capacity = capacity;</span><br><span class="line">    heap-&gt;size = <span class="number">0</span>;</span><br><span class="line">    heap-&gt;arr = (<span class="type">int</span>*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="type">int</span>) * capacity);</span><br><span class="line">    <span class="keyword">if</span> (heap-&gt;arr == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;内存分配失败！\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> heap;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取父节点的索引</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">getParentIndex</span><span class="params">(<span class="type">int</span> i)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (i - <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取左子节点的索引</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">getLeftChildIndex</span><span class="params">(<span class="type">int</span> i)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * i + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取右子节点的索引</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">getRightChildIndex</span><span class="params">(<span class="type">int</span> i)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * i + <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 交换两个元素</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">swap</span><span class="params">(<span class="type">int</span>* a, <span class="type">int</span>* b)</span> &#123;</span><br><span class="line">    <span class="type">int</span> temp = *a;</span><br><span class="line">    *a = *b;</span><br><span class="line">    *b = temp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 上浮操作：维护堆的最小堆序性</span></span><br><span class="line"><span class="comment">// 当一个元素被插入到堆的末尾时，需要向上调整它的位置</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">heapifyUp</span><span class="params">(MinHeap* heap, <span class="type">int</span> index)</span> &#123;</span><br><span class="line">    <span class="type">int</span> parentIndex = getParentIndex(index);</span><br><span class="line">    <span class="comment">// 如果当前节点不是根节点，且比父节点小</span></span><br><span class="line">    <span class="keyword">while</span> (index &gt; <span class="number">0</span> &amp;&amp; heap-&gt;arr[parentIndex] &gt; heap-&gt;arr[index]) &#123;</span><br><span class="line">        swap(&amp;heap-&gt;arr[index], &amp;heap-&gt;arr[parentIndex]);</span><br><span class="line">        index = parentIndex;</span><br><span class="line">        parentIndex = getParentIndex(index);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 下沉操作：维护堆的最小堆序性</span></span><br><span class="line"><span class="comment">// 当根节点被删除或元素被修改时，需要向下调整它的位置</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">heapifyDown</span><span class="params">(MinHeap* heap, <span class="type">int</span> index)</span> &#123;</span><br><span class="line">    <span class="type">int</span> smallest = index;</span><br><span class="line">    <span class="type">int</span> leftChild = getLeftChildIndex(index);</span><br><span class="line">    <span class="type">int</span> rightChild = getRightChildIndex(index);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果左子节点存在且比当前最小的小</span></span><br><span class="line">    <span class="keyword">if</span> (leftChild &lt; heap-&gt;size &amp;&amp; heap-&gt;arr[leftChild] &lt; heap-&gt;arr[smallest]) &#123;</span><br><span class="line">        smallest = leftChild;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果右子节点存在且比当前最小的小</span></span><br><span class="line">    <span class="keyword">if</span> (rightChild &lt; heap-&gt;size &amp;&amp; heap-&gt;arr[rightChild] &lt; heap-&gt;arr[smallest]) &#123;</span><br><span class="line">        smallest = rightChild;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果最小的不是当前节点，则交换并继续向下沉</span></span><br><span class="line">    <span class="keyword">if</span> (smallest != index) &#123;</span><br><span class="line">        swap(&amp;heap-&gt;arr[index], &amp;heap-&gt;arr[smallest]);</span><br><span class="line">        heapifyDown(heap, smallest);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入元素到最小堆</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">insertMinHeap</span><span class="params">(MinHeap* heap, <span class="type">int</span> value)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (heap-&gt;size == heap-&gt;capacity) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;堆已满，无法插入！\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 将新元素添加到数组末尾</span></span><br><span class="line">    heap-&gt;arr[heap-&gt;size] = value;</span><br><span class="line">    heap-&gt;size++;</span><br><span class="line">    <span class="comment">// 进行上浮操作</span></span><br><span class="line">    heapifyUp(heap, heap-&gt;size - <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;插入 %d 成功。\n&quot;</span>, value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 提取最小元素（根节点）</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">extractMin</span><span class="params">(MinHeap* heap)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (heap-&gt;size &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;堆为空，无法提取！\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> INT_MAX; <span class="comment">// 返回一个表示错误的值</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (heap-&gt;size == <span class="number">1</span>) &#123; <span class="comment">// 只有一个元素</span></span><br><span class="line">        heap-&gt;size--;</span><br><span class="line">        <span class="keyword">return</span> heap-&gt;arr[<span class="number">0</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 保存根节点的值</span></span><br><span class="line">    <span class="type">int</span> root = heap-&gt;arr[<span class="number">0</span>];</span><br><span class="line">    <span class="comment">// 将最后一个元素移动到根节点</span></span><br><span class="line">    heap-&gt;arr[<span class="number">0</span>] = heap-&gt;arr[heap-&gt;size - <span class="number">1</span>];</span><br><span class="line">    heap-&gt;size--;</span><br><span class="line">    <span class="comment">// 进行下沉操作</span></span><br><span class="line">    heapifyDown(heap, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取堆的最小元素（不删除）</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">getMin</span><span class="params">(MinHeap* heap)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (heap-&gt;size &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;堆为空。\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> INT_MAX;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> heap-&gt;arr[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印堆的数组表示</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">printHeap</span><span class="params">(MinHeap* heap)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;堆的数组表示: [&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; heap-&gt;size; i++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d&quot;</span>, heap-&gt;arr[i]);</span><br><span class="line">        <span class="keyword">if</span> (i &lt; heap-&gt;size - <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;, &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;]\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 释放堆内存</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">freeMinHeap</span><span class="params">(MinHeap* heap)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (heap == <span class="literal">NULL</span>) <span class="keyword">return</span>;</span><br><span class="line">    <span class="built_in">free</span>(heap-&gt;arr);</span><br><span class="line">    <span class="built_in">free</span>(heap);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;堆内存已释放。\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    MinHeap* myHeap = createMinHeap(MAX_HEAP_SIZE);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;------ 插入元素 ------\n&quot;</span>);</span><br><span class="line">    insertMinHeap(myHeap, <span class="number">3</span>);</span><br><span class="line">    printHeap(myHeap); <span class="comment">// [3]</span></span><br><span class="line">    insertMinHeap(myHeap, <span class="number">2</span>);</span><br><span class="line">    printHeap(myHeap); <span class="comment">// [2, 3]</span></span><br><span class="line">    insertMinHeap(myHeap, <span class="number">15</span>);</span><br><span class="line">    printHeap(myHeap); <span class="comment">// [2, 3, 15]</span></span><br><span class="line">    insertMinHeap(myHeap, <span class="number">5</span>);</span><br><span class="line">    printHeap(myHeap); <span class="comment">// [2, 3, 5, 15]</span></span><br><span class="line">    insertMinHeap(myHeap, <span class="number">4</span>);</span><br><span class="line">    printHeap(myHeap); <span class="comment">// [2, 3, 4, 15, 5] (实际为[2, 3, 4, 15, 5]或[2, 5, 4, 15, 3]等，取决于具体路径，但都满足最小堆序性)</span></span><br><span class="line">    insertMinHeap(myHeap, <span class="number">45</span>);</span><br><span class="line">    printHeap(myHeap); <span class="comment">// [2, 3, 4, 45, 5, 15]</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n------ 提取最小元素 ------\n&quot;</span>);</span><br><span class="line">    <span class="type">int</span> minVal = extractMin(myHeap);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;提取最小元素: %d\n&quot;</span>, minVal); <span class="comment">// Expected: 2</span></span><br><span class="line">    printHeap(myHeap); <span class="comment">// [3, 5, 4, 45, 15] (根节点变为3，并重新调整)</span></span><br><span class="line"></span><br><span class="line">    minVal = extractMin(myHeap);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;提取最小元素: %d\n&quot;</span>, minVal); <span class="comment">// Expected: 3</span></span><br><span class="line">    printHeap(myHeap); <span class="comment">// [4, 5, 15, 45]</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n------ 获取最小元素 ------\n&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;当前最小元素 (不删除): %d\n&quot;</span>, getMin(myHeap)); <span class="comment">// Expected: 4</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n------ 释放内存 ------\n&quot;</span>);</span><br><span class="line">    freeMinHeap(myHeap);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="4-堆的应用场景"><a href="#4-堆的应用场景" class="headerlink" title="4. 堆的应用场景"></a>4. 堆的应用场景</h3><p>堆因其高效的插入和删除根节点操作，在许多场景下都非常有用：</p>
+<ul>
+<li><strong>优先级队列（Priority Queue）：</strong> 这是堆最经典的应用。当需要频繁地获取或处理最高&#x2F;最低优先级的元素时（例如，操作系统的任务调度、事件模拟、图算法中的 Dijkstra 算法和 Prim 算法），堆是最佳选择。</li>
+<li><strong>堆排序（Heapsort）：</strong> 一种高效的排序算法，时间复杂度为 O(nlogn)。它通过将待排序元素构建成一个堆，然后重复提取根节点来实现排序。</li>
+<li><strong>Top K 问题：</strong> 在大量数据中查找最大&#x2F;最小的 K 个元素。例如，找出成绩最高的 10 个学生，或者找出流量最大的 10 个 IP 地址。可以使用大小为 K 的小顶堆或大顶堆来高效解决。</li>
+<li><strong>在线中位数查找：</strong> 结合两个堆（一个最大堆和一个最小堆）可以高效地维护数据流的中位数。</li>
+<li><strong>数据压缩（霍夫曼编码）：</strong> 霍夫曼树的构建过程就使用了优先级队列（堆）。</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2025/05/30/%E5%A0%86/">堆</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
+        <p><span>Created:</span>2025-05-30, 20:52:47</p>
+        <p><span>Updated:</span>2025-05-30, 20:56:35</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2025/05/30/%E5%A0%86/" title="堆">http://example.com/2025/05/30/%E5%A0%86/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/05/30/%E5%A0%86/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/05/30/%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/">
+                    十字链表
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/05/30/kmp/">
+                    kmp
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%AD%E7%A7%98%E2%80%9C%E5%A0%86%E2%80%9D%EF%BC%9A%E9%AB%98%E6%95%88%E7%9A%84%E4%BC%98%E5%85%88%E7%BA%A7%E9%98%9F%E5%88%97%E4%B8%8E%E6%8E%92%E5%BA%8F%E5%88%A9%E5%99%A8"><span class="toc-number">1.</span> <span class="toc-text">揭秘“堆”：高效的优先级队列与排序利器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%A0%86%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">1. 什么是堆？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%A0%86%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-number">1.2.</span> <span class="toc-text">2. 堆的基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-%E6%8F%92%E5%85%A5%E6%93%8D%E4%BD%9C%EF%BC%88Insert%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 插入操作（Insert）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-%E5%88%A0%E9%99%A4%E6%A0%B9%E8%8A%82%E7%82%B9%EF%BC%88Extract-Min-Max%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 删除根节点（Extract Min&#x2F;Max）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-C-%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E6%9C%80%E5%B0%8F%E5%A0%86"><span class="toc-number">1.3.</span> <span class="toc-text">3. C 语言实现最小堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%A0%86%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.4.</span> <span class="toc-text">4. 堆的应用场景</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"堆　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/05/30/%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/" title="Pre: 十字链表">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/05/30/kmp/" title="Next: kmp">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/">十字链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%A0%86/">堆</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/kmp/">kmp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/DP/">DP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%9B%BE/">图</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E4%BA%8C%E5%8F%89%E6%A0%91/">二叉树</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E9%93%BE%E8%A1%A8/">链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E4%BA%8C%E5%88%86/">二分</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E6%AC%A7%E6%8B%89%E8%B4%A8%E6%95%B0%E7%AD%9B/">欧拉质数筛</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/Towards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium/">Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/LoRA/">LoRA</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/%E5%A4%A7%E4%B8%80%E6%80%BB%E7%BB%93/">大一总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/27/Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models/">Building Cooperative Embodied Agents Modularly with Large Language Models</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/26/Generative_Agents_Interactive_Simulacra_of_Human_Behavior/">Generative Agents Interactive Simulacra of Human Behavior</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/26/HuggingGPT-Solving-AI-Tasks-with-ChatGPT-and-its-Friends-in-Hugging-Face/">HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/25/ChatEval/">ChatEval</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/Improving-Factuality-and-Reasoning-in-Language-Models-through-Multiagent-Debate/">Improving Factuality and Reasoning in Language Models through Multiagent Debate</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/ReConcile/">ReConcile</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/04/12/LLM/">本地部署大模型以及微调手册</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/TF-IDF/">TF-IDF 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN-%E5%AE%9E%E7%8E%B0%E8%8E%AB%E5%A5%88%E9%A3%8E%E6%A0%BC%E7%94%BB%E4%BD%9C%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%9C%9F%E5%AE%9E%E7%85%A7%E7%89%87/">CycleGAN 实现莫奈风格画作转化为真实照片</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN/">CycleGAN 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/WGAN-WGAN-GP/">WGAN与WGAN-GP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/DCGAN/">DCGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/ACGAN/">ACGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/15/SVM/">支持向量机（SVM）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/14/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/">逻辑回归（Logistic Regression）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">WGAN/WGAN-GP 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/12/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">ACGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">GAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">DCGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/06/BERT-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">BERT 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/02/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">房价预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/01/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">Transformer 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/27/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/">预测系外行星轨道周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2025 John Doe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

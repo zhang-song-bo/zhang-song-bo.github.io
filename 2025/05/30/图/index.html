@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="John Doe" />
+
+
+
+<meta name="description" content="深入理解“图”1. 什么是图？图是由一组顶点（Vertex &#x2F; Node） 和连接这些顶点的边（Edge） 组成的。简单来说，图 G 可以表示为 G&#x3D;(V,E)，其中 V 是顶点的集合，而 E 是边的集合。 形象比喻：  社交网络： 每个人是一个顶点，朋友关系是连接他们之间的边。 城市交通网络： 每个城市是一个顶点，连接城市的道路是边。 互联网： 每个网页是一个顶点，网页之间的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图">
+<meta property="og:url" content="http://example.com/2025/05/30/%E5%9B%BE/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="深入理解“图”1. 什么是图？图是由一组顶点（Vertex &#x2F; Node） 和连接这些顶点的边（Edge） 组成的。简单来说，图 G 可以表示为 G&#x3D;(V,E)，其中 V 是顶点的集合，而 E 是边的集合。 形象比喻：  社交网络： 每个人是一个顶点，朋友关系是连接他们之间的边。 城市交通网络： 每个城市是一个顶点，连接城市的道路是边。 互联网： 每个网页是一个顶点，网页之间的">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-05-30T12:05:28.000Z">
+<meta property="article:modified_time" content="2025-05-30T12:49:39.072Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>图 | Hexo</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                            <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                        
+                            <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></li>
+                        
+                            <li><a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li>
+                        
+                            <li><a href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACGAN/" rel="tag">ACGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BERT/" rel="tag">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CycleGAN/" rel="tag">CycleGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DCGAN/" rel="tag">DCGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM/" rel="tag">LLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM-Evaluation/" rel="tag">LLM Evaluation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LoRA/" rel="tag">LoRA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Multi-Agent/" rel="tag">Multi-Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVM/" rel="tag">SVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TF-IDF/" rel="tag">TF-IDF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent/" rel="tag">agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/multi-agent/" rel="tag">multi-agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" rel="tag">优化技术</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8F%90%E5%8F%96/" rel="tag">关键词提取</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD/" rel="tag">具身智能</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B/" rel="tag">分类模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/" rel="tag">分类算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%83%8F%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/" rel="tag">图像风格迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E8%B0%83/" rel="tag">微调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8E%A8%E7%90%86%E4%BC%98%E5%8C%96/" rel="tag">推理优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/" rel="tag">支持向量机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/" rel="tag">文本分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B/" rel="tag">模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E6%8B%9F%E4%BA%BA%E7%B1%BB%E8%A1%8C%E4%B8%BA/" rel="tag">模拟人类行为</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" rel="tag">逻辑回归</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></li>
+                
+                    <li><a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li>
+                
+                    <li><a href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-图" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/05/30/%E5%9B%BE/" class="article-date">
+      <time datetime="2025-05-30T12:05:28.000Z" itemprop="datePublished">2025-05-30</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      图
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+    </div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="深入理解“图”"><a href="#深入理解“图”" class="headerlink" title="深入理解“图”"></a>深入理解“图”</h2><h3 id="1-什么是图？"><a href="#1-什么是图？" class="headerlink" title="1. 什么是图？"></a>1. 什么是图？</h3><p>图是由一组<strong>顶点（Vertex &#x2F; Node）</strong> 和连接这些顶点的<strong>边（Edge）</strong> 组成的。简单来说，图 G 可以表示为 G&#x3D;(V,E)，其中 V 是顶点的集合，而 E 是边的集合。</p>
+<p><strong>形象比喻：</strong></p>
+<ul>
+<li><strong>社交网络：</strong> 每个人是一个顶点，朋友关系是连接他们之间的边。</li>
+<li><strong>城市交通网络：</strong> 每个城市是一个顶点，连接城市的道路是边。</li>
+<li><strong>互联网：</strong> 每个网页是一个顶点，网页之间的链接是边。</li>
+</ul>
+<h3 id="2-图的基本术语"><a href="#2-图的基本术语" class="headerlink" title="2. 图的基本术语"></a>2. 图的基本术语</h3><p>理解这些术语是掌握图的关键：</p>
+<ul>
+<li><p><strong>顶点（Vertex &#x2F; Node）：</strong> 图中的基本单元，代表了数据实体。例如，城市、人、网页。</p>
+</li>
+<li><p><strong>边（Edge）：</strong> 连接两个顶点的线，表示它们之间的关系。例如，道路、朋友关系、网页链接。</p>
+</li>
+<li><p><strong>邻接（Adjacent）：</strong> 如果两个顶点之间有一条边直接相连，则称它们是邻接的。</p>
+</li>
+<li><p>度（Degree）：</p>
+<p> 对于无向图，一个顶点的度是与它相连的边的数量。</p>
+<ul>
+<li>对于有向图，分为入度（In-degree）和 出度（Out-degree）。<ul>
+<li><strong>入度：</strong> 指向该顶点的边的数量。</li>
+<li><strong>出度：</strong> 从该顶点出发的边的数量。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>路径（Path）：</strong> 从一个顶点到另一个顶点所经过的顶点序列（或边序列）。</p>
+</li>
+<li><p><strong>连通（Connected）：</strong> 在无向图中，如果从顶点 A 到顶点 B 存在一条路径，则称 A 和 B 是连通的。</p>
+</li>
+<li><p><strong>连通图（Connected Graph）：</strong> 如果图中任意两个顶点都是连通的，则称该图为连通图。</p>
+</li>
+<li><p><strong>回路&#x2F;环（Cycle）：</strong> 一条起始顶点和结束顶点相同的路径。</p>
+</li>
+<li><p><strong>权重&#x2F;权值（Weight）：</strong> 边上可以附加一个数值，表示某种成本、距离或强度。这种图称为<strong>带权图（Weighted Graph）</strong>。</p>
+</li>
+<li><p><strong>子图（Sub-graph）：</strong> 一个图 G′&#x3D;(V′,E′)，其中 V′⊆V 且 E′⊆E。</p>
+</li>
+</ul>
+<h3 id="3-图的分类"><a href="#3-图的分类" class="headerlink" title="3. 图的分类"></a>3. 图的分类</h3><p>图可以根据其边的特性进行分类：</p>
+<ul>
+<li><strong>无向图（Undirected Graph）：</strong> 边没有方向。如果 A 到 B 有一条边，则意味着 B 到 A 也有相同的连接。例如，朋友关系。</li>
+<li><strong>有向图（Directed Graph &#x2F; Digraph）：</strong> 边有方向。如果 A 到 B 有一条边，不代表 B 到 A 也有一条边。例如，单行道，或者 Twitter 上的关注关系（你关注别人，别人不一定关注你）。</li>
+</ul>
+<hr>
+<h3 id="4-图在-C-语言中的表示方法"><a href="#4-图在-C-语言中的表示方法" class="headerlink" title="4. 图在 C 语言中的表示方法"></a>4. 图在 C 语言中的表示方法</h3><p>在 C 语言中，表示图通常有两种主要方式：<strong>邻接矩阵</strong> 和 <strong>邻接表</strong>。选择哪种方式取决于图的特性（顶点数、边数）和具体应用。</p>
+<h4 id="4-1-邻接矩阵（Adjacency-Matrix）"><a href="#4-1-邻接矩阵（Adjacency-Matrix）" class="headerlink" title="4.1 邻接矩阵（Adjacency Matrix）"></a>4.1 邻接矩阵（Adjacency Matrix）</h4><p>邻接矩阵是一个 V×V 的二维数组（或矩阵），其中 V 是图中顶点的数量。</p>
+<ul>
+<li>如果顶点 i 和顶点 j 之间有边相连，则 <code>matrix[i][j] = 1</code> (或表示权重)。</li>
+<li>如果无边相连，则 <code>matrix[i][j] = 0</code> (或表示无穷大)。</li>
+</ul>
+<p><strong>特点：</strong></p>
+<ul>
+<li>优点：<ul>
+<li>判断两顶点之间是否存在边非常快速（O(1)）。</li>
+<li>实现简单直观。</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>空间复杂度高：总是 O(V2)，即使图非常稀疏（边很少）。</li>
+<li>遍历一个顶点的所有邻居需要 O(V) 的时间。</li>
+</ul>
+</li>
+<li><strong>适用场景：</strong> 顶点数量较少，或者图是稠密的（边很多）的情况。</li>
+</ul>
+<p><strong>C 语言示例（无向图，不带权）：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAX_VERTICES 100 <span class="comment">// 最大顶点数</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 邻接矩阵表示图</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">GraphMatrix</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> numVertices;</span><br><span class="line">    <span class="type">int</span> adjMatrix[MAX_VERTICES][MAX_VERTICES];</span><br><span class="line">&#125; GraphMatrix;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化图（邻接矩阵）</span></span><br><span class="line">GraphMatrix* <span class="title function_">createGraphMatrix</span><span class="params">(<span class="type">int</span> V)</span> &#123;</span><br><span class="line">    GraphMatrix* graph = (GraphMatrix*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(GraphMatrix));</span><br><span class="line">    <span class="keyword">if</span> (graph == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;内存分配失败！\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    graph-&gt;numVertices = V;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; V; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; V; j++) &#123;</span><br><span class="line">            graph-&gt;adjMatrix[i][j] = <span class="number">0</span>; <span class="comment">// 初始化为无边</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> graph;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加边（无向图）</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">addEdgeMatrix</span><span class="params">(GraphMatrix* graph, <span class="type">int</span> src, <span class="type">int</span> dest)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (src &gt;= <span class="number">0</span> &amp;&amp; src &lt; graph-&gt;numVertices &amp;&amp; dest &gt;= <span class="number">0</span> &amp;&amp; dest &lt; graph-&gt;numVertices) &#123;</span><br><span class="line">        graph-&gt;adjMatrix[src][dest] = <span class="number">1</span>;</span><br><span class="line">        graph-&gt;adjMatrix[dest][src] = <span class="number">1</span>; <span class="comment">// 无向图，对称</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;无效的顶点索引。\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印邻接矩阵</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">printGraphMatrix</span><span class="params">(GraphMatrix* graph)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;邻接矩阵：\n&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; graph-&gt;numVertices; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; graph-&gt;numVertices; j++) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, graph-&gt;adjMatrix[i][j]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-2-邻接表（Adjacency-List）"><a href="#4-2-邻接表（Adjacency-List）" class="headerlink" title="4.2 邻接表（Adjacency List）"></a>4.2 邻接表（Adjacency List）</h4><p>邻接表是更常用的一种表示方法，特别适用于稀疏图。它是一个由<strong>链表（或动态数组）</strong> 组成的数组，数组的每个索引代表一个顶点，其对应的链表存储了所有与该顶点邻接的顶点。</p>
+<p><strong>特点：</strong></p>
+<ul>
+<li>优点：<ul>
+<li>空间复杂度低：O(V+E)，更适合稀疏图。</li>
+<li>遍历一个顶点的所有邻居非常高效（O(degree)）。</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>判断两顶点之间是否存在边需要遍历链表（最坏 O(degree)）。</li>
+<li>实现相对复杂一点。</li>
+</ul>
+</li>
+<li><strong>适用场景：</strong> 顶点数量很大，或者图是稀疏的（边很少）的情况。</li>
+</ul>
+<p><strong>C 语言示例（无向图，不带权）：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义链表节点 (表示邻接顶点)</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">AdjListNode</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> dest;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">AdjListNode</span>* <span class="title">next</span>;</span></span><br><span class="line">&#125; AdjListNode;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义邻接表数组中的每个头节点</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">AdjList</span> &#123;</span></span><br><span class="line">    AdjListNode *head;</span><br><span class="line">&#125; AdjList;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 邻接表表示图</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">GraphList</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> numVertices;</span><br><span class="line">    AdjList* <span class="built_in">array</span>; <span class="comment">// 存储 AdjList 结构的数组</span></span><br><span class="line">&#125; GraphList;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建邻接列表的新节点</span></span><br><span class="line">AdjListNode* <span class="title function_">newAdjListNode</span><span class="params">(<span class="type">int</span> dest)</span> &#123;</span><br><span class="line">    AdjListNode* newNode = (AdjListNode*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(AdjListNode));</span><br><span class="line">    <span class="keyword">if</span> (newNode == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;内存分配失败！\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    newNode-&gt;dest = dest;</span><br><span class="line">    newNode-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> newNode;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化图（邻接表）</span></span><br><span class="line">GraphList* <span class="title function_">createGraphList</span><span class="params">(<span class="type">int</span> V)</span> &#123;</span><br><span class="line">    GraphList* graph = (GraphList*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(GraphList));</span><br><span class="line">    <span class="keyword">if</span> (graph == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;内存分配失败！\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    graph-&gt;numVertices = V;</span><br><span class="line"></span><br><span class="line">    graph-&gt;<span class="built_in">array</span> = (AdjList*)<span class="built_in">malloc</span>(V * <span class="keyword">sizeof</span>(AdjList));</span><br><span class="line">    <span class="keyword">if</span> (graph-&gt;<span class="built_in">array</span> == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;内存分配失败！\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; V; i++) &#123;</span><br><span class="line">        graph-&gt;<span class="built_in">array</span>[i].head = <span class="literal">NULL</span>; <span class="comment">// 初始化所有链表头为NULL</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> graph;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 添加边（无向图）</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">addEdgeList</span><span class="params">(GraphList* graph, <span class="type">int</span> src, <span class="type">int</span> dest)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (src &gt;= <span class="number">0</span> &amp;&amp; src &lt; graph-&gt;numVertices &amp;&amp; dest &gt;= <span class="number">0</span> &amp;&amp; dest &lt; graph-&gt;numVertices) &#123;</span><br><span class="line">        <span class="comment">// 添加 dest 到 src 的链表</span></span><br><span class="line">        AdjListNode* newNode = newAdjListNode(dest);</span><br><span class="line">        newNode-&gt;next = graph-&gt;<span class="built_in">array</span>[src].head;</span><br><span class="line">        graph-&gt;<span class="built_in">array</span>[src].head = newNode;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 添加 src 到 dest 的链表 (无向图)</span></span><br><span class="line">        newNode = newAdjListNode(src);</span><br><span class="line">        newNode-&gt;next = graph-&gt;<span class="built_in">array</span>[dest].head;</span><br><span class="line">        graph-&gt;<span class="built_in">array</span>[dest].head = newNode;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;无效的顶点索引。\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印邻接表</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">printGraphList</span><span class="params">(GraphList* graph)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;邻接表：\n&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> v = <span class="number">0</span>; v &lt; graph-&gt;numVertices; v++) &#123;</span><br><span class="line">        AdjListNode* current = graph-&gt;<span class="built_in">array</span>[v].head;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;顶点 %d 的邻居: &quot;</span>, v);</span><br><span class="line">        <span class="keyword">while</span> (current) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;-&gt; %d &quot;</span>, current-&gt;dest);</span><br><span class="line">            current = current-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;-&gt; NULL\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 释放邻接表内存</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">freeGraphList</span><span class="params">(GraphList* graph)</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; graph-&gt;numVertices; i++) &#123;</span><br><span class="line">        AdjListNode* current = graph-&gt;<span class="built_in">array</span>[i].head;</span><br><span class="line">        <span class="keyword">while</span> (current != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            AdjListNode* temp = current;</span><br><span class="line">            current = current-&gt;next;</span><br><span class="line">            <span class="built_in">free</span>(temp);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">free</span>(graph-&gt;<span class="built_in">array</span>);</span><br><span class="line">    <span class="built_in">free</span>(graph);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;图的内存已释放。\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-3-综合示例-main-函数"><a href="#4-3-综合示例-main-函数" class="headerlink" title="4.3 综合示例 main 函数"></a>4.3 综合示例 <code>main</code> 函数</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 示例：邻接矩阵</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;--- 邻接矩阵示例 ---\n&quot;</span>);</span><br><span class="line">    GraphMatrix* g_matrix = createGraphMatrix(<span class="number">5</span>); <span class="comment">// 创建 5 个顶点的图</span></span><br><span class="line">    addEdgeMatrix(g_matrix, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    addEdgeMatrix(g_matrix, <span class="number">0</span>, <span class="number">4</span>);</span><br><span class="line">    addEdgeMatrix(g_matrix, <span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">    addEdgeMatrix(g_matrix, <span class="number">1</span>, <span class="number">3</span>);</span><br><span class="line">    addEdgeMatrix(g_matrix, <span class="number">1</span>, <span class="number">4</span>);</span><br><span class="line">    addEdgeMatrix(g_matrix, <span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">    addEdgeMatrix(g_matrix, <span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line">    printGraphMatrix(g_matrix);</span><br><span class="line">    <span class="built_in">free</span>(g_matrix); <span class="comment">// 释放内存</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n--- 邻接表示例 ---\n&quot;</span>);</span><br><span class="line">    GraphList* g_list = createGraphList(<span class="number">5</span>); <span class="comment">// 创建 5 个顶点的图</span></span><br><span class="line">    addEdgeList(g_list, <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    addEdgeList(g_list, <span class="number">0</span>, <span class="number">4</span>);</span><br><span class="line">    addEdgeList(g_list, <span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">    addEdgeList(g_list, <span class="number">1</span>, <span class="number">3</span>);</span><br><span class="line">    addEdgeList(g_list, <span class="number">1</span>, <span class="number">4</span>);</span><br><span class="line">    addEdgeList(g_list, <span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">    addEdgeList(g_list, <span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line">    printGraphList(g_list);</span><br><span class="line">    freeGraphList(g_list); <span class="comment">// 释放内存</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="5-图的遍历"><a href="#5-图的遍历" class="headerlink" title="5. 图的遍历"></a>5. 图的遍历</h3><p>理解图的表示后，如何访问图中的所有顶点和边是另一个核心问题。图的遍历主要有两种方法：</p>
+<ul>
+<li><strong>广度优先搜索（BFS）：</strong> 从一个顶点开始，逐层访问其所有邻居，然后是邻居的邻居，以此类推。通常使用<strong>队列</strong>实现。</li>
+<li><strong>深度优先搜索（DFS）：</strong> 从一个顶点开始，尽可能深地探索其分支，直到无法继续深入，然后回溯。通常使用<strong>栈</strong>（或递归）实现。</li>
+</ul>
+<p>这两种遍历方法是解决许多图算法的基础，例如查找最短路径、判断连通性等。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2025/05/30/%E5%9B%BE/">图</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
+        <p><span>Created:</span>2025-05-30, 20:05:28</p>
+        <p><span>Updated:</span>2025-05-30, 20:49:39</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2025/05/30/%E5%9B%BE/" title="图">http://example.com/2025/05/30/%E5%9B%BE/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/05/30/%E5%9B%BE/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/05/30/DP/">
+                    DP
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/05/30/%E4%BA%8C%E5%8F%89%E6%A0%91/">
+                    二叉树
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E2%80%9C%E5%9B%BE%E2%80%9D"><span class="toc-number">1.</span> <span class="toc-text">深入理解“图”</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%9B%BE%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">1. 什么是图？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%9B%BE%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%9C%AF%E8%AF%AD"><span class="toc-number">1.2.</span> <span class="toc-text">2. 图的基本术语</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%9B%BE%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-number">1.3.</span> <span class="toc-text">3. 图的分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%9B%BE%E5%9C%A8-C-%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E8%A1%A8%E7%A4%BA%E6%96%B9%E6%B3%95"><span class="toc-number">1.4.</span> <span class="toc-text">4. 图在 C 语言中的表示方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5%EF%BC%88Adjacency-Matrix%EF%BC%89"><span class="toc-number">1.4.1.</span> <span class="toc-text">4.1 邻接矩阵（Adjacency Matrix）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-%E9%82%BB%E6%8E%A5%E8%A1%A8%EF%BC%88Adjacency-List%EF%BC%89"><span class="toc-number">1.4.2.</span> <span class="toc-text">4.2 邻接表（Adjacency List）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-%E7%BB%BC%E5%90%88%E7%A4%BA%E4%BE%8B-main-%E5%87%BD%E6%95%B0"><span class="toc-number">1.4.3.</span> <span class="toc-text">4.3 综合示例 main 函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86"><span class="toc-number">1.5.</span> <span class="toc-text">5. 图的遍历</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"图　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/05/30/DP/" title="Pre: DP">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/05/30/%E4%BA%8C%E5%8F%89%E6%A0%91/" title="Next: 二叉树">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/">十字链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%A0%86/">堆</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/kmp/">kmp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/DP/">DP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%9B%BE/">图</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E4%BA%8C%E5%8F%89%E6%A0%91/">二叉树</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E9%93%BE%E8%A1%A8/">链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E4%BA%8C%E5%88%86/">二分</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E6%AC%A7%E6%8B%89%E8%B4%A8%E6%95%B0%E7%AD%9B/">欧拉质数筛</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/Towards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium/">Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/LoRA/">LoRA</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/%E5%A4%A7%E4%B8%80%E6%80%BB%E7%BB%93/">大一总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/27/Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models/">Building Cooperative Embodied Agents Modularly with Large Language Models</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/26/Generative_Agents_Interactive_Simulacra_of_Human_Behavior/">Generative Agents Interactive Simulacra of Human Behavior</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/26/HuggingGPT-Solving-AI-Tasks-with-ChatGPT-and-its-Friends-in-Hugging-Face/">HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/25/ChatEval/">ChatEval</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/Improving-Factuality-and-Reasoning-in-Language-Models-through-Multiagent-Debate/">Improving Factuality and Reasoning in Language Models through Multiagent Debate</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/ReConcile/">ReConcile</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/04/12/LLM/">本地部署大模型以及微调手册</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/TF-IDF/">TF-IDF 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN-%E5%AE%9E%E7%8E%B0%E8%8E%AB%E5%A5%88%E9%A3%8E%E6%A0%BC%E7%94%BB%E4%BD%9C%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%9C%9F%E5%AE%9E%E7%85%A7%E7%89%87/">CycleGAN 实现莫奈风格画作转化为真实照片</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN/">CycleGAN 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/WGAN-WGAN-GP/">WGAN与WGAN-GP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/DCGAN/">DCGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/ACGAN/">ACGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/15/SVM/">支持向量机（SVM）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/14/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/">逻辑回归（Logistic Regression）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">WGAN/WGAN-GP 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/12/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">ACGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">GAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">DCGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/06/BERT-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">BERT 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/02/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">房价预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/01/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">Transformer 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/27/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/">预测系外行星轨道周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2025 John Doe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="John Doe" />
+
+
+
+<meta name="description" content="稀疏矩阵的优雅表示：深入理解“十字链表”1. 为什么需要十字链表？考虑一个 1000×1000 的矩阵，如果它只有 100 个非零元素，却要占用 1000×1000×sizeof(int) 字节的内存（假设整型）。这无疑是巨大的浪费。为了解决这个问题，我们需要只存储非零元素。 传统的稀疏矩阵存储方式还有：  三元组表（Triplet Form）： 存储非零元素的 (行，列，值) 三元组，但查找和修">
+<meta property="og:type" content="article">
+<meta property="og:title" content="十字链表">
+<meta property="og:url" content="http://example.com/2025/05/30/%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="稀疏矩阵的优雅表示：深入理解“十字链表”1. 为什么需要十字链表？考虑一个 1000×1000 的矩阵，如果它只有 100 个非零元素，却要占用 1000×1000×sizeof(int) 字节的内存（假设整型）。这无疑是巨大的浪费。为了解决这个问题，我们需要只存储非零元素。 传统的稀疏矩阵存储方式还有：  三元组表（Triplet Form）： 存储非零元素的 (行，列，值) 三元组，但查找和修">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-05-30T12:54:56.000Z">
+<meta property="article:modified_time" content="2025-05-30T12:56:36.299Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>十字链表 | Hexo</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                            <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                        
+                            <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></li>
+                        
+                            <li><a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li>
+                        
+                            <li><a href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACGAN/" rel="tag">ACGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BERT/" rel="tag">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CycleGAN/" rel="tag">CycleGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DCGAN/" rel="tag">DCGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM/" rel="tag">LLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM-Evaluation/" rel="tag">LLM Evaluation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LoRA/" rel="tag">LoRA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Multi-Agent/" rel="tag">Multi-Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVM/" rel="tag">SVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TF-IDF/" rel="tag">TF-IDF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent/" rel="tag">agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/multi-agent/" rel="tag">multi-agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" rel="tag">优化技术</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8F%90%E5%8F%96/" rel="tag">关键词提取</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD/" rel="tag">具身智能</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B/" rel="tag">分类模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/" rel="tag">分类算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%83%8F%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/" rel="tag">图像风格迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E8%B0%83/" rel="tag">微调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8E%A8%E7%90%86%E4%BC%98%E5%8C%96/" rel="tag">推理优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/" rel="tag">支持向量机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/" rel="tag">文本分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B/" rel="tag">模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E6%8B%9F%E4%BA%BA%E7%B1%BB%E8%A1%8C%E4%B8%BA/" rel="tag">模拟人类行为</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" rel="tag">逻辑回归</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></li>
+                
+                    <li><a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li>
+                
+                    <li><a href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-十字链表" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/05/30/%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/" class="article-date">
+      <time datetime="2025-05-30T12:54:56.000Z" itemprop="datePublished">2025-05-30</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      十字链表
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+    </div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="稀疏矩阵的优雅表示：深入理解“十字链表”"><a href="#稀疏矩阵的优雅表示：深入理解“十字链表”" class="headerlink" title="稀疏矩阵的优雅表示：深入理解“十字链表”"></a>稀疏矩阵的优雅表示：深入理解“十字链表”</h2><h3 id="1-为什么需要十字链表？"><a href="#1-为什么需要十字链表？" class="headerlink" title="1. 为什么需要十字链表？"></a>1. 为什么需要十字链表？</h3><p>考虑一个 1000×1000 的矩阵，如果它只有 100 个非零元素，却要占用 1000×1000×sizeof(int) 字节的内存（假设整型）。这无疑是巨大的浪费。为了解决这个问题，我们需要只存储非零元素。</p>
+<p>传统的稀疏矩阵存储方式还有：</p>
+<ul>
+<li><strong>三元组表（Triplet Form）：</strong> 存储非零元素的 (行，列，值) 三元组，但查找和修改某个元素不方便。</li>
+<li><strong>行主序链表：</strong> 每行一个链表，存储该行的非零元素。</li>
+<li><strong>列主序链表：</strong> 每列一个链表，存储该列的非零元素。</li>
+</ul>
+<p>三元组表不利于矩阵的加法、乘法等操作；行主序链表在按列访问时效率低下，反之亦然。<strong>十字链表</strong>则巧妙地解决了这些问题，它允许我们既能按行遍历，也能按列遍历非零元素。</p>
+<h3 id="2-十字链表的核心思想与节点结构"><a href="#2-十字链表的核心思想与节点结构" class="headerlink" title="2. 十字链表的核心思想与节点结构"></a>2. 十字链表的核心思想与节点结构</h3><p>十字链表的核心思想是：<strong>每个非零元素都存储在一个节点中，并且这个节点同时连接着它所在行的下一个非零元素和它所在列的下一个非零元素。</strong></p>
+<p>它通过在矩阵的行和列方向上分别构建链表，将行链表和列链表“交叉”起来，从而形成一个十字形结构。</p>
+<p><strong>十字链表的基本组成部分：</strong></p>
+<ol>
+<li><strong>行&#x2F;列头节点（Row&#x2F;Column Head Node）：</strong> 用于管理每一行或每一列的非零元素链表。它们通常构成一个头节点数组（或链表），其中每个头节点都包含指向该行&#x2F;列第一个非零元素的指针。<ul>
+<li>为了统一表示，我们通常也会把行&#x2F;列头节点看作是特殊类型的节点。</li>
+</ul>
+</li>
+<li><strong>元素节点（Element Node）：</strong> 存储非零元素的信息，并包含四个指针：<ul>
+<li><code>row</code>: 非零元素所在的行索引。</li>
+<li><code>col</code>: 非零元素所在的列索引。</li>
+<li><code>value</code>: 非零元素的值。</li>
+<li><code>right</code>: 指向同一行中下一个非零元素的指针。</li>
+<li><code>down</code>: 指向同一列中下一个非零元素的指针。</li>
+</ul>
+</li>
+</ol>
+<p><strong>节点结构体定义：</strong></p>
+<p>为了简化，我们可以将所有节点统一为一种类型，并使用一个标志位来区分是头节点还是元素节点，或者更常见地，使用两种不同的结构体，或者在一个统一的结构体中只在元素节点中存储 <code>value</code>。这里我们采用一种更灵活的定义，它可以表示普通元素节点，也可以表示行&#x2F;列头节点。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义稀疏矩阵的节点类型</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">OLNode</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> row;       <span class="comment">// 行索引</span></span><br><span class="line">    <span class="type">int</span> col;       <span class="comment">// 列索引</span></span><br><span class="line">    <span class="type">int</span> value;     <span class="comment">// 存储的非零元素值（仅对元素节点有效）</span></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">OLNode</span> *<span class="title">right</span>;</span> <span class="comment">// 指向同一行下一个非零元素的指针</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">OLNode</span> *<span class="title">down</span>;</span>  <span class="comment">// 指向同一列下一个非零元素的指针</span></span><br><span class="line">&#125; OLNode;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义稀疏矩阵的十字链表结构</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">CrossList</span> &#123;</span></span><br><span class="line">    OLNode** row_heads;   <span class="comment">// 行头节点数组</span></span><br><span class="line">    OLNode** col_heads;   <span class="comment">// 列头节点数组</span></span><br><span class="line">    <span class="type">int</span> rows;             <span class="comment">// 矩阵的行数</span></span><br><span class="line">    <span class="type">int</span> cols;             <span class="comment">// 矩阵的列数</span></span><br><span class="line">    <span class="type">int</span> num_elements;     <span class="comment">// 非零元素的数量</span></span><br><span class="line">&#125; CrossList;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-十字链表的基本操作"><a href="#3-十字链表的基本操作" class="headerlink" title="3. 十字链表的基本操作"></a>3. 十字链表的基本操作</h3><h4 id="3-1-初始化十字链表"><a href="#3-1-初始化十字链表" class="headerlink" title="3.1 初始化十字链表"></a>3.1 初始化十字链表</h4><p>创建矩阵结构，并初始化行头节点数组和列头节点数组。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 初始化一个空的十字链表</span></span><br><span class="line">CrossList* <span class="title function_">initCrossList</span><span class="params">(<span class="type">int</span> m_rows, <span class="type">int</span> m_cols)</span> &#123;</span><br><span class="line">    CrossList* matrix = (CrossList*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(CrossList));</span><br><span class="line">    <span class="keyword">if</span> (matrix == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;内存分配失败！\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    matrix-&gt;rows = m_rows;</span><br><span class="line">    matrix-&gt;cols = m_cols;</span><br><span class="line">    matrix-&gt;num_elements = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 分配行头节点数组</span></span><br><span class="line">    matrix-&gt;row_heads = (OLNode**)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(OLNode*) * m_rows);</span><br><span class="line">    <span class="keyword">if</span> (matrix-&gt;row_heads == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;内存分配失败！\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; m_rows; i++) &#123;</span><br><span class="line">        matrix-&gt;row_heads[i] = <span class="literal">NULL</span>; <span class="comment">// 初始化行链表为空</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 分配列头节点数组</span></span><br><span class="line">    matrix-&gt;col_heads = (OLNode**)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(OLNode*) * m_cols);</span><br><span class="line">    <span class="keyword">if</span> (matrix-&gt;col_heads == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;内存分配失败！\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; m_cols; i++) &#123;</span><br><span class="line">        matrix-&gt;col_heads[i] = <span class="literal">NULL</span>; <span class="comment">// 初始化列链表为空</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> matrix;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-插入非零元素"><a href="#3-2-插入非零元素" class="headerlink" title="3.2 插入非零元素"></a>3.2 插入非零元素</h4><p>插入是十字链表的核心操作。每插入一个元素，都需要将其正确地插入到其对应行的链表和列的链表中。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 插入一个非零元素</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">insertElement</span><span class="params">(CrossList* matrix, <span class="type">int</span> row, <span class="type">int</span> col, <span class="type">int</span> value)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (row &lt; <span class="number">0</span> || row &gt;= matrix-&gt;rows || col &lt; <span class="number">0</span> || col &gt;= matrix-&gt;cols) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;插入失败：索引越界。\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (value == <span class="number">0</span>) &#123; <span class="comment">// 零元素不存储</span></span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    OLNode* newNode = (OLNode*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(OLNode));</span><br><span class="line">    <span class="keyword">if</span> (newNode == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;内存分配失败！\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    newNode-&gt;row = row;</span><br><span class="line">    newNode-&gt;col = col;</span><br><span class="line">    newNode-&gt;value = value;</span><br><span class="line">    newNode-&gt;right = <span class="literal">NULL</span>;</span><br><span class="line">    newNode-&gt;down = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 插入到行链表</span></span><br><span class="line">    <span class="comment">// 找到该行中，比新节点列索引小的最后一个节点，或找到该行链表头</span></span><br><span class="line">    OLNode* p_row = matrix-&gt;row_heads[row];</span><br><span class="line">    <span class="keyword">if</span> (p_row == <span class="literal">NULL</span> || p_row-&gt;col &gt; col) &#123; <span class="comment">// 当前行无节点或新节点应作为第一个</span></span><br><span class="line">        newNode-&gt;right = p_row;</span><br><span class="line">        matrix-&gt;row_heads[row] = newNode;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (p_row-&gt;right != <span class="literal">NULL</span> &amp;&amp; p_row-&gt;right-&gt;col &lt; col) &#123;</span><br><span class="line">            p_row = p_row-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 处理重复元素：如果已存在相同位置的元素，则更新值</span></span><br><span class="line">        <span class="keyword">if</span> (p_row-&gt;right != <span class="literal">NULL</span> &amp;&amp; p_row-&gt;right-&gt;col == col) &#123;</span><br><span class="line">            p_row-&gt;right-&gt;value = value; <span class="comment">// 更新值</span></span><br><span class="line">            <span class="built_in">free</span>(newNode); <span class="comment">// 新节点不再需要</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 插入到正确位置</span></span><br><span class="line">        newNode-&gt;right = p_row-&gt;right;</span><br><span class="line">        p_row-&gt;right = newNode;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 插入到列链表 (与行链表类似)</span></span><br><span class="line">    OLNode* p_col = matrix-&gt;col_heads[col];</span><br><span class="line">    <span class="keyword">if</span> (p_col == <span class="literal">NULL</span> || p_col-&gt;row &gt; row) &#123; <span class="comment">// 当前列无节点或新节点应作为第一个</span></span><br><span class="line">        newNode-&gt;down = p_col;</span><br><span class="line">        matrix-&gt;col_heads[col] = newNode;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (p_col-&gt;down != <span class="literal">NULL</span> &amp;&amp; p_col-&gt;down-&gt;row &lt; row) &#123;</span><br><span class="line">            p_col = p_col-&gt;down;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 注意：这里不用处理重复元素了，因为行链表已经处理过了</span></span><br><span class="line">        newNode-&gt;down = p_col-&gt;down;</span><br><span class="line">        p_col-&gt;down = newNode;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    matrix-&gt;num_elements++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-3-打印矩阵（遍历）"><a href="#3-3-打印矩阵（遍历）" class="headerlink" title="3.3 打印矩阵（遍历）"></a>3.3 打印矩阵（遍历）</h4><p>十字链表可以方便地按行或按列遍历非零元素，甚至可以还原出完整的矩阵。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 打印矩阵（按行遍历非零元素）</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">printMatrixByRow</span><span class="params">(CrossList* matrix)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;按行打印稀疏矩阵的非零元素 (row, col, value):\n&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; matrix-&gt;rows; i++) &#123;</span><br><span class="line">        OLNode* current = matrix-&gt;row_heads[i];</span><br><span class="line">        <span class="keyword">while</span> (current != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;(%d, %d, %d) &quot;</span>, current-&gt;row, current-&gt;col, current-&gt;value);</span><br><span class="line">            current = current-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印矩阵（还原完整矩阵）</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">printFullMatrix</span><span class="params">(CrossList* matrix)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;完整矩阵：\n&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; matrix-&gt;rows; i++) &#123;</span><br><span class="line">        OLNode* current_row_node = matrix-&gt;row_heads[i];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; matrix-&gt;cols; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (current_row_node != <span class="literal">NULL</span> &amp;&amp; current_row_node-&gt;col == j) &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, current_row_node-&gt;value);</span><br><span class="line">                current_row_node = current_row_node-&gt;right;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;0 &quot;</span>); <span class="comment">// 没有非零元素，打印0</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-4-查找元素"><a href="#3-4-查找元素" class="headerlink" title="3.4 查找元素"></a>3.4 查找元素</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 查找某个位置的元素值</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">getElement</span><span class="params">(CrossList* matrix, <span class="type">int</span> row, <span class="type">int</span> col)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (row &lt; <span class="number">0</span> || row &gt;= matrix-&gt;rows || col &lt; <span class="number">0</span> || col &gt;= matrix-&gt;cols) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;查找失败：索引越界。\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 假定超出范围是0</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    OLNode* current = matrix-&gt;row_heads[row]; <span class="comment">// 从行头开始查找</span></span><br><span class="line">    <span class="keyword">while</span> (current != <span class="literal">NULL</span> &amp;&amp; current-&gt;col &lt; col) &#123;</span><br><span class="line">        current = current-&gt;right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (current != <span class="literal">NULL</span> &amp;&amp; current-&gt;col == col) &#123;</span><br><span class="line">        <span class="keyword">return</span> current-&gt;value;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 未找到，返回0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-5-删除元素"><a href="#3-5-删除元素" class="headerlink" title="3.5 删除元素"></a>3.5 删除元素</h4><p>删除元素相对复杂，需要同时更新行链表和列链表。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 删除一个非零元素</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">deleteElement</span><span class="params">(CrossList* matrix, <span class="type">int</span> row, <span class="type">int</span> col)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (row &lt; <span class="number">0</span> || row &gt;= matrix-&gt;rows || col &lt; <span class="number">0</span> || col &gt;= matrix-&gt;cols) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;删除失败：索引越界。\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    OLNode* nodeToDelete = <span class="literal">NULL</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 1. 从行链表中删除</span></span><br><span class="line">    OLNode* prev_row = <span class="literal">NULL</span>;</span><br><span class="line">    OLNode* current_row = matrix-&gt;row_heads[row];</span><br><span class="line">    <span class="keyword">while</span> (current_row != <span class="literal">NULL</span> &amp;&amp; current_row-&gt;col &lt; col) &#123;</span><br><span class="line">        prev_row = current_row;</span><br><span class="line">        current_row = current_row-&gt;right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (current_row != <span class="literal">NULL</span> &amp;&amp; current_row-&gt;col == col) &#123;</span><br><span class="line">        nodeToDelete = current_row; <span class="comment">// 找到了要删除的节点</span></span><br><span class="line">        <span class="keyword">if</span> (prev_row == <span class="literal">NULL</span>) &#123; <span class="comment">// 删除的是行头</span></span><br><span class="line">            matrix-&gt;row_heads[row] = current_row-&gt;right;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            prev_row-&gt;right = current_row-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;未找到 (%d, %d) 处的非零元素。\n&quot;</span>, row, col);</span><br><span class="line">        <span class="keyword">return</span>; <span class="comment">// 未找到，直接返回</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 从列链表中删除</span></span><br><span class="line">    OLNode* prev_col = <span class="literal">NULL</span>;</span><br><span class="line">    OLNode* current_col = matrix-&gt;col_heads[col];</span><br><span class="line">    <span class="keyword">while</span> (current_col != <span class="literal">NULL</span> &amp;&amp; current_col-&gt;row &lt; row) &#123;</span><br><span class="line">        prev_col = current_col;</span><br><span class="line">        current_col = current_col-&gt;down;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 此时 current_col 应该就是 nodeToDelete (因为行和列都指向同一个节点)</span></span><br><span class="line">    <span class="keyword">if</span> (current_col != <span class="literal">NULL</span> &amp;&amp; current_col-&gt;row == row &amp;&amp; current_col-&gt;col == col) &#123;</span><br><span class="line">        <span class="keyword">if</span> (prev_col == <span class="literal">NULL</span>) &#123; <span class="comment">// 删除的是列头</span></span><br><span class="line">            matrix-&gt;col_heads[col] = current_col-&gt;down;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            prev_col-&gt;down = current_col-&gt;down;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">free</span>(nodeToDelete); <span class="comment">// 释放节点内存</span></span><br><span class="line">    matrix-&gt;num_elements--;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;成功删除元素 (%d, %d)。\n&quot;</span>, row, col);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-6-释放内存"><a href="#3-6-释放内存" class="headerlink" title="3.6 释放内存"></a>3.6 释放内存</h4><p>释放所有元素节点和头节点数组的内存。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 释放十字链表占用的所有内存</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">freeCrossList</span><span class="params">(CrossList* matrix)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (matrix == <span class="literal">NULL</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 释放所有元素节点</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; matrix-&gt;rows; i++) &#123;</span><br><span class="line">        OLNode* current = matrix-&gt;row_heads[i];</span><br><span class="line">        <span class="keyword">while</span> (current != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            OLNode* temp = current;</span><br><span class="line">            current = current-&gt;right; <span class="comment">// 先移动到下一个，因为当前节点可能被其他行/列引用</span></span><br><span class="line">            <span class="comment">// 如果是双向链表，需要判断是否已经被释放过</span></span><br><span class="line">            <span class="comment">// 对于十字链表，一个节点只被释放一次。我们按行释放即可。</span></span><br><span class="line">            <span class="built_in">free</span>(temp);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 释放行头和列头数组本身</span></span><br><span class="line">    <span class="built_in">free</span>(matrix-&gt;row_heads);</span><br><span class="line">    <span class="built_in">free</span>(matrix-&gt;col_heads);</span><br><span class="line">    <span class="built_in">free</span>(matrix);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;十字链表内存已释放。\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-完整示例代码"><a href="#4-完整示例代码" class="headerlink" title="4. 完整示例代码"></a>4. 完整示例代码</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义稀疏矩阵的节点类型</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">OLNode</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> row;       <span class="comment">// 行索引</span></span><br><span class="line">    <span class="type">int</span> col;       <span class="comment">// 列索引</span></span><br><span class="line">    <span class="type">int</span> value;     <span class="comment">// 存储的非零元素值</span></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">OLNode</span> *<span class="title">right</span>;</span> <span class="comment">// 指向同一行下一个非零元素的指针</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">OLNode</span> *<span class="title">down</span>;</span>  <span class="comment">// 指向同一列下一个非零元素的指针</span></span><br><span class="line">&#125; OLNode;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义稀疏矩阵的十字链表结构</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">CrossList</span> &#123;</span></span><br><span class="line">    OLNode** row_heads;   <span class="comment">// 行头节点数组</span></span><br><span class="line">    OLNode** col_heads;   <span class="comment">// 列头节点数组</span></span><br><span class="line">    <span class="type">int</span> rows;             <span class="comment">// 矩阵的行数</span></span><br><span class="line">    <span class="type">int</span> cols;             <span class="comment">// 矩阵的列数</span></span><br><span class="line">    <span class="type">int</span> num_elements;     <span class="comment">// 非零元素的数量</span></span><br><span class="line">&#125; CrossList;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化一个空的十字链表</span></span><br><span class="line">CrossList* <span class="title function_">initCrossList</span><span class="params">(<span class="type">int</span> m_rows, <span class="type">int</span> m_cols)</span> &#123;</span><br><span class="line">    CrossList* matrix = (CrossList*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(CrossList));</span><br><span class="line">    <span class="keyword">if</span> (matrix == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;内存分配失败！\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    matrix-&gt;rows = m_rows;</span><br><span class="line">    matrix-&gt;cols = m_cols;</span><br><span class="line">    matrix-&gt;num_elements = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    matrix-&gt;row_heads = (OLNode**)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(OLNode*) * m_rows);</span><br><span class="line">    <span class="keyword">if</span> (matrix-&gt;row_heads == <span class="literal">NULL</span>) &#123; <span class="comment">/* handle error */</span> &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; m_rows; i++) &#123;</span><br><span class="line">        matrix-&gt;row_heads[i] = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    matrix-&gt;col_heads = (OLNode**)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(OLNode*) * m_cols);</span><br><span class="line">    <span class="keyword">if</span> (matrix-&gt;col_heads == <span class="literal">NULL</span>) &#123; <span class="comment">/* handle error */</span> &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; m_cols; i++) &#123;</span><br><span class="line">        matrix-&gt;col_heads[i] = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> matrix;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入一个非零元素</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">insertElement</span><span class="params">(CrossList* matrix, <span class="type">int</span> row, <span class="type">int</span> col, <span class="type">int</span> value)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (row &lt; <span class="number">0</span> || row &gt;= matrix-&gt;rows || col &lt; <span class="number">0</span> || col &gt;= matrix-&gt;cols) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;插入失败：索引越界 (%d, %d)。\n&quot;</span>, row, col);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (value == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 如果插入0，则尝试删除该位置的现有元素 (如果存在)</span></span><br><span class="line">        <span class="comment">// 简化起见，这里假设用户不会插入0，如果需要，可以调用 deleteElement</span></span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    OLNode* newNode = (OLNode*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(OLNode));</span><br><span class="line">    <span class="keyword">if</span> (newNode == <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;内存分配失败！\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    newNode-&gt;row = row;</span><br><span class="line">    newNode-&gt;col = col;</span><br><span class="line">    newNode-&gt;value = value;</span><br><span class="line">    newNode-&gt;right = <span class="literal">NULL</span>;</span><br><span class="line">    newNode-&gt;down = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 插入到行链表 (保持按列索引升序)</span></span><br><span class="line">    OLNode* p_row = matrix-&gt;row_heads[row];</span><br><span class="line">    OLNode* prev_row = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">while</span> (p_row != <span class="literal">NULL</span> &amp;&amp; p_row-&gt;col &lt; col) &#123;</span><br><span class="line">        prev_row = p_row;</span><br><span class="line">        p_row = p_row-&gt;right;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 如果该位置已存在元素，则更新其值并释放新节点</span></span><br><span class="line">    <span class="keyword">if</span> (p_row != <span class="literal">NULL</span> &amp;&amp; p_row-&gt;col == col) &#123;</span><br><span class="line">        p_row-&gt;value = value; <span class="comment">// 更新值</span></span><br><span class="line">        <span class="built_in">free</span>(newNode);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 插入新节点到行链表</span></span><br><span class="line">    <span class="keyword">if</span> (prev_row == <span class="literal">NULL</span>) &#123; <span class="comment">// 插入到行头</span></span><br><span class="line">        newNode-&gt;right = matrix-&gt;row_heads[row];</span><br><span class="line">        matrix-&gt;row_heads[row] = newNode;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        newNode-&gt;right = prev_row-&gt;right;</span><br><span class="line">        prev_row-&gt;right = newNode;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 插入到列链表 (保持按行索引升序)</span></span><br><span class="line">    OLNode* p_col = matrix-&gt;col_heads[col];</span><br><span class="line">    OLNode* prev_col = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">while</span> (p_col != <span class="literal">NULL</span> &amp;&amp; p_col-&gt;row &lt; row) &#123;</span><br><span class="line">        prev_col = p_col;</span><br><span class="line">        p_col = p_col-&gt;down;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 插入新节点到列链表</span></span><br><span class="line">    <span class="keyword">if</span> (prev_col == <span class="literal">NULL</span>) &#123; <span class="comment">// 插入到列头</span></span><br><span class="line">        newNode-&gt;down = matrix-&gt;col_heads[col];</span><br><span class="line">        matrix-&gt;col_heads[col] = newNode;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        newNode-&gt;down = prev_col-&gt;down;</span><br><span class="line">        prev_col-&gt;down = newNode;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    matrix-&gt;num_elements++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 查找某个位置的元素值</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">getElement</span><span class="params">(CrossList* matrix, <span class="type">int</span> row, <span class="type">int</span> col)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (row &lt; <span class="number">0</span> || row &gt;= matrix-&gt;rows || col &lt; <span class="number">0</span> || col &gt;= matrix-&gt;cols) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;查找失败：索引越界。\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 假定超出范围是0</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    OLNode* current = matrix-&gt;row_heads[row]; <span class="comment">// 从行头开始查找</span></span><br><span class="line">    <span class="keyword">while</span> (current != <span class="literal">NULL</span> &amp;&amp; current-&gt;col &lt; col) &#123;</span><br><span class="line">        current = current-&gt;right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (current != <span class="literal">NULL</span> &amp;&amp; current-&gt;col == col) &#123;</span><br><span class="line">        <span class="keyword">return</span> current-&gt;value;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">// 未找到，返回0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 删除一个非零元素</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">deleteElement</span><span class="params">(CrossList* matrix, <span class="type">int</span> row, <span class="type">int</span> col)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (row &lt; <span class="number">0</span> || row &gt;= matrix-&gt;rows || col &lt; <span class="number">0</span> || col &gt;= matrix-&gt;cols) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;删除失败：索引越界。\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    OLNode* nodeToDelete = <span class="literal">NULL</span>; <span class="comment">// 用于最终free的节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 1. 从行链表中删除</span></span><br><span class="line">    OLNode* prev_row = <span class="literal">NULL</span>;</span><br><span class="line">    OLNode* current_row = matrix-&gt;row_heads[row];</span><br><span class="line">    <span class="keyword">while</span> (current_row != <span class="literal">NULL</span> &amp;&amp; current_row-&gt;col &lt; col) &#123;</span><br><span class="line">        prev_row = current_row;</span><br><span class="line">        current_row = current_row-&gt;right;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (current_row != <span class="literal">NULL</span> &amp;&amp; current_row-&gt;col == col) &#123;</span><br><span class="line">        nodeToDelete = current_row; </span><br><span class="line">        <span class="keyword">if</span> (prev_row == <span class="literal">NULL</span>) &#123; <span class="comment">// 删除的是行头</span></span><br><span class="line">            matrix-&gt;row_heads[row] = current_row-&gt;right;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            prev_row-&gt;right = current_row-&gt;right;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;未找到 (%d, %d) 处的非零元素进行删除。\n&quot;</span>, row, col);</span><br><span class="line">        <span class="keyword">return</span>; </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 从列链表中删除 (寻找并跳过该节点)</span></span><br><span class="line">    OLNode* prev_col = <span class="literal">NULL</span>;</span><br><span class="line">    OLNode* current_col = matrix-&gt;col_heads[col];</span><br><span class="line">    <span class="keyword">while</span> (current_col != <span class="literal">NULL</span> &amp;&amp; current_col-&gt;row &lt; row) &#123;</span><br><span class="line">        prev_col = current_col;</span><br><span class="line">        current_col = current_col-&gt;down;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 此时 current_col 应该就是 nodeToDelete (因为行和列都指向同一个节点)</span></span><br><span class="line">    <span class="keyword">if</span> (current_col != <span class="literal">NULL</span> &amp;&amp; current_col-&gt;row == row &amp;&amp; current_col-&gt;col == col) &#123;</span><br><span class="line">        <span class="keyword">if</span> (prev_col == <span class="literal">NULL</span>) &#123; <span class="comment">// 删除的是列头</span></span><br><span class="line">            matrix-&gt;col_heads[col] = current_col-&gt;down;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            prev_col-&gt;down = current_col-&gt;down;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">free</span>(nodeToDelete); <span class="comment">// 释放节点内存</span></span><br><span class="line">    matrix-&gt;num_elements--;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;成功删除元素 (%d, %d)。\n&quot;</span>, row, col);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印矩阵（还原完整矩阵）</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">printFullMatrix</span><span class="params">(CrossList* matrix)</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n完整矩阵 (%d x %d):\n&quot;</span>, matrix-&gt;rows, matrix-&gt;cols);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; matrix-&gt;rows; i++) &#123;</span><br><span class="line">        OLNode* current_row_node = matrix-&gt;row_heads[i];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; matrix-&gt;cols; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (current_row_node != <span class="literal">NULL</span> &amp;&amp; current_row_node-&gt;col == j) &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;%3d &quot;</span>, current_row_node-&gt;value); <span class="comment">// 格式化输出</span></span><br><span class="line">                current_row_node = current_row_node-&gt;right;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;%3d &quot;</span>, <span class="number">0</span>); <span class="comment">// 没有非零元素，打印0</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 释放十字链表占用的所有内存</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">freeCrossList</span><span class="params">(CrossList* matrix)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (matrix == <span class="literal">NULL</span>) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 释放所有元素节点</span></span><br><span class="line">    <span class="comment">// 只需要按行链表释放即可，因为每个节点只在某个行链表和某个列链表中出现一次</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; matrix-&gt;rows; i++) &#123;</span><br><span class="line">        OLNode* current = matrix-&gt;row_heads[i];</span><br><span class="line">        <span class="keyword">while</span> (current != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            OLNode* temp = current;</span><br><span class="line">            current = current-&gt;right; </span><br><span class="line">            <span class="built_in">free</span>(temp);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 释放行头和列头数组本身</span></span><br><span class="line">    <span class="built_in">free</span>(matrix-&gt;row_heads);</span><br><span class="line">    <span class="built_in">free</span>(matrix-&gt;col_heads);</span><br><span class="line">    <span class="built_in">free</span>(matrix);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;十字链表内存已释放。\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span> rows = <span class="number">4</span>, cols = <span class="number">5</span>;</span><br><span class="line">    CrossList* sparseMatrix = initCrossList(rows, cols);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;------ 插入元素 ------\n&quot;</span>);</span><br><span class="line">    insertElement(sparseMatrix, <span class="number">0</span>, <span class="number">1</span>, <span class="number">5</span>);</span><br><span class="line">    insertElement(sparseMatrix, <span class="number">0</span>, <span class="number">4</span>, <span class="number">8</span>);</span><br><span class="line">    insertElement(sparseMatrix, <span class="number">1</span>, <span class="number">0</span>, <span class="number">12</span>);</span><br><span class="line">    insertElement(sparseMatrix, <span class="number">1</span>, <span class="number">3</span>, <span class="number">7</span>);</span><br><span class="line">    insertElement(sparseMatrix, <span class="number">2</span>, <span class="number">1</span>, <span class="number">9</span>);</span><br><span class="line">    insertElement(sparseMatrix, <span class="number">3</span>, <span class="number">2</span>, <span class="number">6</span>);</span><br><span class="line">    insertElement(sparseMatrix, <span class="number">3</span>, <span class="number">4</span>, <span class="number">10</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;插入重复位置元素 (更新):\n&quot;</span>);</span><br><span class="line">    insertElement(sparseMatrix, <span class="number">0</span>, <span class="number">1</span>, <span class="number">100</span>); <span class="comment">// 更新 (0,1) 的值</span></span><br><span class="line"></span><br><span class="line">    printFullMatrix(sparseMatrix);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n------ 查找元素 ------\n&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;元素 (0, 1): %d\n&quot;</span>, getElement(sparseMatrix, <span class="number">0</span>, <span class="number">1</span>)); <span class="comment">// Expected: 100</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;元素 (1, 2): %d\n&quot;</span>, getElement(sparseMatrix, <span class="number">1</span>, <span class="number">2</span>)); <span class="comment">// Expected: 0</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;元素 (3, 4): %d\n&quot;</span>, getElement(sparseMatrix, <span class="number">3</span>, <span class="number">4</span>)); <span class="comment">// Expected: 10</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n------ 删除元素 ------\n&quot;</span>);</span><br><span class="line">    deleteElement(sparseMatrix, <span class="number">0</span>, <span class="number">4</span>); <span class="comment">// 删除 (0,4)</span></span><br><span class="line">    printFullMatrix(sparseMatrix);</span><br><span class="line"></span><br><span class="line">    deleteElement(sparseMatrix, <span class="number">1</span>, <span class="number">0</span>); <span class="comment">// 删除 (1,0)</span></span><br><span class="line">    printFullMatrix(sparseMatrix);</span><br><span class="line"></span><br><span class="line">    deleteElement(sparseMatrix, <span class="number">2</span>, <span class="number">2</span>); <span class="comment">// 删除不存在的元素</span></span><br><span class="line">    printFullMatrix(sparseMatrix);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n------ 内存释放 ------\n&quot;</span>);</span><br><span class="line">    freeCrossList(sparseMatrix);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-十字链表的优势与应用"><a href="#5-十字链表的优势与应用" class="headerlink" title="5. 十字链表的优势与应用"></a>5. 十字链表的优势与应用</h3><p><strong>优势：</strong></p>
+<ul>
+<li><strong>空间效率高：</strong> 只存储非零元素，对于稀疏矩阵来说，大大节省了内存空间。</li>
+<li><strong>灵活的双向访问：</strong> 既可以高效地按行遍历非零元素，也可以高效地按列遍历非零元素。</li>
+<li><strong>插入和删除相对方便：</strong> 相较于三元组表等，插入和删除非零元素（在已知位置时）更为方便，只需调整少数指针。</li>
+</ul>
+<p><strong>应用场景：</strong></p>
+<ul>
+<li><strong>稀疏矩阵的存储和运算：</strong> 矩阵的加法、乘法等运算在十字链表上实现效率更高。</li>
+<li><strong>图的邻接多重表表示：</strong> 图的一种特殊存储结构，每个边可以同时存在于两个顶点的邻接链表中，类似于十字链表的思想。</li>
+<li><strong>数据挖掘和机器学习：</strong> 处理包含大量零值的矩阵数据，例如协同过滤中的用户-物品评分矩阵。</li>
+</ul>
+<h3 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h3><p>十字链表是一种为稀疏矩阵量身定制的数据结构。它通过巧妙地将非零元素组织成行链表和列链表的交织结构，实现了空间上的高效利用和访问上的高度灵活性。虽然它的实现比普通链表复杂，但在处理大规模稀疏数据时，其优势显而易见。</p>
+<p>理解十字链表的原理和实现，将为你在处理稀疏数据和更复杂的数据结构（如图）时提供强大的工具。</p>
+<hr>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2025/05/30/%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/">十字链表</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
+        <p><span>Created:</span>2025-05-30, 20:54:56</p>
+        <p><span>Updated:</span>2025-05-30, 20:56:36</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2025/05/30/%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/" title="十字链表">http://example.com/2025/05/30/%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/05/30/%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/05/30/%E5%A0%86/">
+                    堆
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A8%80%E7%96%8F%E7%9F%A9%E9%98%B5%E7%9A%84%E4%BC%98%E9%9B%85%E8%A1%A8%E7%A4%BA%EF%BC%9A%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E2%80%9C%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8%E2%80%9D"><span class="toc-number">1.</span> <span class="toc-text">稀疏矩阵的优雅表示：深入理解“十字链表”</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">1. 为什么需要十字链表？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8%E7%9A%84%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3%E4%B8%8E%E8%8A%82%E7%82%B9%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.</span> <span class="toc-text">2. 十字链表的核心思想与节点结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-number">1.3.</span> <span class="toc-text">3. 十字链表的基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E5%88%9D%E5%A7%8B%E5%8C%96%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1 初始化十字链表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-%E6%8F%92%E5%85%A5%E9%9D%9E%E9%9B%B6%E5%85%83%E7%B4%A0"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 插入非零元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-%E6%89%93%E5%8D%B0%E7%9F%A9%E9%98%B5%EF%BC%88%E9%81%8D%E5%8E%86%EF%BC%89"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.3 打印矩阵（遍历）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-%E6%9F%A5%E6%89%BE%E5%85%83%E7%B4%A0"><span class="toc-number">1.3.4.</span> <span class="toc-text">3.4 查找元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-%E5%88%A0%E9%99%A4%E5%85%83%E7%B4%A0"><span class="toc-number">1.3.5.</span> <span class="toc-text">3.5 删除元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-6-%E9%87%8A%E6%94%BE%E5%86%85%E5%AD%98"><span class="toc-number">1.3.6.</span> <span class="toc-text">3.6 释放内存</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%AE%8C%E6%95%B4%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-number">1.4.</span> <span class="toc-text">4. 完整示例代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8%E7%9A%84%E4%BC%98%E5%8A%BF%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="toc-number">1.5.</span> <span class="toc-text">5. 十字链表的优势与应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E6%80%BB%E7%BB%93"><span class="toc-number">1.6.</span> <span class="toc-text">6. 总结</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"十字链表　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="Back to Homepage"><i class="fa fa-home"></i></a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/05/30/%E5%A0%86/" title="Next: 堆">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/">十字链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%A0%86/">堆</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/kmp/">kmp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/DP/">DP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%9B%BE/">图</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E4%BA%8C%E5%8F%89%E6%A0%91/">二叉树</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E9%93%BE%E8%A1%A8/">链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E4%BA%8C%E5%88%86/">二分</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E6%AC%A7%E6%8B%89%E8%B4%A8%E6%95%B0%E7%AD%9B/">欧拉质数筛</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/Towards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium/">Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/LoRA/">LoRA</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/%E5%A4%A7%E4%B8%80%E6%80%BB%E7%BB%93/">大一总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/27/Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models/">Building Cooperative Embodied Agents Modularly with Large Language Models</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/26/Generative_Agents_Interactive_Simulacra_of_Human_Behavior/">Generative Agents Interactive Simulacra of Human Behavior</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/26/HuggingGPT-Solving-AI-Tasks-with-ChatGPT-and-its-Friends-in-Hugging-Face/">HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/25/ChatEval/">ChatEval</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/Improving-Factuality-and-Reasoning-in-Language-Models-through-Multiagent-Debate/">Improving Factuality and Reasoning in Language Models through Multiagent Debate</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/ReConcile/">ReConcile</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/04/12/LLM/">本地部署大模型以及微调手册</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/TF-IDF/">TF-IDF 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN-%E5%AE%9E%E7%8E%B0%E8%8E%AB%E5%A5%88%E9%A3%8E%E6%A0%BC%E7%94%BB%E4%BD%9C%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%9C%9F%E5%AE%9E%E7%85%A7%E7%89%87/">CycleGAN 实现莫奈风格画作转化为真实照片</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN/">CycleGAN 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/WGAN-WGAN-GP/">WGAN与WGAN-GP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/DCGAN/">DCGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/ACGAN/">ACGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/15/SVM/">支持向量机（SVM）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/14/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/">逻辑回归（Logistic Regression）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">WGAN/WGAN-GP 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/12/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">ACGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">GAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">DCGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/06/BERT-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">BERT 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/02/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">房价预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/01/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">Transformer 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/27/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/">预测系外行星轨道周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2025 John Doe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
