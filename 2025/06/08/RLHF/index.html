@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="John Doe" />
+
+
+
+<meta name="description" content="RLHF: Reinforcement Learning from Human Feedback研究背景随着大型语言模型（LLMs）能力的飞速增长，它们在生成文本、回答问题等方面表现出惊人的潜力。然而，这些模型在预训练阶段主要通过预测下一个词来学习，这使得它们在面对人类复杂指令时，可能生成不符合人类意图、不安全、不准确或带有偏见的内容。为了使 LLMs 更好地理解和遵循人类的价值观、偏好和指令，仅">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RLHF">
+<meta property="og:url" content="http://example.com/2025/06/08/RLHF/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="RLHF: Reinforcement Learning from Human Feedback研究背景随着大型语言模型（LLMs）能力的飞速增长，它们在生成文本、回答问题等方面表现出惊人的潜力。然而，这些模型在预训练阶段主要通过预测下一个词来学习，这使得它们在面对人类复杂指令时，可能生成不符合人类意图、不安全、不准确或带有偏见的内容。为了使 LLMs 更好地理解和遵循人类的价值观、偏好和指令，仅">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-08T14:42:01.000Z">
+<meta property="article:modified_time" content="2025-06-08T14:44:41.616Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="对齐">
+<meta property="article:tag" content="强化学习">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>RLHF | Hexo</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                            <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                        
+                            <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></li>
+                        
+                            <li><a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li>
+                        
+                            <li><a href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACGAN/" rel="tag">ACGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BERT/" rel="tag">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CycleGAN/" rel="tag">CycleGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DCGAN/" rel="tag">DCGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM/" rel="tag">LLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM-Evaluation/" rel="tag">LLM Evaluation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LoRA/" rel="tag">LoRA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Multi-Agent/" rel="tag">Multi-Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Prompt-Engineering/" rel="tag">Prompt Engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVM/" rel="tag">SVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TF-IDF/" rel="tag">TF-IDF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent/" rel="tag">agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/multi-agent/" rel="tag">multi-agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" rel="tag">优化技术</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8F%90%E5%8F%96/" rel="tag">关键词提取</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD/" rel="tag">具身智能</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B/" rel="tag">分类模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/" rel="tag">分类算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%83%8F%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/" rel="tag">图像风格迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%B9%E9%BD%90/" rel="tag">对齐</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag">强化学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E8%B0%83/" rel="tag">微调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8E%A8%E7%90%86%E4%BC%98%E5%8C%96/" rel="tag">推理优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/" rel="tag">支持向量机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/" rel="tag">文本分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B/" rel="tag">模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E6%8B%9F%E4%BA%BA%E7%B1%BB%E8%A1%8C%E4%B8%BA/" rel="tag">模拟人类行为</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" rel="tag">逻辑回归</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></li>
+                
+                    <li><a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li>
+                
+                    <li><a href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-RLHF" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/06/08/RLHF/" class="article-date">
+      <time datetime="2025-06-08T14:42:01.000Z" itemprop="datePublished">2025-06-08</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RLHF
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LLM/" rel="tag">LLM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AF%B9%E9%BD%90/" rel="tag">对齐</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag">强化学习</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="RLHF-Reinforcement-Learning-from-Human-Feedback"><a href="#RLHF-Reinforcement-Learning-from-Human-Feedback" class="headerlink" title="RLHF: Reinforcement Learning from Human Feedback"></a>RLHF: Reinforcement Learning from Human Feedback</h1><h2 id="研究背景"><a href="#研究背景" class="headerlink" title="研究背景"></a>研究背景</h2><p>随着大型语言模型（LLMs）能力的飞速增长，它们在生成文本、回答问题等方面表现出惊人的潜力。然而，这些模型在预训练阶段主要通过预测下一个词来学习，这使得它们在面对人类复杂指令时，可能生成不符合人类意图、不安全、不准确或带有偏见的内容。为了使 LLMs 更好地理解和遵循人类的价值观、偏好和指令，仅仅依赖大规模的文本数据进行预训练是不足够的。RLHF（Reinforcement Learning from Human Feedback）应运而生，旨在通过引入人类的反馈来对齐模型行为，使其更加有用、无害和诚实。</p>
+<h2 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h2><p>RLHF 的核心理念是：<strong>通过收集人类对模型生成内容的偏好或质量评分，训练一个奖励模型（Reward Model），然后利用这个奖励模型作为强化学习的奖励信号，对语言模型进行微调，使其生成更符合人类期望的内容。</strong></p>
+<p>通过这种方式，RLHF 实现了以下目标：</p>
+<ul>
+<li><strong>对齐模型行为</strong>：使模型生成的内容更符合人类的偏好、意图和安全准则。</li>
+<li><strong>提升用户体验</strong>：提高模型回答的有用性、准确性和自然性。</li>
+<li><strong>处理复杂偏好</strong>：能够捕捉并优化人类对语言模型输出的细微、多维度的偏好。</li>
+</ul>
+<h2 id="方法流程详解"><a href="#方法流程详解" class="headerlink" title="方法流程详解"></a>方法流程详解</h2><p>RLHF 的实现过程通常分为以下三个主要步骤：</p>
+<ol>
+<li><strong>预训练语言模型（Pre-trained Language Model）</strong>：<ul>
+<li>首先，使用大规模文本数据训练一个基础的大型语言模型（例如 GPT-3、PaLM 等）。这个模型是 RLHF 流程的起点，它拥有广泛的语言理解和生成能力。</li>
+</ul>
+</li>
+<li><strong>训练奖励模型（Reward Model - RM）</strong>：<ul>
+<li><strong>数据收集</strong>：从预训练的语言模型中抽取一组提示（prompt），并让模型生成多个不同的响应。然后，聘请人类标注员对这些模型生成的响应进行排序或打分，以表达他们对这些响应质量的偏好。例如，对于同一个提示，人类标注员会比较两个或更多个模型响应，并指出哪个更好。</li>
+<li><strong>模型训练</strong>：基于这些人类偏好数据，训练一个独立的奖励模型。这个奖励模型是一个特殊的机器学习模型（通常也是一个 Transformer 模型），它的输入是提示和模型响应，输出是一个标量值，代表该响应在人类看来有多“好”或多符合偏好。奖励模型的目标是学习并准确预测人类的偏好。</li>
+</ul>
+</li>
+<li><strong>使用强化学习微调语言模型（Fine-tuning with Reinforcement Learning）</strong>：<ul>
+<li><strong>策略定义</strong>：将预训练的语言模型视为一个策略（policy），它在给定提示的情况下生成响应。</li>
+<li><strong>PPO 算法</strong>：通常采用近端策略优化（Proximal Policy Optimization, PPO）等强化学习算法。在这个阶段，语言模型在新的提示下生成响应。</li>
+<li><strong>奖励信号</strong>：生成的响应被输入到之前训练好的奖励模型中，由奖励模型给出实时的奖励分数。</li>
+<li><strong>模型更新</strong>：根据奖励模型的反馈，强化学习算法调整语言模型的参数，使其生成更高奖励分数的响应。为了防止模型在优化奖励时偏离原始预训练模型太远，通常会引入一个 KL 散度惩罚项，限制微调后的模型与原始模型之间的差异，确保模型在学习新行为的同时保持其语言生成能力和泛化性。</li>
+</ul>
+</li>
+</ol>
+<h2 id="实验设置与结果"><a href="#实验设置与结果" class="headerlink" title="实验设置与结果"></a>实验设置与结果</h2><p>RLHF 在多个大型语言模型上得到了广泛应用和验证，其中最著名的成功案例是 OpenAI 的 ChatGPT 和 InstructGPT。</p>
+<ul>
+<li><strong>InstructGPT</strong>：OpenAI 详细介绍了通过 RLHF 训练 InstructGPT 的过程。实验结果表明，与 GPT-3 相比，InstructGPT 在遵循指令和生成有用、无害响应方面表现显著提升，即使模型参数量更小。人类评估员普遍认为 InstructGPT 生成的响应质量更高，更容易遵循指令，且减少了不真实和有害的输出。</li>
+<li><strong>ChatGPT</strong>：作为 InstructGPT 的后续工作，ChatGPT 进一步展示了 RLHF 在构建会话式 AI 方面的巨大潜力。它能够进行连贯的多轮对话，回答复杂问题，撰写不同风格的文本，并在很大程度上避免了有害或偏见的回答，这都归功于其背后复杂的 RLHF 对齐过程。</li>
+<li><strong>其他应用</strong>：RLHF 也被用于代码生成（如 GitHub Copilot 的某些版本）、安全内容过滤等领域，以提升模型在特定任务上的表现和安全性。</li>
+</ul>
+<p>总的来说，RLHF 使得大型语言模型能够更好地与人类意图对齐，显著提升了它们的可用性和安全性。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>RLHF 提供了一种强大的方法，通过融合人类反馈和强化学习，将大型语言模型从单纯的“下一个词预测器”转变为能够更好地理解和响应人类指令的“助手”。它解决了传统预训练模型在对齐人类价值观和偏好方面的不足，是构建负责任和有用 AI 的关键技术。</p>
+<h2 id="如何使用-概念性说明"><a href="#如何使用-概念性说明" class="headerlink" title="如何使用 (概念性说明)"></a>如何使用 (概念性说明)</h2><p>RLHF 的实现通常需要大量的计算资源、专业的数据标注团队和复杂的工程实践。对于个人或中小型团队，直接从零开始实现完整的 RLHF 流程非常具有挑战性。然而，我们可以利用现有的开源库和工具，或基于已经过 RLHF 对齐的模型进行进一步的微调。</p>
+<h3 id="1-理解-RLHF-流程的组件"><a href="#1-理解-RLHF-流程的组件" class="headerlink" title="1. 理解 RLHF 流程的组件"></a>1. 理解 RLHF 流程的组件</h3><ul>
+<li><strong>基础模型</strong>：一个强大的预训练语言模型（例如 <code>llama-2-7b-chat</code>，它已经通过 RLHF 进行了对齐）。</li>
+<li><strong>奖励模型</strong>：一个能够评估模型输出质量的模型。这通常需要通过人类偏好数据训练。</li>
+<li><strong>强化学习算法</strong>：如 PPO，用于根据奖励信号优化语言模型。</li>
+</ul>
+<h3 id="2-使用现有工具和框架-概念性代码示例"><a href="#2-使用现有工具和框架-概念性代码示例" class="headerlink" title="2. 使用现有工具和框架 (概念性代码示例)"></a>2. 使用现有工具和框架 (概念性代码示例)</h3><p>虽然完整的 RLHF 流程复杂，但像 Hugging Face 的 <code>trl</code> (Transformer Reinforcement Learning) 库提供了一些模块化的组件和示例，可以帮助研究人员和开发者尝试 RLHF 的某些部分。</p>
+<p>以下是一个非常高层的、概念性的代码流程，展示如何使用 <code>trl</code> 库的 PPO 训练器。请注意，这只是一个简化示例，实际应用需要更详细的数据准备和参数配置。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 假设已经安装了必要的库：pip install transformers accelerate trl peft bitsandbytes</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoTokenizer, AutoModelForCausalLM, pipeline</span><br><span class="line"><span class="keyword">from</span> trl <span class="keyword">import</span> PPOTrainer, PPOConfig</span><br><span class="line"><span class="keyword">from</span> trl.core <span class="keyword">import</span> LengthSampler</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 1. 加载一个基础的对齐模型（例如，一个已经过SFT的模型）</span></span><br><span class="line"><span class="comment"># 实际RLHF通常从SFT（监督微调）后的模型开始</span></span><br><span class="line">model_name = <span class="string">&quot;mistralai/Mistral-7B-Instruct-v0.2&quot;</span> <span class="comment"># 示例：一个Instruct模型</span></span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(model_name)</span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 确保tokenizer有pad_token，对于生成任务尤其重要</span></span><br><span class="line"><span class="keyword">if</span> tokenizer.pad_token <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">    tokenizer.pad_token = tokenizer.eos_token</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 假设我们有一个奖励模型（Reward Model）</span></span><br><span class="line"><span class="comment"># 在实际情况中，奖励模型需要单独训练</span></span><br><span class="line"><span class="comment"># 这里我们创建一个模拟奖励模型，实际中会是一个经过训练的Transformer模型</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DummyRewardModel</span>(torch.nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__()</span><br><span class="line">        <span class="comment"># 这是一个非常简化的模拟，实际奖励模型会是一个transformer模型</span></span><br><span class="line">        <span class="variable language_">self</span>.dummy_head = torch.nn.Linear(<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, input_ids, attention_mask=<span class="literal">None</span></span>):</span><br><span class="line">        <span class="comment"># 假设奖励只是一个随机值，实际会根据response的内容计算</span></span><br><span class="line">        <span class="comment"># input_ids 和 attention_mask 实际会被用来计算embedding，然后传递给分类头</span></span><br><span class="line">        <span class="keyword">return</span> torch.randn(input_ids.shape[<span class="number">0</span>], <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">reward_model = DummyRewardModel()</span><br><span class="line"><span class="comment"># 或者加载一个预训练的奖励模型：</span></span><br><span class="line"><span class="comment"># from trl import AutoModelForSequenceClassification</span></span><br><span class="line"><span class="comment"># reward_model = AutoModelForSequenceClassification.from_pretrained(&quot;path_to_reward_model&quot;)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 定义PPO配置</span></span><br><span class="line">ppo_config = PPOConfig(</span><br><span class="line">    learning_rate=<span class="number">1e-5</span>,</span><br><span class="line">    ppo_epochs=<span class="number">4</span>,</span><br><span class="line">    mini_batch_size=<span class="number">4</span>,</span><br><span class="line">    batch_size=<span class="number">16</span>,</span><br><span class="line">    target_kl=<span class="number">0.1</span>, <span class="comment"># KL散度惩罚，防止模型偏离原始行为太远</span></span><br><span class="line">    seed=<span class="number">42</span>,</span><br><span class="line">    <span class="comment"># 其他参数...</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 初始化PPOTrainer</span></span><br><span class="line"><span class="comment"># model: 要训练的语言模型</span></span><br><span class="line"><span class="comment"># ref_model: 参考模型，用于计算KL散度，通常是SFT后的模型副本</span></span><br><span class="line"><span class="comment"># tokenizer: 分词器</span></span><br><span class="line"><span class="comment"># reward_model: 奖励模型</span></span><br><span class="line"><span class="comment"># dataset: 训练数据集，包含prompt</span></span><br><span class="line">ppo_trainer = PPOTrainer(</span><br><span class="line">    config=ppo_config,</span><br><span class="line">    model=model,</span><br><span class="line">    ref_model=<span class="literal">None</span>, <span class="comment"># 可以是model的副本，或者一个冻结的SFT模型</span></span><br><span class="line">    tokenizer=tokenizer,</span><br><span class="line">    reward_model=reward_model,</span><br><span class="line">    <span class="comment"># 数据集准备：</span></span><br><span class="line">    <span class="comment"># dataset = dataset.map(lambda x: &#123;&quot;query&quot;: tokenizer(x[&quot;prompt&quot;], return_tensors=&quot;pt&quot;)&#125;)</span></span><br><span class="line">    <span class="comment"># dummy_dataset = [&#123;&quot;query&quot;: tokenizer(&quot;Tell me a story about a dragon.&quot;, return_tensors=&quot;pt&quot;)&#125;]</span></span><br><span class="line">    <span class="comment"># 这里需要实际的prompt数据集</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 定义一个生成函数</span></span><br><span class="line"><span class="comment"># 实际中会使用model.generate，这里是PPOTrainer的示例</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_response</span>(<span class="params">prompts</span>):</span><br><span class="line">    <span class="comment"># This function would typically generate responses from the current policy model</span></span><br><span class="line">    <span class="comment"># and would be called internally by PPOTrainer.</span></span><br><span class="line">    <span class="comment"># For demonstration, let&#x27;s just make a dummy generation.</span></span><br><span class="line">    outputs = []</span><br><span class="line">    <span class="keyword">for</span> prompt <span class="keyword">in</span> prompts:</span><br><span class="line">        input_ids = tokenizer.encode(prompt, return_tensors=<span class="string">&quot;pt&quot;</span>)</span><br><span class="line">        generated_ids = ppo_trainer.accelerator.unwrap_model(ppo_trainer.model).generate(</span><br><span class="line">            input_ids.to(ppo_trainer.accelerator.device),</span><br><span class="line">            max_new_tokens=<span class="number">50</span>,</span><br><span class="line">            do_sample=<span class="literal">True</span>,</span><br><span class="line">            top_k=<span class="number">0</span>,</span><br><span class="line">            top_p=<span class="number">1.0</span>,</span><br><span class="line">            eos_token_id=tokenizer.eos_token_id,</span><br><span class="line">            pad_token_id=tokenizer.pad_token_id,</span><br><span class="line">        )</span><br><span class="line">        outputs.append(tokenizer.decode(generated_ids[<span class="number">0</span>][<span class="built_in">len</span>(input_ids[<span class="number">0</span>]):], skip_special_tokens=<span class="literal">True</span>))</span><br><span class="line">    <span class="keyword">return</span> outputs</span><br><span class="line"></span><br><span class="line"><span class="comment"># 6. PPO 训练循环 (概念性)</span></span><br><span class="line"><span class="comment"># 实际中，PPOTrainer 会自动处理这个循环</span></span><br><span class="line"><span class="comment"># ppo_trainer.learn()</span></span><br><span class="line"><span class="comment"># </span></span><br><span class="line"><span class="comment"># 以下是一个模拟训练循环的结构，用于说明概念：</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(ppo_config.ppo_epochs):</span><br><span class="line">    <span class="comment"># 模拟数据批次</span></span><br><span class="line">    dummy_prompts = [<span class="string">&quot;Tell me a joke.&quot;</span>, <span class="string">&quot;Write a short poem.&quot;</span>, <span class="string">&quot;Explain quantum physics simply.&quot;</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 1. 收集批次的提示和模型响应</span></span><br><span class="line">    query_tensors = [tokenizer.encode(q, return_tensors=<span class="string">&quot;pt&quot;</span>).squeeze(<span class="number">0</span>) <span class="keyword">for</span> q <span class="keyword">in</span> dummy_prompts]</span><br><span class="line">    responses = generate_response(dummy_prompts) <span class="comment"># PPOTrainer内部调用</span></span><br><span class="line">    response_tensors = [tokenizer.encode(r, return_tensors=<span class="string">&quot;pt&quot;</span>).squeeze(<span class="number">0</span>) </span><br><span class="line">                        <span class="keyword">for</span> r <span class="keyword">in</span> [<span class="string">&quot;Why did the scarecrow win an award? Because he was outstanding in his field!&quot;</span>, <span class="string">&quot;The moon shines bright, a silvery light.&quot;</span>, <span class="string">&quot;It&#x27;s super small stuff that makes up everything.&quot;</span>]]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 2. 计算奖励</span></span><br><span class="line">    rewards = []</span><br><span class="line">    <span class="keyword">for</span> q_t, r_t <span class="keyword">in</span> <span class="built_in">zip</span>(query_tensors, response_tensors):</span><br><span class="line">        full_text_tensor = torch.cat([q_t, r_t])</span><br><span class="line">        <span class="comment"># reward_score = reward_model(full_text_tensor.unsqueeze(0)).item() # 实际会batch处理</span></span><br><span class="line">        rewards.append(torch.tensor(<span class="variable language_">self</span>.reward_model(torch.randn(<span class="number">1</span>,<span class="number">1</span>)).item())) <span class="comment"># 假设的随机奖励</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 3. PPO 优化步骤</span></span><br><span class="line">    ppo_trainer.step(query_tensors, response_tensors, rewards)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Epoch <span class="subst">&#123;epoch&#125;</span>: Simulating PPO step with rewards: <span class="subst">&#123;rewards&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 7. 保存模型</span></span><br><span class="line">ppo_trainer.save_pretrained(<span class="string">&quot;my_rlhf_model&quot;</span>)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2025/06/08/RLHF/">RLHF</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
+        <p><span>Created:</span>2025-06-08, 22:42:01</p>
+        <p><span>Updated:</span>2025-06-08, 22:44:41</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2025/06/08/RLHF/" title="RLHF">http://example.com/2025/06/08/RLHF/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/06/08/RLHF/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/06/08/prefix-turning/">
+                    prefix turning
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RLHF-Reinforcement-Learning-from-Human-Feedback"><span class="toc-number">1.</span> <span class="toc-text">RLHF: Reinforcement Learning from Human Feedback</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF"><span class="toc-number">1.1.</span> <span class="toc-text">研究背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="toc-number">1.2.</span> <span class="toc-text">核心思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.3.</span> <span class="toc-text">方法流程详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE%E4%B8%8E%E7%BB%93%E6%9E%9C"><span class="toc-number">1.4.</span> <span class="toc-text">实验设置与结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-%E6%A6%82%E5%BF%B5%E6%80%A7%E8%AF%B4%E6%98%8E"><span class="toc-number">1.6.</span> <span class="toc-text">如何使用 (概念性说明)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%90%86%E8%A7%A3-RLHF-%E6%B5%81%E7%A8%8B%E7%9A%84%E7%BB%84%E4%BB%B6"><span class="toc-number">1.6.1.</span> <span class="toc-text">1. 理解 RLHF 流程的组件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8%E7%8E%B0%E6%9C%89%E5%B7%A5%E5%85%B7%E5%92%8C%E6%A1%86%E6%9E%B6-%E6%A6%82%E5%BF%B5%E6%80%A7%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.6.2.</span> <span class="toc-text">2. 使用现有工具和框架 (概念性代码示例)</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"RLHF　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="Back to Homepage"><i class="fa fa-home"></i></a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/06/08/prefix-turning/" title="Next: prefix turning">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/06/08/RLHF/">RLHF</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/06/08/prefix-turning/">prefix turning</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/06/04/%E9%98%9F%E5%88%97-%E6%A0%88/">队列/栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/">十字链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%A0%86/">堆</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/kmp/">kmp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/DP/">DP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%9B%BE/">图</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E4%BA%8C%E5%8F%89%E6%A0%91/">二叉树</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E9%93%BE%E8%A1%A8/">链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E4%BA%8C%E5%88%86/">二分</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E6%AC%A7%E6%8B%89%E8%B4%A8%E6%95%B0%E7%AD%9B/">欧拉质数筛</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/Towards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium/">Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/LoRA/">LoRA</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/%E5%A4%A7%E4%B8%80%E6%80%BB%E7%BB%93/">大一总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/27/Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models/">Building Cooperative Embodied Agents Modularly with Large Language Models</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/26/Generative_Agents_Interactive_Simulacra_of_Human_Behavior/">Generative Agents Interactive Simulacra of Human Behavior</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/26/HuggingGPT-Solving-AI-Tasks-with-ChatGPT-and-its-Friends-in-Hugging-Face/">HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/25/ChatEval/">ChatEval</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/Improving-Factuality-and-Reasoning-in-Language-Models-through-Multiagent-Debate/">Improving Factuality and Reasoning in Language Models through Multiagent Debate</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/ReConcile/">ReConcile</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/04/12/LLM/">本地部署大模型以及微调手册</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/TF-IDF/">TF-IDF 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN-%E5%AE%9E%E7%8E%B0%E8%8E%AB%E5%A5%88%E9%A3%8E%E6%A0%BC%E7%94%BB%E4%BD%9C%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%9C%9F%E5%AE%9E%E7%85%A7%E7%89%87/">CycleGAN 实现莫奈风格画作转化为真实照片</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN/">CycleGAN 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/WGAN-WGAN-GP/">WGAN与WGAN-GP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/DCGAN/">DCGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/ACGAN/">ACGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/15/SVM/">支持向量机（SVM）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/14/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/">逻辑回归（Logistic Regression）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">WGAN/WGAN-GP 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/12/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">ACGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">DCGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">GAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/06/BERT-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">BERT 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/02/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">房价预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/01/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">Transformer 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/27/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/">预测系外行星轨道周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2025 John Doe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

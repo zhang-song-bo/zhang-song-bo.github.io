@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="John Doe" />
+
+
+
+<meta name="description" content="Prefix Tuning: Optimizing Continuous Prompts for Large Language Models原论文链接：arXiv:2101.00190 项目主页：GitHub - XiangLi1999&#x2F;PrefixTuning 研究背景大型语言模型（LLMs）在自然语言处理任务中展现出强大的能力。然而，为了使这些模型适应特定下游任务，通常需要进行微调。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="prefix turning">
+<meta property="og:url" content="http://example.com/2025/06/08/prefix-turning/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Prefix Tuning: Optimizing Continuous Prompts for Large Language Models原论文链接：arXiv:2101.00190 项目主页：GitHub - XiangLi1999&#x2F;PrefixTuning 研究背景大型语言模型（LLMs）在自然语言处理任务中展现出强大的能力。然而，为了使这些模型适应特定下游任务，通常需要进行微调。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-06-08T14:18:15.000Z">
+<meta property="article:modified_time" content="2025-06-08T14:27:34.805Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="微调">
+<meta property="article:tag" content="Prompt Engineering">
+<meta name="twitter:card" content="summary">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>prefix turning | Hexo</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: 
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.jpg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>Menu</li>
+                        <li>Tags</li>
+                        
+                        <li>Friends</li>
+                        
+                        
+                        <li>About Me</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                            <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                        
+                            <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></li>
+                        
+                            <li><a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li>
+                        
+                            <li><a href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACGAN/" rel="tag">ACGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/BERT/" rel="tag">BERT</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CycleGAN/" rel="tag">CycleGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/DCGAN/" rel="tag">DCGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GAN/" rel="tag">GAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM/" rel="tag">LLM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM-Evaluation/" rel="tag">LLM Evaluation</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LoRA/" rel="tag">LoRA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Multi-Agent/" rel="tag">Multi-Agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Prompt-Engineering/" rel="tag">Prompt Engineering</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SVM/" rel="tag">SVM</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/TF-IDF/" rel="tag">TF-IDF</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN/" rel="tag">WGAN</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/WGAN-GP/" rel="tag">WGAN-GP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/agent/" rel="tag">agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/code/" rel="tag">code</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/multi-agent/" rel="tag">multi-agent</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BC%98%E5%8C%96%E6%8A%80%E6%9C%AF/" rel="tag">优化技术</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B3%E9%94%AE%E8%AF%8D%E6%8F%90%E5%8F%96/" rel="tag">关键词提取</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD/" rel="tag">具身智能</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E6%A8%A1%E5%9E%8B/" rel="tag">分类模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E7%B1%BB%E7%AE%97%E6%B3%95/" rel="tag">分类算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%9B%BE%E5%83%8F%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB/" rel="tag">图像风格迁移</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%B9%E9%BD%90/" rel="tag">对齐</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag">强化学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%AE%E8%B0%83/" rel="tag">微调</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8E%A8%E7%90%86%E4%BC%98%E5%8C%96/" rel="tag">推理优化</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA/" rel="tag">支持向量机</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%96%87%E6%9C%AC%E5%88%86%E6%9E%90/" rel="tag">文本分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E5%9E%8B/" rel="tag">模型</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%A8%A1%E6%8B%9F%E4%BA%BA%E7%B1%BB%E8%A1%8C%E4%B8%BA/" rel="tag">模拟人类行为</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag">线性回归</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" rel="tag">逻辑回归</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="https://pages.github.com/">GitHub</a>
+                    
+                      <a class="main-nav-link switch-friends-link" target="_blank" rel="noopener" href="http://moxfive.xyz/">MOxFIVE</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">专注于前端</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.jpg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/categories/%E7%94%9F%E6%B4%BB%E9%9A%8F%E8%AE%B0/">生活随记</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></li>
+                
+                    <li><a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></li>
+                
+                    <li><a href="/categories/%E7%AE%97%E6%B3%95/">算法</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="Tags" friends="Friends" about="About Me"/>
+</nav>
+      <div class="body-wrap"><article id="post-prefix-turning" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2025/06/08/prefix-turning/" class="article-date">
+      <time datetime="2025-06-08T14:18:15.000Z" itemprop="datePublished">2025-06-08</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      prefix turning
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LLM/" rel="tag">LLM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Prompt-Engineering/" rel="tag">Prompt Engineering</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%AE%E8%B0%83/" rel="tag">微调</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="Prefix-Tuning-Optimizing-Continuous-Prompts-for-Large-Language-Models"><a href="#Prefix-Tuning-Optimizing-Continuous-Prompts-for-Large-Language-Models" class="headerlink" title="Prefix Tuning: Optimizing Continuous Prompts for Large Language Models"></a>Prefix Tuning: Optimizing Continuous Prompts for Large Language Models</h1><p>原论文链接：arXiv:2101.00190</p>
+<p>项目主页：GitHub - XiangLi1999&#x2F;PrefixTuning</p>
+<h2 id="研究背景"><a href="#研究背景" class="headerlink" title="研究背景"></a>研究背景</h2><p>大型语言模型（LLMs）在自然语言处理任务中展现出强大的能力。然而，为了使这些模型适应特定下游任务，通常需要进行微调。传统的全量微调方法涉及更新模型的所有参数，这不仅计算成本高昂，而且对存储资源的需求也很大。提示工程（Prompt Engineering）作为一种无需修改模型参数即可引导模型行为的方法，虽然可以降低成本，但在复杂任务上表现往往不如微调。为了结合两者的优势，同时避免各自的缺点，Prefix Tuning应运而生，它旨在通过优化少量的“前缀”参数来高效地适配大型模型。</p>
+<h2 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h2><p>Prefix Tuning 的核心思想是：<strong>在不修改大型预训练模型参数的情况下，通过在输入序列前添加一小段可训练的连续向量（即“前缀”），来引导模型执行特定任务</strong>。这些前缀向量可以看作是任务特定的“软提示”或“虚拟token”，它们与原始输入一起输入到模型中，从而在推理过程中影响模型的行为。</p>
+<p>通过这种方式，Prefix Tuning 实现了以下目标：</p>
+<ul>
+<li><strong>参数高效</strong>：只训练前缀参数，模型的主体参数保持冻结，大大减少了可训练参数数量。</li>
+<li><strong>性能接近全量微调</strong>：在许多任务上，Prefix Tuning 的性能可以与全量微调相媲美，甚至在某些情况下超越提示工程。</li>
+<li><strong>易于任务切换</strong>：不同的任务只需替换不同的前缀，而无需重新加载整个模型。</li>
+</ul>
+<h2 id="方法流程详解"><a href="#方法流程详解" class="headerlink" title="方法流程详解"></a>方法流程详解</h2><p>Prefix Tuning 的实现过程如下：</p>
+<ol>
+<li><strong>冻结原始模型参数</strong>：预训练语言模型的原始权重（例如 GPT-2 或 T5）保持不变。</li>
+<li><strong>引入可训练前缀</strong>：在模型的每一层或仅在输入层，引入一系列可训练的连续向量，这些向量构成了“前缀”。对于自回归模型（如GPT-2），前缀添加到输入序列的开头；对于编码器-解码器模型（如T5），前缀同时添加到编码器和解码器的输入中。</li>
+<li><strong>训练前缀参数</strong>：在特定任务的数据集上，仅训练这些前缀向量的参数，以最小化任务相关的损失函数。模型的主体参数在整个训练过程中保持冻结。</li>
+<li><strong>推理阶段</strong>：在推理时，将训练好的前缀向量与新的输入拼接在一起，然后将组合后的序列输入到冻结的预训练模型中进行预测。</li>
+</ol>
+<p>这种方法的优势在于，它将任务特定的知识编码到一小组连续的前缀向量中，从而实现了参数的高效适配。</p>
+<h2 id="实验设置与结果"><a href="#实验设置与结果" class="headerlink" title="实验设置与结果"></a>实验设置与结果</h2><p>研究团队在多个生成式任务上对 Prefix Tuning 进行了评估，包括表格到文本生成（E2E NLG）、摘要（XSum）和问答（WebNLG）。实验结果表明，Prefix Tuning 在以下方面表现出色：</p>
+<ul>
+<li><strong>参数效率</strong>：在 GPT-2 上，Prefix Tuning 仅需训练0.1%的模型参数，即可达到与全量微调相近的性能。</li>
+<li>性能表现：<ul>
+<li>在E2E NLG任务上，Prefix Tuning 在数据量较少时优于全量微调，并且在完整数据集上与全量微调性能相当。</li>
+<li>在XSum摘要任务上，Prefix Tuning 表现优于全量微调，达到了新的SOTA。</li>
+<li>在WebNLG问答任务上，Prefix Tuning 在低数据量和完整数据集设置下都表现出色。</li>
+</ul>
+</li>
+<li><strong>鲁棒性</strong>：Prefix Tuning 在低数据量场景下表现更稳定。</li>
+</ul>
+<p>此外，Prefix Tuning 在训练和推理阶段都不会引入显著的额外延迟，并且由于参数量极小，可以轻松切换不同任务的前缀。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Prefix Tuning 提供了一种高效且有效的大型语言模型微调方法，它通过优化少量的连续前缀向量来适配模型，从而显著降低了计算资源的需求，同时保持了模型的性能。其核心思想是利用可训练的软提示来引导冻结的预训练模型。</p>
+<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><p>在实践中，使用 Prefix Tuning 对大型语言模型进行高效微调，可以显著减少训练所需的参数和计算资源。以下是一个典型的 Prefix Tuning 微调流程，适用于如 GPT-2、T5 等模型，结合了 Hugging Face Transformers 和 PEFT（Parameter-Efficient Fine-Tuning）库的使用。</p>
+<h3 id="1-安装必要的库"><a href="#1-安装必要的库" class="headerlink" title="1. 安装必要的库"></a>1. 安装必要的库</h3><p>确保安装了以下 Python 库：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install torch transformers datasets peft</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-加载预训练模型和分词器"><a href="#2-加载预训练模型和分词器" class="headerlink" title="2. 加载预训练模型和分词器"></a>2. 加载预训练模型和分词器</h3><p>以 GPT-2 模型为例，加载预训练模型和对应的分词器：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> AutoTokenizer, AutoModelForCausalLM</span><br><span class="line"></span><br><span class="line">model_name = <span class="string">&quot;gpt2&quot;</span></span><br><span class="line">tokenizer = AutoTokenizer.from_pretrained(model_name)</span><br><span class="line">model = AutoModelForCausalLM.from_pretrained(model_name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># GPT-2 does not have a padding token by default, which is often needed for batching.</span></span><br><span class="line"><span class="keyword">if</span> tokenizer.pad_token <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">    tokenizer.pad_token = tokenizer.eos_token</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-应用-Prefix-Tuning-配置"><a href="#3-应用-Prefix-Tuning-配置" class="headerlink" title="3. 应用 Prefix Tuning 配置"></a>3. 应用 Prefix Tuning 配置</h3><p>使用 PEFT 库配置 Prefix Tuning 参数，并将其应用到模型中：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> peft <span class="keyword">import</span> get_peft_model, PrefixTuningConfig, TaskType</span><br><span class="line"></span><br><span class="line">prefix_config = PrefixTuningConfig(</span><br><span class="line">    task_type=TaskType.CAUSAL_LM, <span class="comment"># For causal language modeling tasks</span></span><br><span class="line">    num_virtual_tokens=<span class="number">20</span>,       <span class="comment"># Number of virtual tokens in the prefix</span></span><br><span class="line">    encoder_hidden_size=model.config.hidden_size <span class="comment"># Hidden size of the encoder (for GPT-2, it&#x27;s model.config.n_embd)</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">model = get_peft_model(model, prefix_config)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Print the number of trainable parameters</span></span><br><span class="line">model.print_trainable_parameters()</span><br></pre></td></tr></table></figure>
+
+<p>在此配置中：</p>
+<ul>
+<li><code>task_type</code>：指定任务类型，例如 <code>TaskType.CAUSAL_LM</code> 用于自回归语言模型。</li>
+<li><code>num_virtual_tokens</code>：前缀中虚拟token的数量，这个值通常需要根据任务和模型进行调整。</li>
+<li><code>encoder_hidden_size</code>：模型的隐藏层维度。</li>
+</ul>
+<h3 id="4-准备训练数据"><a href="#4-准备训练数据" class="headerlink" title="4. 准备训练数据"></a>4. 准备训练数据</h3><p>使用 Hugging Face 的 <code>datasets</code> 库加载和预处理训练数据。对于文本生成任务，你需要将输入和目标文本拼接起来，并进行tokenization。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> datasets <span class="keyword">import</span> load_dataset</span><br><span class="line"></span><br><span class="line"><span class="comment"># Example: a simple text dataset</span></span><br><span class="line">data_files = &#123;<span class="string">&quot;train&quot;</span>: <span class="string">&quot;train.txt&quot;</span>, <span class="string">&quot;validation&quot;</span>: <span class="string">&quot;validation.txt&quot;</span>&#125;</span><br><span class="line">dataset = load_dataset(<span class="string">&quot;text&quot;</span>, data_files=data_files)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">tokenize_function</span>(<span class="params">examples</span>):</span><br><span class="line">    <span class="comment"># This example assumes each line in your text file is a separate example.</span></span><br><span class="line">    <span class="comment"># For actual tasks, you&#x27;d structure your data as input-output pairs.</span></span><br><span class="line">    <span class="keyword">return</span> tokenizer(examples[<span class="string">&quot;text&quot;</span>], truncation=<span class="literal">True</span>, max_length=<span class="number">128</span>)</span><br><span class="line"></span><br><span class="line">tokenized_dataset = dataset.<span class="built_in">map</span>(tokenize_function, batched=<span class="literal">True</span>, remove_columns=[<span class="string">&quot;text&quot;</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># Format for PyTorch</span></span><br><span class="line">tokenized_dataset.set_format(<span class="string">&quot;torch&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Data collator for language modeling, which handles padding</span></span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> DataCollatorForLanguageModeling</span><br><span class="line">data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-定义训练参数和训练器"><a href="#5-定义训练参数和训练器" class="headerlink" title="5. 定义训练参数和训练器"></a>5. 定义训练参数和训练器</h3><p>设置训练参数，并使用 <code>Trainer</code> 进行模型训练：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> Trainer, TrainingArguments</span><br><span class="line"></span><br><span class="line">training_args = TrainingArguments(</span><br><span class="line">    output_dir=<span class="string">&quot;./prefix-tuning-gpt2&quot;</span>,</span><br><span class="line">    per_device_train_batch_size=<span class="number">4</span>,</span><br><span class="line">    num_train_epochs=<span class="number">3</span>,</span><br><span class="line">    learning_rate=<span class="number">5e-5</span>, <span class="comment"># Typically a lower learning rate than full fine-tuning</span></span><br><span class="line">    logging_dir=<span class="string">&quot;./logs&quot;</span>,</span><br><span class="line">    save_total_limit=<span class="number">2</span>,</span><br><span class="line">    save_steps=<span class="number">500</span>,</span><br><span class="line">    evaluation_strategy=<span class="string">&quot;steps&quot;</span>,</span><br><span class="line">    eval_steps=<span class="number">500</span>,</span><br><span class="line">    logging_steps=<span class="number">100</span>,</span><br><span class="line">    load_best_model_at_end=<span class="literal">True</span>,</span><br><span class="line">    report_to=<span class="string">&quot;none&quot;</span> <span class="comment"># Disable reporting to services like Weights &amp; Biases if not needed</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">trainer = Trainer(</span><br><span class="line">    model=model,</span><br><span class="line">    args=training_args,</span><br><span class="line">    train_dataset=tokenized_dataset[<span class="string">&quot;train&quot;</span>],</span><br><span class="line">    eval_dataset=tokenized_dataset[<span class="string">&quot;validation&quot;</span>],</span><br><span class="line">    data_collator=data_collator,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-开始训练"><a href="#6-开始训练" class="headerlink" title="6. 开始训练"></a>6. 开始训练</h3><p>启动训练过程：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trainer.train()</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-保存和加载-Prefix-Tuning-模型"><a href="#7-保存和加载-Prefix-Tuning-模型" class="headerlink" title="7. 保存和加载 Prefix Tuning 模型"></a>7. 保存和加载 Prefix Tuning 模型</h3><p>训练完成后，保存 Prefix Tuning 模块的权重：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model.save_pretrained(<span class="string">&quot;prefix-tuning-gpt2&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>在需要时，加载保存的模型进行推理或进一步训练。注意，加载时需要先加载原始预训练模型，然后加载PEFT模型：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> peft <span class="keyword">import</span> PeftModel</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load the base model first</span></span><br><span class="line">base_model = AutoModelForCausalLM.from_pretrained(model_name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Load the PeftModel (Prefix Tuning weights) on top of the base model</span></span><br><span class="line">peft_model = PeftModel.from_pretrained(base_model, <span class="string">&quot;prefix-tuning-gpt2&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Now peft_model can be used for inference or further training</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>Title:</span><a href="/2025/06/08/prefix-turning/">prefix turning</a></p>
+        <p><span>Author:</span><a href="/" title="Back to Homepage"></a></p>
+        <p><span>Created:</span>2025-06-08, 22:18:15</p>
+        <p><span>Updated:</span>2025-06-08, 22:27:34</p>
+        <p>
+            <span>Full URL:</span><a class="post-url" href="/2025/06/08/prefix-turning/" title="prefix turning">http://example.com/2025/06/08/prefix-turning/</a>
+            <span class="copy-path" data-clipboard-text="From http://example.com/2025/06/08/prefix-turning/　　By " title="Copy Article&#39;s Link &amp; Author"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>License:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"CC BY-NC-SA 4.0"</a> Keep Link &amp; Author if Distribute.
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2025/06/08/RLHF/">
+                    RLHF
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2025/06/04/%E9%98%9F%E5%88%97-%E6%A0%88/">
+                    队列/栈
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Prefix-Tuning-Optimizing-Continuous-Prompts-for-Large-Language-Models"><span class="toc-number">1.</span> <span class="toc-text">Prefix Tuning: Optimizing Continuous Prompts for Large Language Models</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF"><span class="toc-number">1.1.</span> <span class="toc-text">研究背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="toc-number">1.2.</span> <span class="toc-text">核心思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.3.</span> <span class="toc-text">方法流程详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE%E4%B8%8E%E7%BB%93%E6%9E%9C"><span class="toc-number">1.4.</span> <span class="toc-text">实验设置与结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8"><span class="toc-number">1.6.</span> <span class="toc-text">如何使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85%E5%BF%85%E8%A6%81%E7%9A%84%E5%BA%93"><span class="toc-number">1.6.1.</span> <span class="toc-text">1. 安装必要的库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%8A%A0%E8%BD%BD%E9%A2%84%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%88%86%E8%AF%8D%E5%99%A8"><span class="toc-number">1.6.2.</span> <span class="toc-text">2. 加载预训练模型和分词器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%BA%94%E7%94%A8-Prefix-Tuning-%E9%85%8D%E7%BD%AE"><span class="toc-number">1.6.3.</span> <span class="toc-text">3. 应用 Prefix Tuning 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%87%86%E5%A4%87%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE"><span class="toc-number">1.6.4.</span> <span class="toc-text">4. 准备训练数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%AE%9A%E4%B9%89%E8%AE%AD%E7%BB%83%E5%8F%82%E6%95%B0%E5%92%8C%E8%AE%AD%E7%BB%83%E5%99%A8"><span class="toc-number">1.6.5.</span> <span class="toc-text">5. 定义训练参数和训练器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E5%BC%80%E5%A7%8B%E8%AE%AD%E7%BB%83"><span class="toc-number">1.6.6.</span> <span class="toc-text">6. 开始训练</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E4%BF%9D%E5%AD%98%E5%92%8C%E5%8A%A0%E8%BD%BD-Prefix-Tuning-%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.6.7.</span> <span class="toc-text">7. 保存和加载 Prefix Tuning 模型</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="Hide"  title="Show or Hide Table of Contents">
+
+    <script>
+        yiliaConfig.toc = ["Hide", "Show", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"prefix turning　| Hexo　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2025/06/08/RLHF/" title="Pre: RLHF">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="Mini Archives"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2025/06/04/%E9%98%9F%E5%88%97-%E6%A0%88/" title="Next: 队列/栈">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2025/06/08/RLHF/">RLHF</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/06/08/prefix-turning/">prefix turning</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/06/04/%E9%98%9F%E5%88%97-%E6%A0%88/">队列/栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/">十字链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%A0%86/">堆</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/kmp/">kmp</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/DP/">DP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E5%9B%BE/">图</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E4%BA%8C%E5%8F%89%E6%A0%91/">二叉树</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E9%93%BE%E8%A1%A8/">链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E4%BA%8C%E5%88%86/">二分</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/30/%E6%AC%A7%E6%8B%89%E8%B4%A8%E6%95%B0%E7%AD%9B/">欧拉质数筛</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/Towards-Efficient-and-Scalable-Multi-agent-Reasoning-via-Bayesian-Nash-Equilibrium/">Towards Efficient and Scalable Multi-agent Reasoning via Bayesian Nash Equilibrium</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/LoRA/">LoRA</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/28/%E5%A4%A7%E4%B8%80%E6%80%BB%E7%BB%93/">大一总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/27/Building-Cooperative-Embodied-Agents-Modularly-with-Large-Language-Models/">Building Cooperative Embodied Agents Modularly with Large Language Models</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/26/Generative_Agents_Interactive_Simulacra_of_Human_Behavior/">Generative Agents Interactive Simulacra of Human Behavior</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/26/HuggingGPT-Solving-AI-Tasks-with-ChatGPT-and-its-Friends-in-Hugging-Face/">HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/25/ChatEval/">ChatEval</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/Improving-Factuality-and-Reasoning-in-Language-Models-through-Multiagent-Debate/">Improving Factuality and Reasoning in Language Models through Multiagent Debate</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/05/24/ReConcile/">ReConcile</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/04/12/LLM/">本地部署大模型以及微调手册</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/26/TF-IDF/">TF-IDF 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%A4%9A%E7%94%9F%E6%88%90%E5%99%A8%E6%9E%B6%E6%9E%84/">多生成器架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/%E5%B1%82%E5%BD%92%E4%B8%80%E5%8C%96/">层归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/Inception-Score/">Inception Score</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/23/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/21/%E5%85%B3%E4%BA%8E-GAN-%E5%8F%8A%E5%85%B6%E8%A1%8D%E7%94%9F%E6%A8%A1%E5%9E%8B%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 GAN 及其衍生模型的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/FID/">FID</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/20/%E5%85%B3%E4%BA%8E-Transformer-%E7%9A%84%E7%AC%94%E8%AE%B0%E4%B8%8E%E6%80%9D%E8%80%83/">关于 Transformer 的笔记与思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN-%E5%AE%9E%E7%8E%B0%E8%8E%AB%E5%A5%88%E9%A3%8E%E6%A0%BC%E7%94%BB%E4%BD%9C%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%9C%9F%E5%AE%9E%E7%85%A7%E7%89%87/">CycleGAN 实现莫奈风格画作转化为真实照片</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/18/CycleGAN/">CycleGAN 详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/WGAN-WGAN-GP/">WGAN与WGAN-GP</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/DCGAN/">DCGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/16/ACGAN/">ACGAN</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/15/SVM/">支持向量机（SVM）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/14/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/">逻辑回归（Logistic Regression）详解</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/WGAN-WGAN-GP-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">WGAN/WGAN-GP 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/Wasserstein%E8%B7%9D%E7%A6%BB/">Wasserstein距离</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/13/KL%E6%95%A3%E5%BA%A6/">KL散度</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/12/ACGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">ACGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/10/%E6%89%B9%E5%BD%92%E4%B8%80%E5%8C%96/">批归一化</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/DCGAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">DCGAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/09/GAN-%E5%AE%9E%E7%8E%B0%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%94%9F%E6%88%90/">GAN 实现手写数字生成</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/06/BERT-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">BERT 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/02/%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B/">房价预测</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/03/01/Transformer-%E5%AE%9E%E7%8E%B0-IMDb-%E6%83%85%E6%84%9F%E5%88%86%E7%B1%BB/">Transformer 实现 IMDb 情感分类</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/27/%E9%A2%84%E6%B5%8B%E7%B3%BB%E5%A4%96%E8%A1%8C%E6%98%9F%E8%BD%A8%E9%81%93%E5%91%A8%E6%9C%9F/">预测系外行星轨道周期</a></li><li class="post-list-item"><a class="post-list-link" href="/2025/02/23/%E6%B5%8B%E8%AF%95%E5%8D%9A%E5%AE%A2/">测试博客</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2025 John Doe
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="A fast, simple &amp; powerful blog framework">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="Another simple and elegant theme for Hexo  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="Site Visitors"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="Page Hits"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="Back to Top"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="Comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="Go to Bottom"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
